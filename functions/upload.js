@@ -1,6 +1,6 @@
 export async function onRequestPost(context) {
   const GITHUB_TOKEN = context.env.GITHUB_TOKEN;
-  const GITHUB_REPO = "souweststrummers/webupload";
+  const GITHUB_REPO = "souweststrummers/website";
   const GITHUB_API = "https://api.github.com/repos/" + GITHUB_REPO + "/contents/uploads/";
 
   const formData = await context.request.formData();
