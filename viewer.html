@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <title>Viewer - Sou'West Strummers</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            background: #f0f0f0;
+        }
+        #pdf-container {
+            width: 90%;
+            height: 80vh;
+            overflow-y: auto;
+            background: white;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        canvas {
+            display: block;
+            margin: 10px auto;
+        }
+        .controls {
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background: #007BFF;
+            color: white;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .speed-slider {
+            margin-left: 10px;
+        }
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <button id="playPauseButton" onclick="toggleScrolling()">⏸️</button>
+        <label for="speed">Speed:</label>
+        <input type="range" id="speed" class="speed-slider" min="0.1" max="0.8" step="0.05" value="0.5" onchange="changeSpeed(this.value)">
+        <span id="speedValue">0.5x</span>
+    </div>
+
+    <div id="pdf-container"></div>
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+function getQueryParam(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+const pdfFolder = "pdfs/"; // Folder where the PDFs are stored
+
+const defaultPdf = "1. All I Have to Do Is Dream.pdf"; // Default PDF
+const pdfFile = getQueryParam("pdf") || defaultPdf;
+const pdfUrl = pdfFolder + pdfFile; // Combine folder path and file name
+
+        const container = document.getElementById('pdf-container');
+        let scrollInterval;
+        let scrolling = true;
+        let autoScrollSpeed = 0.5; // Default speed
+        let scrollStep = autoScrollSpeed * 1.5; // Reduced step size
+
+        async function renderPDF(pdfUrl) {
+            try {
+                const loadingTask = pdfjsLib.getDocument(pdfUrl);
+                const pdf = await loadingTask.promise;
+
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const canvas = document.createElement('canvas');
+                    container.appendChild(canvas);
+                    const context = canvas.getContext('2d');
+                    const viewport = page.getViewport({ scale: 1 });
+
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    await page.render({ canvasContext: context, viewport }).promise;
+                }
+
+                changeSpeed(0.5); // Ensure correct speed is set
+                startAutoScroll();
+            } catch (error) {
+                console.error("❌ Error loading PDF:", error);
+                container.innerHTML = "<p style='color: red;'>⚠️ Failed to load PDF. Please check the file path.</p>";
+            }
+        }
+
+        function startAutoScroll() {
+            if (scrollInterval) clearInterval(scrollInterval);
+
+            scrollInterval = setInterval(() => {
+                if (scrolling && container.scrollTop + container.clientHeight < container.scrollHeight) {
+                    container.scrollTop += scrollStep;
+                }
+            }, 200); // Increased interval for slower scrolling
+        }
+
+        function toggleScrolling() {
+            scrolling = !scrolling;
+            document.getElementById('playPauseButton').innerText = scrolling ? '⏸️' : '▶️';
+            if (scrolling) {
+                startAutoScroll();
+            } else {
+                clearInterval(scrollInterval);
+            }
+        }
+
+        function changeSpeed(value) {
+            autoScrollSpeed = parseFloat(value);
+            scrollStep = Math.max(autoScrollSpeed * 1.5, 0.5); // Ensure at least 0.5px step
+            document.getElementById('speedValue').innerText = `${value}x`;
+            if (scrolling) startAutoScroll();
+        }
+
+        renderPDF(pdfUrl);
+    </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendar HTML Generator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    label { display: block; margin-top: 10px; }
+    input, textarea { width: 100%; padding: 5px; margin-top: 5px; }
+    pre { background: #f4f4f4; padding: 10px; white-space: pre-wrap; border: 1px solid #ccc; margin-top: 20px; }
+    button { margin-top: 15px; padding: 8px 15px; }
+    #copyBtn { display: none; }
+    #copyMsg { color: green; display: none; margin-left: 10px; }
+  </style>
+</head>
+<body>
+
+  <h2>Generate Calendar Event HTML</h2>
+
+  <form id="eventForm">
+    <label>Event Title:
+      <input type="text" id="title" required>
+    </label>
+
+    <label>Start Date & Time:
+      <input type="datetime-local" id="start" step="1800" required>
+    </label>
+
+    <label>End Date & Time:
+      <input type="datetime-local" id="end" step="1800" required>
+    </label>
+
+    <label>Location:
+      <input type="text" id="location">
+    </label>
+
+    <label>Event Description:
+      <textarea id="description" rows="4"></textarea>
+    </label>
+
+    <button type="submit">Generate HTML</button>
+  </form>
+
+  <h3>Generated HTML:</h3>
+  <pre id="output"></pre>
+  <button id="copyBtn">Copy to Clipboard</button>
+  <span id="copyMsg">Copied!</span>
+
+  <script>
+    const form = document.getElementById('eventForm');
+    const output = document.getElementById('output');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyMsg = document.getElementById('copyMsg');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const title = encodeURIComponent(document.getElementById('title').value);
+      const start = new Date(document.getElementById('start').value);
+      const end = new Date(document.getElementById('end').value);
+      const location = encodeURIComponent(document.getElementById('location').value);
+      const description = encodeURIComponent(document.getElementById('description').value);
+
+      const formatDateForGoogle = (date) =>
+        date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+	const formatDateForOutlook = (date) => {
+	  const pad = (n) => String(n).padStart(2, '0');
+	  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+	};
+
+      const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${formatDateForGoogle(start)}/${formatDateForGoogle(end)}&details=${description}&location=${location}`;
+      const outlookUrl = `https://outlook.live.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent&subject=${title}&startdt=${formatDateForOutlook(start)}&enddt=${formatDateForOutlook(end)}&location=${location}&body=${description}`;
+
+      const generatedHtml = `
+<!-- Google Calendar Link -->
+<a href="${googleUrl}" target="_blank" alt="Add to Google Calendar">
+  <i class="fa-brands fa-google"></i> Calendar
+</a>
+<br>
+<!-- Outlook Calendar Link -->
+<a href="${outlookUrl}" target="_blank" alt="Add to Outlook Calendar">
+  <i class="fa-brands fa-microsoft"></i> Calendar
+</a>
+`.trim();
+
+      output.textContent = generatedHtml;
+      copyBtn.style.display = 'inline-block';
+      copyMsg.style.display = 'none';
+    });
+
+    copyBtn.addEventListener('click', () => {
+      const text = output.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        copyMsg.style.display = 'inline';
+        setTimeout(() => copyMsg.style.display = 'none', 2000);
+      });
+    });
+  </script>
+
+</body>
+</html>
