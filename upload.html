@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h2>Upload a File</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="file" required />
+      <button type="submit">Upload</button>
+    </form>
+    <p id="response"></p>
+    <script>
+      document.getElementById("uploadForm").onsubmit = async (e) => {
+        e.preventDefault();
+        const form = new FormData(e.target);
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: form,
+        });
+        const text = await res.text();
+        document.getElementById("response").innerText = text;
+      };
+    </script>
+  </body>
+</html>
