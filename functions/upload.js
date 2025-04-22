@@ -1,7 +1,6 @@
-// /functions/upload.js
 export async function onRequestPost(context) {
   const GITHUB_TOKEN = context.env.GITHUB_TOKEN;
-  const GITHUB_REPO = "souweststrummers/website";
+  const GITHUB_REPO = "souweststrummers/webupload";
   const GITHUB_API = "https://api.github.com/repos/" + GITHUB_REPO + "/contents/uploads/";
 
   const formData = await context.request.formData();
@@ -34,5 +33,3 @@ export async function onRequestPost(context) {
 
   return new Response("File uploaded successfully!");
 }
-
-// Add "GITHUB_TOKEN" as a secret in Cloudflare Pages project settings

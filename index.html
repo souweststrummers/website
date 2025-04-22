@@ -1,59 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Home - Sou'West Strummers</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<link rel="stylesheet" href="assets/style.css">
-	<meta charset="UTF-8">
-	<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-<div class="navbar">
-	<span class="menu-icon">&#9776;</span>
-        <div class="nav-links">
-        <a class="nav-item" href="index.html">Home</a>
-        <a class="nav-item" href="songs.html">Songs</a>
-		<a class="nav-item" href="events.html">Events</a>
-		<a class="nav-item" href="library.html">Library</a>
-		</div>
-    </div>
-    <div class="banner"></div>
-		
-<h1>Welcome to Sou'West Strummers</h1>
-<div style="padding:0px 5% 0px 5%;">
-<p>Sou’west Strummers is mainly a <i class="fa fa-guitar"></i> ukulele group with guitar and a few other instruments included. <br>Everyone is welcome, even if you've never played before
-
-<p>
-<h2>Join Us</h2>
-<i class="fa fa-clock"></i> We meet every Thursday night, 7.00 p.m. – 9.00 p.m.
-
-<p>
-<h2>The Venue</h2>
-<i class="fa fa-map-marker"></i> Golden Mile Tavern and Restaurant
-<br>2 Trents Rd  – off the main highway
-<br>(right round the back for the restaurant entrance)
-
-<h2>Let's Jam!</h2>
-When you arrive, grab any of the available tables, or see if theres some free spots with others
-<br>If you want something to eat, check out the menu - <i class="fa fa-cutlery"></i> <a class="link" href="https://www.thegoldenmile.co.nz/assets/pdfs/full-menu-jan-2025.pdf">Golden Mile Tavern, Restaurant Menu</a>
-<br>We'll then go from table to table asking which song you want to play, songs can be found here - <i class="fa fa-music"></i> <a href="songs.html">Songs</a><br>
-<i class="fa-solid fa-mug-hot"></i> We'll take a break at 8.00 p.m. for a cup of coffee or a chat.
-
-<h2 style="padding-top:10px;">More Info</h2>
-<h3 style="padding-top:0px;">Liz Surname</h3>
-<i class="fa fa-envelope"></i> <a href="mailto:strum@souweststrummers.co.nz">strum@souweststrummers.co.nz</a><br>
-<i class="fa fa-phone"></i> 021 234 5678
-<p>
-
-
- <script>
-        $(document).ready(function(){
-            $('.menu-icon').click(function(){
-                $('.nav-links').toggleClass('active');
-            });
+<html>
+  <body>
+    <h2>Upload a File</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="file" required />
+      <button type="submit">Upload</button>
+    </form>
+    <p id="response"></p>
+    <script>
+      document.getElementById("uploadForm").onsubmit = async (e) => {
+        e.preventDefault();
+        const form = new FormData(e.target);
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: form,
         });
+        const text = await res.text();
+        document.getElementById("response").innerText = text;
+      };
     </script>
-
-</body>
+  </body>
 </html>
