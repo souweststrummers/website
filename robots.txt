@@ -1,0 +1,4 @@
+User-agent: *        # which crawler this applies to (“*” = all bots)
+Disallow: /blinkers     # don’t crawl anything under /admin/
+Allow: /public       # explicitly allow /public/ (even if parent is disallowed)
+Sitemap: https://souweststrummers.co.nz/sitemap.xml

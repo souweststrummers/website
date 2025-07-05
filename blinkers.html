@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <title>Songs - Sou'West Strummers</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" href="https://souweststrummers.co.nz/assets/style.css">
+	<script>
+	// Check if the device is a mobile
+	function isMobileDevice() {
+		return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+	}
+
+	if (isMobileDevice()) {
+		window.location.href = "mobile.html"; // Change this to your mobile page URL
+	}
+	</script>
+	<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-32CW6KG98H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-32CW6KG98H');
+</script>
+	<style>
+	.card {height: 300px;}
+	</style>
+</head>
+<body>
+<div class="navbar">
+	<span class="menu-icon">&#9776;</span>
+<div class="nav-links">
+		<div class="nav-links">
+        <a class="nav-item" href="index.html">Home</a>
+        <a class="nav-item" href="songs.html">Songs</a>
+		<a class="nav-item" href="events.html">Events</a>
+		<a class="nav-item" href="library.html">Library</a>
+		</div>
+		</div>
+    </div>
+    <div class="banner"></div>
+	
+	<h1><i class="fa fa-music"></i> Our Songs </h1>
+		
+<main>		
+<div id="search-container">
+  <input type="text" id="searchBar" placeholder="Type the song name, number or learn">
+<br>
+  <select id="category-select" style="padding:10px; font-size:1.1rem;">
+    <option value="">Songbooks (All)</option>
+    <option value="white">Song Book #1 (White)</option>
+    <option value="pink">Song Book #2 (Pink)</option>
+    <option value="blue">Song Book #3 (Blue)</option>
+    <option value="yellow">Song Book #4 (Yellow)</option>
+    <option value="purple">Song Book #5 (Purple)</option>
+    <option value="red">Nga Waiata O Aotearoa #6 (Red)</option>
+  </select>
+  <br>
+  <br>
+ <button id="clearSearch"><i class="fa-solid fa-rotate-right"></i> Reload</button>
+</div>
+<br>
+
+	
+
+    <div id="noResults">No song found <i class="fa fa-meh-o"></i>, please check your spelling</div>
+    <div class="card-container">
+	<button id="backToTop">Back to Top</button>
+
+<!-- Add new songs below, please put them in numbered order -->
+
+<a class="link-nochange" href="pdfs/1-All-I-Have-to-Do-Is-Dream.pdf">
+ <div class="card" data-name="1. All I Have to Do Is Dream" data-category="red">
+ <p>1. All I Have to Do Is Dream</p> 
+ <img src="covers/red.jpg">
+ <a class="link-nochange" href="#"><i class="fa fa-music"></i> Listern on mp3</a>
+ </div>
+ 
+</a>
+<a class="link-nochange" href="pdfs/2-All-Of-Me-.pdf">
+ <div class="card" data-name="2. All Of Me " data-category="yellow">
+ <p>2. All Of Me </p> 
+ <img src="covers/yellow.jpg">
+  <a class="link-nochange" href="#"><i class="fa fa-music"></i> Listern on mp3</a>
+ </div>
+</a>
+<a class="link-nochange" href="pdfs/3-Another-Somebody-Done-Somebody-Wrong-Song.pdf">
+ <div class="card" data-name="3. Another Somebody Done Somebody Wrong Song" data-category="white">
+ <p>3. Another Somebody Done Somebody Wrong Song</p> 
+ <img src="covers/white.jpg">
+  <a class="link-nochange" href="#"><i class="fa fa-music"></i> Listern on mp3</a>
+ </div>
+</a>
+<a class="link-nochange" href="pdfs/4-April-Sun-In-Cuba.pdf">
+ <div class="card" data-name="4. April Sun In Cuba" data-category="pink">
+ <p>4. April Sun In Cuba</p> 
+ <img src="covers/pink.jpg">
+  <a class="link-nochange" href="#"><i class="fa fa-music"></i> Listern on mp3</a>
+ </div>
+</a>
+<a class="link-nochange" href="pdfs/5-Are-You-Lonesome-Tonight.pdf">
+ <div class="card" data-name="5. Are You Lonesome Tonight" data-category="blue">
+ <p>5. Are You Lonesome Tonight</p> 
+ <img src="covers/blue.jpg">
+  <a class="link-nochange" href="#"><i class="fa fa-music"></i> Listern on mp3</a>
+ </div>
+</a>
+<a class="link-nochange" href="pdfs/300-Without-You.pdf">
+ <div class="card" data-name="300 unlisted without you learn" data-category="purple">
+ <p>300 (Unlisted) Without You</p> 
+ <img src="covers/purple.jpg">
+  <a class="link-nochange" href="#"><i class="fa fa-music"></i> Listern on mp3</a>
+ </div>
+</a>
+
+
+</main>
+   <script>
+$(document).ready(function () {
+   // Focus on search bar when page loads
+$('#searchBar').focus();
+
+// combined filter function
+function filterCards() {
+    var value = $('#searchBar').val().toLowerCase();
+    var chosenCat = $('#category-select').val().toLowerCase();
+    var visibleCards = 0;
+
+    // “pick” shortcut
+    if (value === "pick") {
+        value = Math.floor(Math.random() * 250 + 1).toString();
+    }
+
+    $('.card').each(function () {
+        var $card     = $(this);
+        var name      = $card.data('name').toLowerCase();
+        var category  = ($card.data('category') || "").toLowerCase();
+
+        var matchName = name.includes(value);
+        var matchCat  = !chosenCat || category === chosenCat;
+        var show      = matchName && matchCat;
+
+        // hide/show the entire link so no empty anchors remain
+       //$card.closest('a.link-nochange').toggle(show);
+$(this).toggle(show);
+        if (show) visibleCards++;
+    });
+
+    $('#noResults').toggle(visibleCards === 0);
+}
+
+// bind both controls
+$('#searchBar').on('keyup',    filterCards);
+$('#category-select').on('change', filterCards);
+	
+
+    // Hide keyboard after 3s of inactivity
+    let typingTimer;
+    const doneTypingInterval = 3000;
+
+    $('#searchBar').on('input', function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(() => $('#searchBar').blur(), doneTypingInterval);
+    }).on('keydown', function () {
+        clearTimeout(typingTimer);
+    });
+
+
+    // Toggle menu
+    $('.menu-icon').click(function () {
+        $('.nav-links').toggleClass('active');
+    });
+
+    // Clear search bar when clicking clear button
+    $('#clearSearch').click(function () {
+        location.reload();
+    });
+
+    // Show/hide back-to-top button
+    $(window).scroll(function () {
+        $('#backToTop').toggle($(this).scrollTop() > 100);
+    });
+
+    // Scroll to top when button is clicked
+    $('#backToTop').click(function () {
+        $('html, body').animate({ scrollTop: 0 }, 'fast');
+    });
+});
+  </script>
+	
+</body>
+</html>
