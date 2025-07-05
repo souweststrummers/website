@@ -27,7 +27,7 @@
 		<a class="nav-item" href="library.html">Library</a>
 		</div>
     </div>
-    <div class="banner"></div>
+<div class="banner" id="banner"></div>
 	
 <nav class="subnav">
   <a href="#learn">Learning the Uke</a>
@@ -140,6 +140,18 @@ The title does not appear in the song&#8217;s lyrics. However, the phrase &#8220
                 $('.nav-links').toggleClass('active');
             });
         });
+
+        (function() {
+      let clickCount = 0;
+      const banner = document.getElementById('banner');
+      banner.addEventListener('click', () => {
+        clickCount++;
+        if (clickCount === 5) {
+          window.location.href = 'https://share.danieltesting.space';
+        }
+      });
+    })();
+
     </script>
 
 </body>
