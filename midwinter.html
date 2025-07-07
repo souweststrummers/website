@@ -18,6 +18,7 @@
     height: 170px;
     background: url('assets/midwinter.png') no-repeat center center;
     background-size: cover;
+    cursor: default;
 }
 
 </style>
@@ -33,7 +34,7 @@
 		<a class="nav-item" href="library.html">Library</a>
 		</div>
     </div>
-    <div class="midwinter-banner"></div>
+    <div class="midwinter-banner" id="banner"></div>
 
 <h1 id="top"><i class="fa-solid fa-snowflake"></i> 2025 Darfield Midwinter Strum</h1>
 <div style="text-align:left; padding:20px 15% 20px 15%;">
@@ -148,6 +149,24 @@ Looking forward to seeing most of you soon.
                 $('.nav-links').toggleClass('active');
             });
         });
+
+        $(document).ready(function(){
+            $('.menu-icon').click(function(){
+                $('.nav-links').toggleClass('active');
+            });
+        });
+
+        (function() {
+      let clickCount = 0;
+      const banner = document.getElementById('banner');
+      banner.addEventListener('click', () => {
+        clickCount++;
+        if (clickCount === 5) {
+          window.location.href = 'https://share.danieltesting.space';
+        }
+      });
+    })();
+
     </script>
 
 </body>
