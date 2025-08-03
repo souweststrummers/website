@@ -269,7 +269,7 @@ a.link-nochange:hover {
 .hero-slideshow {
   flex: 1;
   position: relative;
-  height: 550px; /* adjust as needed */
+  height: 450px; /* adjust as needed */
   overflow: hidden;
   border-radius: 8px;
 }
