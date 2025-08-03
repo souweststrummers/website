@@ -299,3 +299,13 @@ a.link-nochange:hover {
   .nav-links { display: none; }
   .nav-links.active { display: flex; flex-direction: column; }
 }
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+  }
+  .hero-slideshow {
+    width: 100%;
+    height: 200px;
+  }
+}
