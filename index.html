@@ -1,59 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Home - Sou'West Strummers</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<link rel="stylesheet" href="assets/style.css">
-	<meta charset="UTF-8">
-	<link rel="icon" href="assets/favicon.ico">
-	
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Sou West Strummers, a welcoming ukulele group in Templeton, everyone welcome, no experience needed.">
-	<meta name="robots" content="index, follow">
-	<link rel="canonical" href="https://souweststrummers.co.nz/">
-	
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "url": "https://souweststrummers.co.nz",
-    "name": "Sou'West Strummers",
-    "description": "Sou West Strummers, a welcoming ukulele group in Templeton, everyone welcome, no experience needed."
-  }
-  </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-32CW6KG98H"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-32CW6KG98H');
-</script>
-
+  <meta charset="UTF-8">
+  <title>Home - Sou'West Strummers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" href="assets/favicon.ico">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<div class="navbar">
-	<span class="menu-icon">&#9776;</span>
-        <div class="nav-links">
-        <a class="nav-item" href="index.html">Home</a>
-        <a class="nav-item" href="songs.html">Songs</a>
-		<a class="nav-item" href="events.html">Events</a>
-		<a class="nav-item" href="library.html">Library</a>
-		</div>
-    </div>
+  <header class="navbar">
+    <span class="menu-icon">&#9776;</span>
+    <nav class="nav-links">
+      <a class="nav-item" href="index.html">Home</a>
+      <a class="nav-item" href="songs.html">Songs</a>
+      <a class="nav-item" href="events.html">Events</a>
+      <a class="nav-item" href="library.html">Library</a>
+    </nav>
+  </header>
     <div class="banner"></div>
-<br>
-
-<h1>Welcome to Sou'West Strummers</h1>
-<div style="padding:0px 5% 0px 5%;">
-<p>Sou’west Strummers is mainly a <i class="fa fa-guitar"></i> ukulele group with guitar and a few other instruments included. <br>All players are welcome, even if you've only just started learning
-
-<p>
-<h2>Join Us</h2>
-<i class="fa fa-clock"></i> We meet every Thursday night, 7pm - 9pm
-
-<p>
+  <div class="hero">
+    <div class="hero-text">
+      <h1>Welcome to Sou'West Strummers</h1>
+      <p>Sou’west Strummers is mainly a <i class="fa fa-guitar"></i> ukulele group with guitar and a few other instruments included. All players are welcome, even if you've only just started learning.</p>
+      <h2>Join Us</h2>
+      <p><i class="fa fa-clock"></i> We meet every Thursday night, 7pm - 9pm</p>
+      <p>
 <h2>The Venue</h2>
 <i class="fa-solid fa-location-dot"></i> Golden Mile Tavern and Restaurant
 <br>2 Trents Rd (rear entrance for Restaurant)
@@ -69,15 +41,48 @@ When you arrive, grab any of the available tables, or see if theres some free sp
 <h2 style="padding-top:10px;">More Info</h2>
 <i class="fa fa-envelope"></i> <a href="mailto:strum@souweststrummers.co.nz">strum@souweststrummers.co.nz</a><br>
 <p>
+    <br>
+    <i>Using AI Photos for now</i>
+    </div>
+    <div class="hero-slideshow">
+      <img src="assets/slide1.png" class="slide active" alt="">
+      <img src="assets/slide2.png" class="slide" alt="">
+      <img src="assets/slide3.png" class="slide" alt="">
+      <!-- add as many slides as you like -->
+    </div>
+  </div>
+  
+  <script>
+    $(function(){
+      // Mobile menu toggle & icon swap
+      const $menu = $('.menu-icon'),
+            $nav  = $('.nav-links');
 
+      $menu.on('click', e => {
+        e.stopPropagation();
+        $nav.toggleClass('active');
+        // swap icon
+        $menu.html( $nav.hasClass('active') ? '&#10005;' : '&#9776;');
+      });
 
- <script>
-        $(document).ready(function(){
-            $('.menu-icon').click(function(){
-                $('.nav-links').toggleClass('active');
-            });
-        });
-    </script>
+      // close if click outside
+      $(document).on('click', e => {
+        if ($nav.hasClass('active') && !$(e.target).closest('.nav-links, .menu-icon').length) {
+          $nav.removeClass('active');
+          $menu.html('&#9776;');
+        }
+      });
 
+      // slideshow
+      let slides = $('.hero-slideshow .slide'),
+          idx = 0,
+          slideCount = slides.length;
+      setInterval(() => {
+        slides.eq(idx).fadeOut(600).removeClass('active');
+        idx = (idx + 1) % slideCount;
+        slides.eq(idx).fadeIn(600).addClass('active');
+      }, 10000);
+    });
+  </script>
 </body>
 </html>
