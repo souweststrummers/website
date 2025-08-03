@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home - Sou'West Strummers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" href="assets/favicon.ico">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <header class="navbar">
+    <span class="menu-icon">&#9776;</span>
+    <nav class="nav-links">
+      <a class="nav-item" href="index.html">Home</a>
+      <a class="nav-item" href="songs.html">Songs</a>
+      <a class="nav-item" href="events.html">Events</a>
+      <a class="nav-item" href="library.html">Library</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div class="hero-text">
+      <h1>Welcome to Sou'West Strummers</h1>
+      <p>Sou’west Strummers is mainly a <i class="fa fa-guitar"></i> ukulele group with guitar and a few other instruments included. All players are welcome, even if you've only just started learning.</p>
+      <h2>Join Us</h2>
+      <p><i class="fa fa-clock"></i> We meet every Thursday night, 7pm - 9pm</p>
+      <!-- … any other text … -->
+    </div>
+    <div class="hero-slideshow">
+      <img src="assets/slide1.png" class="slide active" alt="">
+      <img src="assets/slide2.png" class="slide" alt="">
+      <img src="assets/slide3.png" class="slide" alt="">
+      <!-- add as many slides as you like -->
+    </div>
+  </div>
+  
+<div style="padding:0px 5% 0px 5%;"></div>
+<h1>Welcome to Sou'West Strummers</h1>
+
+<p>Sou’west Strummers is mainly a <i class="fa fa-guitar"></i> ukulele group with guitar and a few other instruments included. <br>All players are welcome, even if you've only just started learning
+
+<p>
+<h2>Join Us</h2>
+<i class="fa fa-clock"></i> We meet every Thursday night, 7pm - 9pm
+
+<p>
+<h2>The Venue</h2>
+<i class="fa-solid fa-location-dot"></i> Golden Mile Tavern and Restaurant
+<br>2 Trents Rd (rear entrance for Restaurant)
+
+<h2>Let's Jam!</h2>
+When you arrive, grab any of the available tables, or see if theres some free spots with other players
+<br>If your hungry, check out the menu - <i class="fa fa-cutlery"></i> <a class="link" href="https://www.thegoldenmile.co.nz/assets/pdfs/full-menu-april-2025.pdf">Golden Mile Tavern, Restaurant Menu</a>
+<br>We'll then go from table to table asking which song you want to play, songs can be found here - <i class="fa fa-music"></i> <a href="songs.html">Songs</a><br>
+<i class="fa-solid fa-mug-hot"></i> We'll take a break at 8pm for a cup of coffee and a chat.
+<br><i class="fa fa-coins"></i> Please bring a gold coin with you to help cover various events throughout the year
+
+
+<h2 style="padding-top:10px;">More Info</h2>
+<i class="fa fa-envelope"></i> <a href="mailto:strum@souweststrummers.co.nz">strum@souweststrummers.co.nz</a><br>
+<p>
+
+  <script>
+    $(function(){
+      // Mobile menu toggle & icon swap
+      const $menu = $('.menu-icon'),
+            $nav  = $('.nav-links');
+
+      $menu.on('click', e => {
+        e.stopPropagation();
+        $nav.toggleClass('active');
+        // swap icon
+        $menu.html( $nav.hasClass('active') ? '&#10005;' : '&#9776;');
+      });
+
+      // close if click outside
+      $(document).on('click', e => {
+        if ($nav.hasClass('active') && !$(e.target).closest('.nav-links, .menu-icon').length) {
+          $nav.removeClass('active');
+          $menu.html('&#9776;');
+        }
+      });
+
+      // slideshow
+      let slides = $('.hero-slideshow .slide'),
+          idx = 0,
+          slideCount = slides.length;
+      setInterval(() => {
+        slides.eq(idx).fadeOut(600).removeClass('active');
+        idx = (idx + 1) % slideCount;
+        slides.eq(idx).fadeIn(600).addClass('active');
+      }, 4000);
+    });
+  </script>
+</body>
+</html>
