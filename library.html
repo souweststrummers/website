@@ -36,6 +36,7 @@
 		</div>
     </div>
 <div class="banner"></div>
+<button id="backToTop"><i class="fa-solid fa-angle-up"></i> Back to Top</button>
 	
 <nav class="subnav">
   <a href="#learn">Learning the Uke</a>
@@ -147,6 +148,11 @@ The title does not appear in the song&#8217;s lyrics. However, the phrase &#8220
                 $('.nav-links').toggleClass('active');
             });
         });
+
+            // Scroll to top when button is clicked
+    $('#backToTop').click(function () {
+        $('html, body').animate({ scrollTop: 0 }, 'fast');
+    });
     </script>
 
 </body>
