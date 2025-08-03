@@ -289,14 +289,13 @@ a.link-nochange:hover {
   .hero {
     flex-direction: column;
   }
-  .hero-slideshow {
-    display:none;
+  .hero-text {
+    padding: 0 3% 0 3%;
   }
-}
-
-/* === Menu icon visible only on mobile === */
-@media (max-width: 600px) {
-  .menu-icon { display: block; }
+  .hero-slideshow {
+    display: none;
+  }
+.menu-icon { display: block; }
   .nav-links { display: none; }
   .nav-links.active { display: flex; flex-direction: column; }
 }
