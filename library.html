@@ -148,7 +148,10 @@ The title does not appear in the song&#8217;s lyrics. However, the phrase &#8220
                 $('.nav-links').toggleClass('active');
             });
         });
-
+    // Show/hide back-to-top button
+    $(window).scroll(function () {
+        $('#backToTop').toggle($(this).scrollTop() > 100);
+    });
             // Scroll to top when button is clicked
     $('#backToTop').click(function () {
         $('html, body').animate({ scrollTop: 0 }, 'fast');
