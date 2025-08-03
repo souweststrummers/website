@@ -145,9 +145,23 @@ Looking forward to seeing most of you soon.
     })();
 
     $(document).ready(function(){
-            $('.menu-icon').click(function(){
-                $('.nav-links').toggleClass('active');
-            });
+   const $menu = $('.menu-icon'),
+            $nav  = $('.nav-links');
+
+      $menu.on('click', e => {
+        e.stopPropagation();
+        $nav.toggleClass('active');
+        // swap icon
+        $menu.html( $nav.hasClass('active') ? '&#10005;' : '&#9776;');
+      });
+
+      // close if click outside
+      $(document).on('click', e => {
+        if ($nav.hasClass('active') && !$(e.target).closest('.nav-links, .menu-icon').length) {
+          $nav.removeClass('active');
+          $menu.html('&#9776;');
+        }
+      });
     });
 
 
