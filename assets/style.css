@@ -285,7 +285,7 @@ a.link-nochange:hover {
 }
 
 /* === Mobile responsiveness === */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .hero {
     flex-direction: column;
   }
@@ -298,14 +298,4 @@ a.link-nochange:hover {
 .menu-icon { display: block; }
   .nav-links { display: none; }
   .nav-links.active { display: flex; flex-direction: column; }
-}
-
-@media (max-width: 768px) {
-  .hero {
-    flex-direction: column;
-  }
-  .hero-slideshow {
-    width: 100%;
-    height: 200px;
-  }
 }
