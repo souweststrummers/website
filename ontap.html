@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <title>Darfield Midwinter Strum - Sou'West Strummers Events</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" href="assets/style.css">
+<style>
+	html {
+  scroll-behavior: smooth;
+}
+
+
+.midwinter-banner {
+    width: 100%;
+    height: 170px;
+    background: url('https://scontent.fchc1-1.fna.fbcdn.net/v/t39.30808-6/476353971_504363906028075_535957713080970207_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=tDr3MGGH3U8Q7kNvwHFfpVX&_nc_oc=AdnBCz9XrVoqU2RHhHAUniq69rJ7g4maqmLvYfAmBAWh1ifd-9VmOQX46OeNFj5zfhs&_nc_zt=23&_nc_ht=scontent.fchc1-1.fna&_nc_gid=_ZuHcRMefZ934UeND6ZMdQ&oh=00_AfUvACc4BhW4-bGKtOS-HVE1Hwj---jE77H279yzUT84UQ&oe=68965013') no-repeat center center;
+    background-size: cover;
+    cursor: default;
+}
+
+</style>
+
+</head>
+<body>
+    <div class="navbar">
+	<span class="menu-icon">&#9776;</span>
+        <div class="nav-links">
+        <a class="nav-item" href="index.html">Home</a>
+        <a class="nav-item" href="songs.html">Songs</a>
+		<a class="nav-item" href="events.html">Events</a>
+		<a class="nav-item" href="library.html">Library</a>
+		</div>
+    </div>
+    <div class="midwinter-banner" id="banner"></div>
+
+<h1 id="top"><i class="fa-solid fa-microphone-lines"></i> ON TAP - Rock Band</h1>
+<div style="text-align:left; padding:20px 15% 20px 15%;">
+
+<i class="fa-solid fa-clock"></i> Friday, 15 August 2025, 7pm - 11pm
+<br><i class="fa-solid fa-location-dot"></i> Richmond Club, The Borough (London St, Richmond)
+<br>
+<br>
+Hi and Hey'all, 
+<br><br>
+Advance notice... First time for my band, "ON TAP" playing at the Richmond Club, The Borough, (London St, Richmond) Friday August 15th... Eek it's only Friday week away!!! 
+<br><br>
+FINALLY  we are playing at a more reasonable hour for all our "mature" friends ha ha... 7pm - 11pm. I've been out to look at the venue and it's an amazing complete rebuild since the quakes, and the food is very reasonable and good quality.. Entertainment🤔🤔?? ..well you be the judge of that😉 but there's a big dance floor so if a lot of you head out, it'll be a great night. 
+<br><br>
+(In saying the above, they DO ask punters to fill out a form on what they thought of the band, and that determines if we're asked back!!.. So just work out an acceptable bribe for a good review 😉) 
+<br><br>
+We'll be back The Church Pub the following Saturday, 10pm- 1am, and start our Taitap Hotel summer season of 6 dates on Father's day. So roll on fun times. 😎😎
+<br><br>
+Cheers Chrissy
+<br><br>
+Ps. I will expect anyone who comes to join in singing on  <a href="pdfs/241-Flowers.pdf"><i> 241. Flowers</i></a> as its one of my band numbers! 
+<a href="https://www.facebook.com/Ontapchristchurch" target="_blank"><i class="fa-brands fa-facebook"></i> More Info</a>
+
+</div>
+
+ <script>
+  
+
+        (function() {
+      let clickCount = 0;
+      const banner = document.getElementById('banner');
+      banner.addEventListener('click', () => {
+        clickCount++;
+        if (clickCount === 5) {
+          window.location.href = 'https://share.danieltesting.space';
+        }
+      });
+    })();
+
+    $(document).ready(function(){
+   const $menu = $('.menu-icon'),
+            $nav  = $('.nav-links');
+
+      $menu.on('click', e => {
+        e.stopPropagation();
+        $nav.toggleClass('active');
+        // swap icon
+        $menu.html( $nav.hasClass('active') ? '&#10005;' : '&#9776;');
+      });
+
+      // close if click outside
+      $(document).on('click', e => {
+        if ($nav.hasClass('active') && !$(e.target).closest('.nav-links, .menu-icon').length) {
+          $nav.removeClass('active');
+          $menu.html('&#9776;');
+        }
+      });
+    });
+
+
+    </script>
+
+</body>
+</html>
