@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Songs Library - Sou'West Strummers</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .search-controls {
+            background: white;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .search-bar {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            font-size: 1.1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .view-toggle {
+            display: flex;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-left: auto;
+        }
+
+        .view-btn {
+            padding: 0.75rem 1rem;
+            border: none;
+            background: white;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .songs-stats {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .songs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .songs-list {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .song-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .song-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .song-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .song-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .song-artist {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .song-genre {
+            display: inline-block;
+            background: #f0f2ff;
+            color: #667eea;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .song-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .pdf-link {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .pdf-link:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .favorite-btn {
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .favorite-btn:hover, .favorite-btn.active {
+            background: #ffd700;
+            border-color: #ffd700;
+            color: #333;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.3s ease;
+        }
+
+        .list-item:hover {
+            background: #f8f9ff;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-number {
+            min-width: 60px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .list-title {
+            flex: 1;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .list-genre {
+            margin-right: 1rem;
+            padding: 0.25rem 0.75rem;
+            background: #f0f2ff;
+            color: #667eea;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .list-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .quick-access {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .quick-access h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-link {
+            padding: 0.75rem 1.5rem;
+            background: #f8f9ff;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .quick-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+            }
+            
+            .filter-controls {
+                justify-content: center;
+            }
+            
+            .view-toggle {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+            
+            .songs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .list-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .list-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
+        .dropbox-notice {
+            background: #e8f4fd;
+            border: 2px solid #b3d9ff;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .dropbox-notice a {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .dropbox-notice a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1><i class="fas fa-music"></i> Songs Library</h1>
+                <a href="index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="search-controls">
+                <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search for songs, artists, or keywords...">
+                </div>
+                
+                <div class="filter-controls">
+                    <button class="filter-btn active" data-genre="all">All Songs</button>
+                    <button class="filter-btn" data-genre="rock">Rock & Pop</button>
+                    <button class="filter-btn" data-genre="country">Country</button>
+                    <button class="filter-btn" data-genre="folk">Folk</button>
+                    <button class="filter-btn" data-genre="classic">Classics</button>
+                    <button class="filter-btn" data-genre="nz">NZ Music</button>
+                    
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="grid">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn" data-view="list">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="songs-stats">
+                <i class="fas fa-music"></i> Showing <span id="song-count">250</span> songs in our collection
+            </div>
+
+            <div class="quick-access">
+                <h3><i class="fas fa-star"></i> Quick Access</h3>
+                <div class="quick-links">
+                    <a href="#" class="quick-link" data-filter="favorites">My Favorites</a>
+                    <a href="#" class="quick-link" data-filter="recently-added">Recently Added</a>
+                    <a href="#" class="quick-link" data-filter="popular">Most Popular</a>
+                    <a href="https://www.dropbox.com/scl/fo/pf5qjmeifqlca4rr9ix2n/AE6-IXQ2-tori2lF2hF82mY?rlkey=bhamst82oxhs7k7zpaxhqop6x&st=ci57089g&dl=0" target="_blank" class="quick-link">
+                        <i class="fas fa-external-link-alt"></i> View All PDFs
+                    </a>
+                </div>
+            </div>
+
+            <div class="songs-grid" id="songs-grid">
+                <!-- Sample songs - in real implementation, these would be generated from your song list -->
+                <div class="song-card" data-genre="classic" data-title="all i have to do is dream">
+                    <div class="song-number">1</div>
+                    <div class="song-title">All I Have to Do Is Dream</div>
+                    <div class="song-artist">The Everly Brothers</div>
+                    <div class="song-genre">Classic</div>
+                    <div class="song-actions">
+                        <a href="pdfs/1-All-I-Have-to-Do-Is-Dream.pdf" class="pdf-link" target="_blank">
+                            <i class="fas fa-file-pdf"></i> View PDF
+                        </a>
+                        <button class="favorite-btn" title="Add to favorites">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="song-card" data-genre="rock" data-title="all of me">
+                    <div class="song-number">2</div>
+                    <div class="song-title">All Of Me</div>
+                    <div class="song-artist">John Legend</div>
+                    <div class="song-genre">Rock & Pop</div>
+                    <div class="song-actions">
+                        <a href="pdfs/2-All-Of-Me-.pdf" class="pdf-link" target="_blank">
+                            <i class="fas fa-file-pdf"></i> View PDF
+                        </a>
+                        <button class="favorite-btn" title="Add to favorites">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="song-card" data-genre="nz" data-title="april sun in cuba">
+                    <div class="song-number">4</div>
+                    <div class="song-title">April Sun In Cuba</div>
+                    <div class="song-artist">Dragon</div>
+                    <div class="song-genre">NZ Music</div>
+                    <div class="song-actions">
+                        <a href="pdfs/4-April-Sun-In-Cuba.pdf" class="pdf-link" target="_blank">
+                            <i class="fas fa-file-pdf"></i> View PDF
+                        </a>
+                        <button class="favorite-btn" title="Add to favorites">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="song-card" data-genre="rock" data-title="bad moon rising">
+                    <div class="song-number">8</div>
+                    <div class="song-title">Bad Moon Rising</div>
+                    <div class="song-artist">Creedence Clearwater Revival</div>
+                    <div class="song-genre">Rock & Pop</div>
+                    <div class="song-actions">
+                        <a href="pdfs/8-Bad-Moon-Rising.pdf" class="pdf-link" target="_blank">
+                            <i class="fas fa-file-pdf"></i> View PDF
+                        </a>
+                        <button class="favorite-btn" title="Add to favorites">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="song-card" data-genre="folk" data-title="big yellow taxi">
+                    <div class="song-number">10</div>
+                    <div class="song-title">Big Yellow Taxi</div>
+                    <div class="song-artist">Joni Mitchell</div>
+                    <div class="song-genre">Folk</div>
+                    <div class="song-actions">
+                        <a href="pdfs/10-Big-Yellow-Taxi.pdf" class="pdf-link" target="_blank">
+                            <i class="fas fa-file-pdf"></i> View PDF
+                        </a>
+                        <button class="favorite-btn" title="Add to favorites">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="song-card" data-genre="nz" data-title="blue smoke">
+                    <div class="song-number">15</div>
+                    <div class="song-title">Blue Smoke</div>
+                    <div class="song-artist">Pixie Williams</div>
+                    <div class="song-genre">NZ Music</div>
+                    <div class="song-actions">
+                        <a href="pdfs/15-Blue-Smoke.pdf" class="pdf-link" target="_blank">
+                            <i class="fas fa-file-pdf"></i> View PDF
+                        </a>
+                        <button class="favorite-btn" title="Add to favorites">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- More sample cards would continue here... -->
+            </div>
+
+            <div class="songs-list" id="songs-list">
+                <!-- List view would be populated here -->
+            </div>
+
+            <div class="no-results" id="no-results" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3>No songs found</h3>
+                <p>Try adjusting your search or filter criteria</p>
+            </div>
+
+            <div class="dropbox-notice">
+                <i class="fas fa-cloud"></i>
+                <strong>All Songs Available on Dropbox</strong><br>
+                <a href="https://www.dropbox.com/scl/fo/pf5qjmeifqlca4rr9ix2n/AE6-IXQ2-tori2lF2hF82mY?rlkey=bhamst82oxhs7k7zpaxhqop6x&st=ci57089g&dl=0" target="_blank">
+                    Access the complete song collection on Dropbox
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        const songCards = document.querySelectorAll('.song-card');
+        const songCount = document.getElementById('song-count');
+        const noResults = document.getElementById('no-results');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const viewBtns = document.querySelectorAll('.view-btn');
+        const songsGrid = document.getElementById('songs-grid');
+        const songsList = document.getElementById('songs-list');
+
+        let currentFilter = 'all';
+        let currentView = 'grid';
+
+        // Search function
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase();
+            let visibleCount = 0;
+
+            songCards.forEach(card => {
+                const title = card.dataset.title;
+                const genre = card.dataset.genre;
+                
+                const matchesSearch = title.includes(searchTerm);
+                const matchesFilter = currentFilter === 'all' || genre === currentFilter;
+
+                if (matchesSearch && matchesFilter) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            songCount.textContent = visibleCount;
+            noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', performSearch);
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.genre;
+                performSearch();
+            });
+        });
+
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                viewBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentView = btn.dataset.view;
+                
+                if (currentView === 'grid') {
+                    songsGrid.style.display = 'grid';
+                    songsList.style.display = 'none';
+                } else {
+                    songsGrid.style.display = 'none';
+                    songsList.style.display = 'block';
+                }
+            });
+        });
+
+        // Favorite functionality
+        document.querySelectorAll('.favorite-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('active');
+                const icon = btn.querySelector('i');
+                if (btn.classList.contains('active')) {
+                    icon.className = 'fas fa-heart';
+                } else {
+                    icon.className = 'far fa-heart';
+                }
+            });
+        });
+
+        // Quick access filters
+        document.querySelectorAll('[data-filter]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const filter = link.dataset.filter;
+                
+                if (filter === 'favorites') {
+                    // Show only favorited songs
+                    songCards.forEach(card => {
+                        const favoriteBtn = card.querySelector('.favorite-btn');
+                        card.style.display = favoriteBtn.classList.contains('active') ? 'block' : 'none';
+                    });
+                }
+                // Add more filter logic as needed
+            });
+        });
+
+        // Initialize
+        performSearch();
+    </script>
+</body>
+</html>
