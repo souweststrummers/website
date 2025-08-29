@@ -7,16 +7,7 @@
     <title>Songs - Sou'West Strummers</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<link rel="stylesheet" href="assets/style.css">
-	<script>
-	// Check if the device is a mobile
-	function isMobileDevice() {
-		return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-	}
 
-	if (isMobileDevice()) {
-	//	window.location.href = "mobile.html";  Change this to your mobile page URL
-	}
-	</script>
 	<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-32CW6KG98H"></script>
 <script>
@@ -45,7 +36,7 @@
     
 <main>		
     <input type="text" id="searchBar" placeholder="Type the song name, number or learn">
-	<button id="clearSearch">Clear</button>
+    <button id="clearSearch"><i class="fa-solid fa-xmark"></i></button>
 
     <div id="noResults">No song found <i class="fa fa-meh-o"></i>, please check your spelling</div>
     <div class="card-container">
