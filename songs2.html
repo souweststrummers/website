@@ -38,8 +38,8 @@
     <input type="text" id="searchBar" placeholder="Type the song name, number or learn">
     <button id="clearSearch"><i class="fa-solid fa-xmark"></i></button>
     <br>
-    <button id="Dice"><i class="fa-solid fa-dice"></i></button>
-    <button id="NZ"><i class="fa-solid fa-kiwi-bird"></i></button>
+<button id="Dice"><i class="fa-solid fa-dice"></i></button>
+<button id="NZ"><i class="fa-solid fa-kiwi-bird"></i></button>
 
 <button id="Rock"><i class="fa-solid fa-guitar"></i></button>
 <button id="Pop"><i class="fa-solid fa-music"></i></button>
@@ -1625,7 +1625,7 @@ $(document).ready(function () {
 
     // Clear search bar when clicking clear button
     $('#clearSearch').click(function () {
-        location.reload();
+        $('#searchBar').val("").trigger('keyup');
     });
 
     $('#Dice').click(function () {
