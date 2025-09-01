@@ -41,6 +41,17 @@
     <button id="Dice"><i class="fa-solid fa-dice"></i></button>
     <button id="NZ"><i class="fa-solid fa-kiwi-bird"></i></button>
 
+<button id="Rock"><i class="fa-solid fa-guitar"></i></button>
+<button id="Pop"><i class="fa-solid fa-music"></i></button>
+<button id="Country"><i class="fa-solid fa-hat-cowboy"></i></button>
+<button id="Folk"><i class="fa-solid fa-tree"></i></button>
+<button id="Jazz"><i class="fa-solid fa-motorcycle"></i></button>
+<button id="BluesSoul"><i class="fa-solid fa-record-vinyl"></i></button>
+<button id="Reggae"><i class="fa-solid fa-umbrella-beach"></i></button>
+<button id="Alternative"><i class="fa-solid fa-headphones"></i></button>
+<button id="Gospel"><i class="fa-solid fa-church"></i></button>
+<button id="Soundtrack"><i class="fa-solid fa-film"></i></button>
+
 
     <div id="noResults">No song found <i class="fa-regular fa-face-sad-tear"></i>, please check your spelling</div>
     <div class="card-container">
@@ -1623,6 +1634,48 @@ $(document).ready(function () {
     $('#NZ').click(function () {
         $('#searchBar').val("Waiata").trigger('keyup');
     });
+
+    $('#Rock').click(function () {
+    $('#searchBar').val("rock").trigger('keyup');
+});
+
+$('#Pop').click(function () {
+    $('#searchBar').val("pop").trigger('keyup');
+});
+
+$('#Country').click(function () {
+    $('#searchBar').val("country").trigger('keyup');
+});
+
+$('#Folk').click(function () {
+    $('#searchBar').val("folk").trigger('keyup');
+});
+
+$('#Jazz').click(function () {
+    $('#searchBar').val("jazz").trigger('keyup');
+});
+
+$('#BluesSoul').click(function () {
+    $('#searchBar').val("blues").trigger('keyup');
+});
+
+$('#Reggae').click(function () {
+    $('#searchBar').val("reggae").trigger('keyup');
+});
+
+$('#Alternative').click(function () {
+    $('#searchBar').val("alternative").trigger('keyup');
+});
+
+$('#Gospel').click(function () {
+    $('#searchBar').val("gospel").trigger('keyup');
+});
+
+
+$('#Soundtrack').click(function () {
+    $('#searchBar').val("soundtrack").trigger('keyup');
+});
+
 
 
     // Show/hide back-to-top button
