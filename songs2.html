@@ -37,7 +37,9 @@
 <main>		
     <input type="text" id="searchBar" placeholder="Type the song name, number or learn">
     <button id="clearSearch"><i class="fa-solid fa-xmark"></i></button>
-    <button id="XmasButton"><i class="fa-solid fa-dice"></i></button>
+    <br>
+    <button id="Dice"><i class="fa-solid fa-dice"></i></button>
+    <button id="NZ"><i class="fa-solid fa-kiwi-bird"></i></button>
 
 
     <div id="noResults">No song found <i class="fa-regular fa-face-sad-tear"></i>, please check your spelling</div>
@@ -1615,8 +1617,11 @@ $(document).ready(function () {
         location.reload();
     });
 
-    $('#XmasButton').click(function () {
+    $('#Dice').click(function () {
         $('#searchBar').val("pick").trigger('keyup');
+    });
+    $('#NZ').click(function () {
+        $('#searchBar').val("Waiata").trigger('keyup');
     });
 
 
