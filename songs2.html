@@ -37,6 +37,8 @@
 <main>		
     <input type="text" id="searchBar" placeholder="Type the song name, number or learn">
     <button id="clearSearch"><i class="fa-solid fa-xmark"></i></button>
+    <button id="RandomButton"><i class="fa-solid fa-dice"></i></button>
+
 
     <div id="noResults">No song found <i class="fa fa-meh-o"></i>, please check your spelling</div>
     <div class="card-container">
@@ -55,11 +57,6 @@
 
 </main>
 
-<!-- <footer> -->
-<!-- <a class="link-nochange" href="#"><img class="ad" src=""></a> -->
-<!-- <br> -->
-<!-- Local Ad or bulliten -->
-<!-- </footer> -->
    <script>
 $(document).ready(function () {
     // Focus on search bar when page loads
@@ -120,6 +117,11 @@ $(document).ready(function () {
     $('#clearSearch').click(function () {
         location.reload();
     });
+
+    $('#RandomButon').click(function () {
+    $('#searchBar').val("pick").trigger('keyup');
+});
+
 
     // Show/hide back-to-top button
     $(window).scroll(function () {
