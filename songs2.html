@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <title>Songs - Sou'West Strummers</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" href="assets/style.css">
+
+	<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-32CW6KG98H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-32CW6KG98H');
+</script>
+</head>
+<body>
+<div class="navbar">
+	<span class="menu-icon">&#9776;</span>
+<div class="nav-links">
+		<div class="nav-links">
+        <a class="nav-item" href="index.html">Home</a>
+        <a class="nav-item" href="songs.html">Songs</a>
+		<a class="nav-item" href="events.html">Events</a>
+		<a class="nav-item" href="library.html">Library</a>
+		</div>
+		</div>
+    </div>
+    <div class="banner"></div>
+	
+	<h1><i class="fa fa-music"></i> Songs </h1>
+    
+<main>		
+    <input type="text" id="searchBar" placeholder="Type the song name, number or learn">
+    <button id="clearSearch"><i class="fa-solid fa-xmark"></i></button>
+
+    <div id="noResults">No song found <i class="fa fa-meh-o"></i>, please check your spelling</div>
+    <div class="card-container">
+	<button id="backToTop"><i class="fa-solid fa-angle-up"></i> Back to Top</button>
+
+<!-- Add new songs below, please put them in numbered order -->
+ <div id="include"></div>
+
+  <script>
+    fetch("songcontent.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("include").innerHTML = data;
+      });
+  </script>
+
+</main>
+
+<!-- <footer> -->
+<!-- <a class="link-nochange" href="#"><img class="ad" src=""></a> -->
+<!-- <br> -->
+<!-- Local Ad or bulliten -->
+<!-- </footer> -->
+   <script>
+$(document).ready(function () {
+    // Focus on search bar when page loads
+    $('#searchBar').focus();
+
+    // Search functionality
+    $('#searchBar').on('keyup', function () {
+        var value = $(this).val().toLowerCase();
+        var visibleCards = 0;
+		
+		 // If "pick" is typed, pick a random song number from 1 to 250
+        if (value === "pick") {
+            var randomNumber = Math.floor(Math.random() * 250) + 1;
+            value = randomNumber.toString(); // Search by random number
+        }
+
+        $('.card').each(function () {
+            var match = $(this).data('name').toLowerCase().includes(value);
+            $(this).toggle(match);
+            if (match) visibleCards++;
+        });
+
+        $('#noResults').toggle(visibleCards === 0);
+    });
+	
+
+    // Hide keyboard after 3s of inactivity
+    let typingTimer;
+    const doneTypingInterval = 3000;
+
+    $('#searchBar').on('input', function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(() => $('#searchBar').blur(), doneTypingInterval);
+    }).on('keydown', function () {
+        clearTimeout(typingTimer);
+    });
+
+     // Mobile menu toggle & icon swap
+      const $menu = $('.menu-icon'),
+            $nav  = $('.nav-links');
+
+      $menu.on('click', e => {
+        e.stopPropagation();
+        $nav.toggleClass('active');
+        // swap icon
+        $menu.html( $nav.hasClass('active') ? '&#10005;' : '&#9776;');
+      });
+
+      // close if click outside
+      $(document).on('click', e => {
+        if ($nav.hasClass('active') && !$(e.target).closest('.nav-links, .menu-icon').length) {
+          $nav.removeClass('active');
+          $menu.html('&#9776;');
+        }
+      });
+
+    // Clear search bar when clicking clear button
+    $('#clearSearch').click(function () {
+        location.reload();
+    });
+
+    // Show/hide back-to-top button
+    $(window).scroll(function () {
+        $('#backToTop').toggle($(this).scrollTop() > 100);
+    });
+
+    // Scroll to top when button is clicked
+    $('#backToTop').click(function () {
+        $('html, body').animate({ scrollTop: 0 }, 'fast');
+    });
+});
+  </script>
+	
+</body>
+</html>
