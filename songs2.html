@@ -2366,7 +2366,7 @@ $(document).ready(function () {
         if (value === "pick") {
             var randomNumber = Math.floor(Math.random() * 250) + 1;
             value = randomNumber.toString()+"."; // Search by random number
-            console.log(value)
+            $('#categoryButtons').show();
         }
 
         $('.card').each(function () {
