@@ -116,6 +116,7 @@ img {padding-top:10px;}
     margin-left: 5px;
     font-size: 16px;
     cursor: pointer;
+    color:#000 !important;
 }
 
 .card-container {
