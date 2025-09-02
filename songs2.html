@@ -52,12 +52,12 @@
     <button id="clearSearch"><i class="fa-solid fa-xmark"></i></button>
 <button id="ShowFavs" title="Favourites"><i class="fa-solid fa-star"></i></button>
 
-<br><br>
+
 <!-- Toggle button -->
 <button id="toggleCategories">
-  <i class="fa-solid fa-tags"></i> Categories
+  <i class="fa-solid fa-tags"></i>
 </button>
-
+<br><br>
 <!-- Category button container -->
 <div id="categoryButtons" style="display:none; margin-top:10px;">
 <button id="Dice" title="Random"><i class="fa-solid fa-dice"></i></button>
@@ -70,9 +70,8 @@
   <button id="Reggae" title="Reggae"><i class="fa-solid fa-umbrella-beach"></i></button>
   <button id="Alternative" title="Alternative"><i class="fa-solid fa-headphones"></i></button>
   <button id="Gospel" title="Gospel"><i class="fa-solid fa-church"></i></button>
+  <br><br>
 </div>
-
-<br><br>
 
     <div id="noResults">No song found <i class="fa-regular fa-face-sad-tear"></i>, please check your spelling</div>
     <div class="card-container">
@@ -2453,10 +2452,10 @@ $('#toggleCategories').click(function () {
     const container = $('#categoryButtons');
     if (container.is(':visible')) {
         container.hide();
-        $(this).html('<i class="fa-solid fa-tags"></i> Categories');
+        $(this).html('<i class="fa-solid fa-tags"></i>');
     } else {
         container.show();
-        $(this).html('<i class="fa-solid fa-tags"></i> Hide Categories');
+        $(this).html('<i class="fa-solid fa-tags"></i>');
     }
 });
 
