@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chord Sheet Builder – Following The Sun</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --fg:#0b3a36; --sub:#2f6f68; --accent:#6bbaae; --muted:#7a8a89; --bg:#f7fbfa;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; font-family:"Work Sans",system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--fg); background:var(--bg)}
+  header{padding:1.25rem 1rem; background:#fff; border-bottom:1px solid #e3eeec}
+  h1{margin:.2rem 0 .25rem; font-size:1.5rem}
+  .meta{color:var(--muted)}
+  main{display:grid; gap:1rem; grid-template-columns:1fr 1fr; padding:1rem; align-items:start}
+  textarea{width:100%; min-height:48vh; padding:.8rem; border:1px solid #cfe2df; border-radius:12px; font:400 16px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; background:#fff}
+  .panel{background:#fff; border:1px solid #e3eeec; border-radius:14px; padding:1rem}
+  .controls{display:flex; gap:.5rem; flex-wrap:wrap; margin:.5rem 0 1rem}
+  button{border:1px solid var(--accent); background:var(--accent); color:#003541; font-weight:700; padding:.6rem .9rem; border-radius:999px; cursor:pointer}
+  button.secondary{background:#fff; color:var(--sub)}
+  .chips{display:flex; gap:.5rem; flex-wrap:wrap; margin:.5rem 0 0}
+  .chip{border:1px solid var(--accent); color:var(--sub); padding:.2rem .5rem; border-radius:999px; font-size:.9rem}
+  .sheet{padding:1rem}
+  .sheet h2{font-size:1.1rem; letter-spacing:.06em; text-transform:uppercase; color:var(--sub); margin:1rem 0 .5rem}
+  .line{white-space:pre-wrap; line-height:1.75; font-size:1.03rem}
+  .chorded{position:relative; display:inline-block}
+  .chorded .ch{
+    position:absolute; left:0; top:-1.2em;
+    font-weight:700; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--accent)
+  }
+  .prog{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--sub)}
+  .hint{font-size:.9rem; color:var(--muted)}
+  code.k{background:#eef6f5; padding:.1rem .35rem; border-radius:6px; border:1px solid #d7e8e6}
+
+  /* Modal */
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,.6);
+    z-index:9999; display:none; align-items:center; justify-content:center; padding:1rem;
+  }
+  .modal{
+    background:#fff; border-radius:14px; width:100%; max-width:960px; max-height:90vh; display:flex; flex-direction:column; overflow:hidden;
+  }
+  .modal header{
+    border-bottom:1px solid #e9f2f1; padding:.85rem 1rem; display:flex; align-items:center; justify-content:space-between;
+  }
+  .modal h3{margin:0; font-size:1.1rem}
+  .modal .content{padding:1rem; overflow:auto}
+  .modal .tabs{display:flex; gap:.5rem; padding:.5rem 1rem; border-bottom:1px solid #eef3f2}
+  .tab{border:1px solid #cfe2df; background:#fff; padding:.4rem .7rem; border-radius:999px; cursor:pointer; color:var(--sub)}
+  .tab.active{background:var(--accent); color:#003541; border-color:var(--accent); font-weight:700}
+  .modal textarea{width:100%; min-height:40vh; font:400 13px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace}
+  .modal .actions{display:flex; gap:.5rem; padding:0 1rem 1rem; flex-wrap:wrap}
+  .ghost{background:#fff; border:1px dashed #cfe2df; color:var(--sub)}
+  .close-x{border:none; background:transparent; font-size:1.3rem; cursor:pointer; color:var(--muted)}
+  .sr-only{position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0}
+  @media (max-width: 980px){
+    main{grid-template-columns:1fr}
+  }
+  @media print{
+    header, .controls, .panel:first-of-type{display:none}
+    main{display:block; padding:0}
+    .sheet{padding:0.8in}
+    body{background:#fff}
+  }
+
+</style>
+</head>
+<body>
+<div class="sheet">
+<h2>Intro</h2>
+<div class="line">F#m C#m D A</div>
+<div class="line">&nbsp;</div>
+<h2>Verse 1</h2>
+<div class="line">F#m                       C#m</div>
+<div class="line">Maybe I don't wanna know</div>
+<div class="line">&nbsp;</div>
+<div class="line">The way home</div>
+<div class="line">D</div>
+<div class="line">Taking on a journey,</div>
+<div class="line">         A</div>
+<div class="line">I've got places to go</div>
+<div class="line">F#m                     C#m</div>
+<div class="line">Wanna chase a miracle?</div>
+<div class="line">&nbsp;</div>
+<div class="line">It's possible,</div>
+<div class="line">D                          A</div>
+<div class="line">You just gotta open the door</div>
+<div class="line">             F#m      C#m</div>
+<div class="line">Darling it's cold out there</div>
+<div class="line">      D</div>
+<div class="line">Don't fear the road just</div>
+<div class="line">                A</div>
+<div class="line">Come along with me</div>
+<div class="line">           F#m       C#m</div>
+<div class="line">You're not alone out there</div>
+<div class="line">      D                             A</div>
+<div class="line">Let's write a song make up the melody</div>
+<div class="line">&nbsp;</div>
+<div class="line">&nbsp;</div>
+<h2>Chorus</h2>
+<div class="line">F#m                      C#m</div>
+<div class="line">If you're looking for me baby</div>
+<div class="line">                 D</div>
+<div class="line">You know you can find me</div>
+<div class="line">              A</div>
+<div class="line">Following the sun</div>
+<div class="line">F#m                     C#m</div>
+<div class="line">Somewhere running up my heart beat</div>
+<div class="line">               D</div>
+<div class="line">I don't look behind me</div>
+<div class="line">              A</div>
+<div class="line">Following the sun</div>
+<div class="line">&nbsp;</div>
+<div class="line">F#m C#m D A</div>
+<div class="line">&nbsp;</div>
+<div class="line">              F#m  C#m  D  A</div>
+<div class="line">Following the sun</div>
+<div class="line">&nbsp;</div>
+<div class="line">&nbsp;</div>
+<h2>Verse 2</h2>
+<div class="line">F#m                           C#m</div>
+<div class="line">Come and give your love away</div>
+<div class="line">&nbsp;</div>
+<div class="line">Don't play it safe</div>
+<div class="line">D                       A</div>
+<div class="line">I'ma let you fall but i won't let you break</div>
+<div class="line">F#m                    C#m</div>
+<div class="line">Wanna chase a sunset,</div>
+<div class="line">&nbsp;</div>
+<div class="line">Are You ready yet?</div>
+<div class="line">D                                A</div>
+<div class="line">We won't get this chance every day</div>
+<div class="line">             F#m      C#m</div>
+<div class="line">Darling it's cold out there</div>
+<div class="line">      D</div>
+<div class="line">Don't fear the road just</div>
+<div class="line">                A</div>
+<div class="line">Come along with me</div>
+<div class="line">           F#m       C#m</div>
+<div class="line">You're not alone out there</div>
+<div class="line">      D                             A</div>
+<div class="line">Let's write a song make up the melody</div>
+<div class="line">&nbsp;</div>
+<div class="line">&nbsp;</div>
+<h2>Chorus</h2>
+<div class="line">F#m                      C#m</div>
+<div class="line">If you're looking for me baby</div>
+<div class="line">                 D</div>
+<div class="line">You know you can find me</div>
+<div class="line">              A</div>
+<div class="line">Following the sun</div>
+<div class="line">F#m                     C#m</div>
+<div class="line">Somewhere running up my heart beat</div>
+<div class="line">               D</div>
+<div class="line">I don't look behind me</div>
+<div class="line">              A</div>
+<div class="line">Following the sun</div>
+<div class="line">&nbsp;</div>
+<div class="line">F#m C#m D A</div>
+<div class="line">              F#m  C#m  D  A</div>
+<div class="line">Following the sun</div>
+<div class="line">&nbsp;</div>
+<div class="line">Following the sun</div>
+<div class="line">&nbsp;</div>
+<div class="line">&nbsp;</div>
+<h2>Bridge</h2>
+<div class="line">N.C.</div>
+<div class="line">You can lean on...</div>
+<div class="line">N.C.</div>
+<div class="line">You can lean on me</div>
+<div class="line">N.C.</div>
+<div class="line">You can lean on...</div>
+<div class="line">N.C.</div>
+<div class="line">You can lean on me</div>
+<div class="line">&nbsp;</div>
+<div class="line">&nbsp;</div>
+<h2>Chorus</h2>
+<div class="line">F#m                      C#m</div>
+<div class="line">If you're looking for me baby</div>
+<div class="line">                 D</div>
+<div class="line">You know you can find me</div>
+<div class="line">              A</div>
+<div class="line">Following the sun</div>
+<div class="line">F#m                     C#m</div>
+<div class="line">Somewhere running up my heart beat</div>
+<div class="line">               D</div>
+<div class="line">I don't look behind me</div>
+<div class="line">              A</div>
+<div class="line">Following the sun</div>
+<div class="line">&nbsp;</div>
+<div class="line">F#m C#m D A</div>
+<div class="line">&nbsp;</div>
+<div class="line">              F#m  C#m  D  A</div>
+<div class="line">Following the sun</div>
+<div class="line">              F#m</div>
+<div class="line">Following the sun</div>
+<div class="line">&nbsp;</div>
+<div class="line">&nbsp;</div>
+<h2>Outro</h2>
+<div class="line">           C#m      D</div>
+<div class="line">You can lean on...</div>
+<div class="line">           A        F#m</div>
+<div class="line">You can lean on me</div>
+<div class="line">           C#m      D</div>
+<div class="line">You can lean on...</div>
+<div class="line">           A</div>
+<div class="line">You can lean on me</div>
+<div class="line">&nbsp;</div>
+<div class="line">F#m C#m D A</div>
+<div class="line">&nbsp;</div>
+<div class="line">&nbsp;</div>
+<div class="line">&nbsp;</div>
+</div>
+</body>
+</html>

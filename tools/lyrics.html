@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chord Sheet Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --fg:#0b3a36; --sub:#2f6f68; --accent:#6bbaae; --muted:#7a8a89; --bg:#f7fbfa;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; font-family:"Work Sans",system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--fg); background:var(--bg)}
+  header{padding:1.25rem 1rem; background:#fff; border-bottom:1px solid #e3eeec}
+  h1{margin:.2rem 0 .25rem; font-size:1.5rem}
+  .meta{color:var(--muted)}
+  main{display:grid; gap:1rem; grid-template-columns:1fr 1fr; padding:1rem; align-items:start}
+  textarea{width:100%; min-height:48vh; padding:.8rem; border:1px solid #cfe2df; border-radius:12px; font:400 16px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; background:#fff}
+  .panel{background:#fff; border:1px solid #e3eeec; border-radius:14px; padding:1rem}
+  .controls{display:flex; gap:.5rem; flex-wrap:wrap; margin:.5rem 0 1rem}
+  button{border:1px solid var(--accent); background:var(--accent); color:#003541; font-weight:700; padding:.6rem .9rem; border-radius:999px; cursor:pointer}
+  button.secondary{background:#fff; color:var(--sub)}
+  .chips{display:flex; gap:.5rem; flex-wrap:wrap; margin:.5rem 0 0}
+  .chip{border:1px solid var(--accent); color:var(--sub); padding:.2rem .5rem; border-radius:999px; font-size:.9rem}
+  .sheet{padding:1rem}
+  .sheet h2{font-size:1.1rem; letter-spacing:.06em; text-transform:uppercase; color:var(--sub); margin:1rem 0 .5rem}
+  .line{white-space:pre-wrap; line-height:1.75; font-size:1.03rem}
+  .chorded{position:relative; display:inline-block}
+  .chorded .ch{
+    position:absolute; left:0; top:-1.2em;
+    font-weight:700; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--accent)
+  }
+  .prog{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--sub)}
+  .hint{font-size:.9rem; color:var(--muted)}
+  code.k{background:#eef6f5; padding:.1rem .35rem; border-radius:6px; border:1px solid #d7e8e6}
+
+  /* Modal */
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,.6);
+    z-index:9999; display:none; align-items:center; justify-content:center; padding:1rem;
+  }
+  .modal{
+    background:#fff; border-radius:14px; width:100%; max-width:960px; max-height:90vh; display:flex; flex-direction:column; overflow:hidden;
+  }
+  .modal header{
+    border-bottom:1px solid #e9f2f1; padding:.85rem 1rem; display:flex; align-items:center; justify-content:space-between;
+  }
+  .modal h3{margin:0; font-size:1.1rem}
+  .modal .content{padding:1rem; overflow:auto}
+  .modal .tabs{display:flex; gap:.5rem; padding:.5rem 1rem; border-bottom:1px solid #eef3f2}
+  .tab{border:1px solid #cfe2df; background:#fff; padding:.4rem .7rem; border-radius:999px; cursor:pointer; color:var(--sub)}
+  .tab.active{background:var(--accent); color:#003541; border-color:var(--accent); font-weight:700}
+  .modal textarea{width:100%; min-height:40vh; font:400 13px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace}
+  .modal .actions{display:flex; gap:.5rem; padding:0 1rem 1rem; flex-wrap:wrap}
+  .ghost{background:#fff; border:1px dashed #cfe2df; color:var(--sub)}
+  .close-x{border:none; background:transparent; font-size:1.3rem; cursor:pointer; color:var(--muted)}
+  .sr-only{position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0}
+  @media (max-width: 980px){
+    main{grid-template-columns:1fr}
+  }
+  @media print{
+    header, .controls, .panel:first-of-type{display:none}
+    main{display:block; padding:0}
+    .sheet{padding:0.8in}
+    body{background:#fff}
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Chord Sheet Maker</h1>
+    <p>Daniel Sherratt and ChatGPT</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>1) Paste lyrics (with chord markers)</h2>
+      <p class="hint">Paste the lyrics here, inserting chords with braces like {F#m} at the exact spot they should appear above the next word. Use blank lines to start new sections.
+      <div class="hint">Put a section header on a line by itself in square brackets, e.g. <code class="k">[Chorus]</code>.</div>
+      <br>
+      <textarea id="input" placeholder="Paste the lyrics here..."></textarea>
+      <div class="controls">
+        <button id="build">Build Sheet</button>
+        <button class="secondary" id="clear">Clear</button>
+        <button class="secondary" id="print">Print</button>
+        <button class="secondary" id="getHtml">Get HTML</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>2) Preview / Export</h2>
+      <div id="sheet" class="sheet" aria-live="polite">
+        <p class="hint">Your formatted sheet will appear here.</p>
+        <hr>
+        <div>
+          <h2>Intro</h2>
+          <div class="prog">F#m &nbsp; C#m &nbsp; D &nbsp; A</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal for HTML output -->
+  <div id="htmlModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="htmlModalTitle">
+    <div class="modal">
+      <header>
+        <h3 id="htmlModalTitle">Generated HTML</h3>
+        <button class="close-x" id="modalClose" aria-label="Close">✕</button>
+      </header>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="section">Rendered section only</button>
+        <button class="tab" data-tab="full">Full standalone HTML</button>
+      </div>
+
+      <div class="content">
+        <label for="htmlOutput" class="sr-only">HTML Output</label>
+        <textarea id="htmlOutput" readonly></textarea>
+      </div>
+
+      <div class="actions">
+        <button id="copyHtml">Copy to Clipboard</button>
+        <button id="downloadHtml" class="ghost">Download .html</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const input = document.getElementById('input');
+  const sheet = document.getElementById('sheet');
+  const btnBuild = document.getElementById('build');
+  const btnClear = document.getElementById('clear');
+  const btnPrint = document.getElementById('print');
+  const btnGetHtml = document.getElementById('getHtml');
+
+  const modal = document.getElementById('htmlModal');
+  const modalClose = document.getElementById('modalClose');
+  const htmlOutput = document.getElementById('htmlOutput');
+  const tabs = Array.from(document.querySelectorAll('.tab'));
+  const btnCopy = document.getElementById('copyHtml');
+  const btnDownload = document.getElementById('downloadHtml');
+
+  const escapeHTML = (s) => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  function tokenize(line){
+    // Returns tokens: {type:'chord'|'space'|'word'|'header'|'other', text:string}
+    if (/^\s*\[(.+?)\]\s*$/.test(line)) {
+      return [{type:'header', text: line.match(/^\s*\[(.+?)\]\s*$/)[1]}];
+    }
+    const tokens = [];
+    const re = /(\{[A-G][#b]?(?:m|maj7|maj9|m7|m9|sus2|sus4|dim|aug|add9|7|9|6|4|2)?\})|(\s+)|([^\s]+)/gi;
+    let m;
+    while ((m = re.exec(line)) !== null){
+      if (m[1]) tokens.push({type:'chord', text: m[1].slice(1,-1)});
+      else if (m[2]) tokens.push({type:'space', text: m[2]});
+      else tokens.push({type:'word', text: m[3]});
+    }
+    if (tokens.length === 0) tokens.push({type:'other', text: ''});
+    return tokens;
+  }
+
+  function renderLine(line){
+    const tokens = tokenize(line);
+    if (tokens.length === 1 && tokens[0].type === 'header'){
+      return `<h2>${escapeHTML(tokens[0].text)}</h2>`;
+    }
+    let out = '<div class="line">';
+    let pending = null;
+    for (const t of tokens){
+      if (t.type === 'chord'){
+        pending = t.text;
+        continue;
+      }
+      if (t.type === 'word'){
+        if (pending){
+          out += `<span class="chorded"><span class="ch">${escapeHTML(pending)}</span>${escapeHTML(t.text)}</span>`;
+          pending = null;
+        } else {
+          out += escapeHTML(t.text);
+        }
+      } else {
+        // spaces or other
+        out += t.text;
+      }
+    }
+    // If a trailing chord was placed at end-of-line, show it above a spacer
+    if (pending){
+      out += `<span class="chorded"><span class="ch">${escapeHTML(pending)}</span>&nbsp;</span>`;
+    }
+    out += '</div>';
+    return out;
+  }
+
+  function build(){
+    const lines = input.value.replace(/\r\n/g, '\n').split('\n');
+    const parts = [];
+    for (const line of lines){
+      if (line.trim() === ''){
+        parts.push('<div class="line">&nbsp;</div>');
+      } else {
+        parts.push(renderLine(line));
+      }
+    }
+    sheet.innerHTML = parts.join('\n');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function openModal(){
+    // default tab = section
+    setActiveTab('section');
+    modal.style.display = 'flex';
+    // focus the textarea quickly for easy copying
+    setTimeout(() => htmlOutput.select(), 50);
+  }
+  function closeModal(){
+    modal.style.display = 'none';
+  }
+
+  function setActiveTab(which){
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === which));
+    if (which === 'section'){
+      // Only the rendered sheet HTML (inner content)
+      const content = sheet.innerHTML.trim();
+      htmlOutput.value = content;
+      btnDownload.onclick = () => downloadFile('song-section.html', content);
+    } else {
+      // Full standalone HTML file with same styles, wrapping the current sheet content
+      const full = buildStandaloneHTML(sheet.innerHTML.trim());
+      htmlOutput.value = full;
+      btnDownload.onclick = () => downloadFile('song-standalone.html', full);
+    }
+  }
+
+  function buildStandaloneHTML(inner){
+    const styles = document.querySelector('style').innerHTML;
+    const title = document.title || 'Chord Sheet';
+    return [
+      '<!DOCTYPE html>',
+      '<html lang="en">',
+      '<head>',
+      '<meta charset="utf-8" />',
+      '<meta name="viewport" content="width=device-width, initial-scale=1" />',
+      `<title>${escapeHTML(title)}</title>`,
+      '<link rel="preconnect" href="https://fonts.googleapis.com">',
+      '<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">',
+      '<style>', styles, '</style>',
+      '</head>',
+      '<body>',
+      '<div class="sheet">',
+      inner,
+      '</div>',
+      '</body>',
+      '</html>'
+    ].join('\n');
+  }
+
+  async function copyToClipboard(text){
+    try{
+      await navigator.clipboard.writeText(text);
+      flashButton(btnCopy, 'Copied!');
+    }catch{
+      // Fallback: select text and rely on user copy
+      htmlOutput.select();
+      flashButton(btnCopy, 'Press Ctrl/Cmd+C');
+    }
+  }
+
+  function downloadFile(filename, text){
+    const blob = new Blob([text], {type: 'text/html;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function flashButton(btn, label){
+    const orig = btn.textContent;
+    btn.textContent = label;
+    btn.disabled = true;
+    setTimeout(()=>{ btn.textContent = orig; btn.disabled = false; }, 1200);
+  }
+
+  // Events
+  btnBuild.addEventListener('click', build);
+  btnClear.addEventListener('click', () => { input.value = ''; input.focus(); });
+  btnPrint.addEventListener('click', () => window.print());
+
+  btnGetHtml.addEventListener('click', () => {
+    // Ensure preview is up to date
+    if (!sheet.innerHTML.trim() || /Your formatted sheet/.test(sheet.innerHTML)){
+      build();
+    }
+    openModal();
+  });
+
+  tabs.forEach(t => t.addEventListener('click', () => setActiveTab(t.dataset.tab)));
+  modalClose.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+  });
+  document.getElementById('copyHtml').addEventListener('click', () => copyToClipboard(htmlOutput.value));
+
+  // Prefill with a tiny fictitious demo so you can see how it works (not real lyrics)
+  input.value = [
+    "[Verse]",
+    "We’ll go {F#m}where the light is and {C#m}chase the morning sky",
+    "",
+    "[Chorus]",
+    "{D}Hold on {A}tight — we’re {F#m}following the {C#m}sun"
+  ].join("\n");
+})();
+</script>
+</body>
+</html>
