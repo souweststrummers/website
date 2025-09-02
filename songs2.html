@@ -66,29 +66,36 @@ z-index: 9999;}
 	<h1><i class="fa fa-music"></i> Songs </h1>
     
 <main>		
-    <input type="text" id="searchBar" placeholder="Type the song name, number or learn">
+    <input type="text" id="searchBar" placeholder="Type the song name, number, learn, artist or genre">
     <button id="clearSearch"><i class="fa-solid fa-xmark"></i></button>
 
 
 
 <!-- Toggle button -->
-<button id="toggleCategories">
+<button id="toggleCategories" title="Categories">
   <i class="fa-solid fa-tags"></i>
 </button>
-<br><br>
+
 <!-- Category button container -->
 <div id="categoryButtons" style="display:none; margin-top:10px;">
   <button id="ShowFavs" title="Favourites"><i class="fa-solid fa-star"></i></button>
   <button id="Dice" title="Random"><i class="fa-solid fa-dice"></i></button>
   <button id="NZ" title="NZ"><i class="fa-solid fa-kiwi-bird"></i></button>
+  <button id="Jazz" title="Rex"><i class="fa-solid fa-motorcycle"></i></button>
+  <button id="Unlisted" title="Unlisted"><i class="fa-solid fa-file"></i></button>
+ <!-- 
   <button id="Rock" title="Rock"><i class="fa-solid fa-guitar"></i></button>
   <button id="Pop" title="Pop"><i class="fa-solid fa-music"></i></button>
   <button id="Country" title="Country"><i class="fa-solid fa-hat-cowboy"></i></button>
   <button id="Folk" title="Folk"><i class="fa-solid fa-tree"></i></button>
-  <button id="Jazz" title="Jazz"><i class="fa-solid fa-motorcycle"></i></button>
-  <button id="Reggae" title="Reggae"><i class="fa-solid fa-umbrella-beach"></i></button>
-  <button id="Alternative" title="Alternative"><i class="fa-solid fa-headphones"></i></button>
   <button id="Gospel" title="Gospel"><i class="fa-solid fa-church"></i></button>
+  <button id="Alternative" title="Alternative"><i class="fa-solid fa-headphones"></i></button>
+   <button id="Reggae" title="Reggae"><i class="fa-solid fa-umbrella-beach"></i></button>
+  -->
+
+
+
+
   <br><br>
 </div>
 
@@ -2438,42 +2445,13 @@ $(document).ready(function () {
         $('#searchBar').val("waiata").trigger('keyup');
     });
 
-    $('#Rock').click(function () {
-    $('#searchBar').val("rock").trigger('keyup');
-});
+    $('#Jazz').click(function () {
+        $('#searchBar').val("jazz").trigger('keyup');
+    });
+    $('#Unlisted').click(function () {
+        $('#searchBar').val("unlisted").trigger('keyup');
+    });
 
-$('#Pop').click(function () {
-    $('#searchBar').val("pop").trigger('keyup');
-});
-
-$('#Country').click(function () {
-    $('#searchBar').val("country").trigger('keyup');
-});
-
-$('#Folk').click(function () {
-    $('#searchBar').val("folk").trigger('keyup');
-});
-
-$('#Jazz').click(function () {
-    $('#searchBar').val("jazz").trigger('keyup');
-});
-
-$('#Reggae').click(function () {
-    $('#searchBar').val("reggae").trigger('keyup');
-});
-
-$('#Alternative').click(function () {
-    $('#searchBar').val("alternative").trigger('keyup');
-});
-
-$('#Gospel').click(function () {
-    $('#searchBar').val("gospel").trigger('keyup');
-});
-
-
-$('#Soundtrack').click(function () {
-    $('#searchBar').val("soundtrack").trigger('keyup');
-});
 
 $('#toggleCategories').click(function () {
     const container = $('#categoryButtons');

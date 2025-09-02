@@ -35,7 +35,7 @@
 		<a class="nav-item" href="library.html">Library</a>
 		</div>
     </div>
-<div class="banner"></div>
+<div id="banner" class="banner"></div>
 <button id="backToTop"><i class="fa-solid fa-angle-up"></i> Back to Top</button>
 	
 <nav class="subnav">
@@ -177,7 +177,20 @@ The title does not appear in the song&#8217;s lyrics. However, the phrase &#8220
     $('#backToTop').click(function () {
         $('html, body').animate({ scrollTop: 0 }, 'fast');
     });
+
+     (function() {
+      let clickCount = 0;
+      const banner = document.getElementById('banner');
+      banner.addEventListener('click', () => {
+        clickCount++;
+        if (clickCount === 5) {
+          window.location.href = 'tools.html';
+        }
+      });
+    })();
+
     </script>
+    
 
 </body>
 </html>

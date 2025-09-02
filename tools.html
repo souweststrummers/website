@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <title>Tools - Sou'West Strummers</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="navbar">
+	<span class="menu-icon">&#9776;</span>
+        <div class="nav-links">
+        <a class="nav-item" href="index.html">Home</a>
+        <a class="nav-item" href="songs.html">Songs</a>
+		<a class="nav-item" href="events.html">Events</a>
+		<a class="nav-item" href="library.html">Library</a>
+
+		</div>
+    </div>
+    <div class="banner"></div>
+	<h1><i class="fa-solid fa-screwdriver-wrench"></i> Tools</h1>
+    <a href="tools/blinkers.html"><i class="fa-solid fa-crow"></i> Blinkers</a><br>
+    <a href="tools/calendar.html"><i class="fa-solid fa-calendar-plus"></i> Calendar</a><br>
+    <a href="tools/chords.html"><i class="fa-solid fa-pen"></i> Chords Generator</a><br>
+    <a href="tools/mobile.html"><i class="fa-solid fa-mobile"></i> Mobile Songs Version</a><br>
+    <a href="https://share.danieltesting.space"><i class="fa-solid fa-upload"></i> Daniel Share</a><br>
+
+
+
+
+
+ <script>
+        $(document).ready(function(){
+   const $menu = $('.menu-icon'),
+            $nav  = $('.nav-links');
+
+      $menu.on('click', e => {
+        e.stopPropagation();
+        $nav.toggleClass('active');
+        // swap icon
+        $menu.html( $nav.hasClass('active') ? '&#10005;' : '&#9776;');
+      });
+
+      // close if click outside
+      $(document).on('click', e => {
+        if ($nav.hasClass('active') && !$(e.target).closest('.nav-links, .menu-icon').length) {
+          $nav.removeClass('active');
+          $menu.html('&#9776;');
+        }
+      });
+        });
+    </script>
+
+</body>
+</html>
