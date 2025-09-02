@@ -2358,6 +2358,7 @@ $(document).ready(function () {
     // Search functionality
     $('#searchBar').on('keyup', function () {
         $('#noFavourites').hide();
+        $('#categoryButtons').hide();
         var value = $(this).val().toLowerCase();
         var visibleCards = 0;
 		
