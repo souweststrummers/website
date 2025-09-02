@@ -69,6 +69,9 @@
   <br><br>
 </div>
 
+<div id="noFavourites" style="display:none; text-align:center; margin:20px; font-style:italic; color:#666;">
+  ⭐ You have no favourites yet. Click the star on a song to add one.
+</div>
     <div id="noResults">No song found <i class="fa-regular fa-face-sad-tear"></i>, please check your spelling</div>
     <div class="card-container">
 	<button id="backToTop"><i class="fa-solid fa-angle-up"></i> Back to Top</button>
@@ -2447,15 +2450,32 @@ $('#toggleCategories').click(function () {
     });
 });
 
+
+// Load favourites from localStorage
+let favourites = JSON.parse(localStorage.getItem('favourites')) || [];
+
+
 $('#ShowFavs').click(function () {
+  if (favourites.length === 0) {
+    // hide all cards
+    $('.card').hide();
+    // show message
+    $('#noFavourites').show();
+  } else {
   $('.card').each(function () {
     const title = $(this).data('name');
     $(this).toggle(favourites.includes(title));
   });
+      // hide message
+    $('#noFavourites').hide();
+  }
 });
 
-// Load favourites from localStorage
-let favourites = JSON.parse(localStorage.getItem('favourites')) || [];
+
+
+
+
+
 
 // Initialize UI state
 $('.card').each(function () {
@@ -2490,6 +2510,8 @@ $('.fav-btn').click(function (e) {
   // Save back to localStorage
   localStorage.setItem('favourites', JSON.stringify(favourites));
 });
+
+
   </script>
 	
 </body>
