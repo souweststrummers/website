@@ -2365,7 +2365,7 @@ $(document).ready(function () {
 		 // If "pick" is typed, pick a random song number from 1 to 250
         if (value === "pick") {
             var randomNumber = Math.floor(Math.random() * 250) + 1;
-            value = randomNumber.toString(); // Search by random number
+            value = randomNumber.toString()+"."; // Search by random number
         }
 
         $('.card').each(function () {
