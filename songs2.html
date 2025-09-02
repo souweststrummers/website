@@ -2409,6 +2409,7 @@ $(document).ready(function () {
     // Clear search bar when clicking clear button
     $('#clearSearch').click(function () {
         $('#searchBar').val("").trigger('keyup');
+        $('#noFavourites').hide();
     });
 
     $('#Dice').click(function () {
@@ -2462,15 +2463,19 @@ $('#ShowFavs').click(function () {
     // show message
     $('#noFavourites').show();
   } else {
-  $('.card').each(function () {
-    const title = $(this).data('name');
-    $(this).toggle(favourites.includes(title));
-  });
-      // hide message
+    $('.card').each(function () {
+      const title = $(this).data('name');
+      $(this).toggle(favourites.includes(title));
+    });
+    // hide message
     $('#noFavourites').hide();
   }
 });
 
+$('#ShowAll').click(function () {
+  $('.card').show();
+  $('#noFavourites').hide();
+});
 
 
 
