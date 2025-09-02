@@ -17,6 +17,20 @@
 
   gtag('config', 'G-32CW6KG98H');
 </script>
+
+<style>
+.fav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  float: right;   /* keep it aligned */
+  font-size: 1.2em;
+}
+.fav-btn.active i {
+  color: gold;    /* highlight favourite */
+}
+
+</style>
 </head>
 <body>
 <div class="navbar">
@@ -38,6 +52,8 @@
     <input type="text" id="searchBar" placeholder="Type the song name, number or learn">
     <button id="clearSearch"><i class="fa-solid fa-xmark"></i></button>
     <br>
+    <button id="ShowFavs"><i class="fa-solid fa-star"></i> Favourites</button>
+
 <button id="Dice" aria-label="Random"><i class="fa-solid fa-dice"></i></button>
 <button id="NZ"><i class="fa-solid fa-kiwi-bird"></i></button>
 
@@ -62,6 +78,9 @@
  <div class="card" data-name="1. All I Have to Do Is Dream | The Everly Brothers | Rock/Pop (1950s)">
  <p>1. All I Have to Do Is Dream</p> 
  <img src="covers/art.jpg">
+   <button class="fav-btn" title="Add to favourites">
+    <i class="fa-regular fa-star"></i>
+  </button>
  </div>
 </a>
 <a class="link-nochange" href="pdfs/2-All-Of-Me-.pdf">
@@ -1687,6 +1706,46 @@ $('#Soundtrack').click(function () {
     $('#backToTop').click(function () {
         $('html, body').animate({ scrollTop: 0 }, 'fast');
     });
+});
+
+$('#ShowFavs').click(function () {
+  $('.card').each(function () {
+    const title = $(this).data('name');
+    $(this).toggle(favourites.includes(title));
+  });
+});
+
+// Load favourites from localStorage
+let favourites = JSON.parse(localStorage.getItem('favourites')) || [];
+
+// Initialize UI state
+$('.card').each(function () {
+  const title = $(this).data('name');
+  if (favourites.includes(title)) {
+    $(this).find('.fav-btn').addClass('active')
+      .find('i').removeClass('fa-regular').addClass('fa-solid');
+  }
+});
+
+// Handle click
+$('.fav-btn').click(function () {
+  const card = $(this).closest('.card');
+  const title = card.data('name');
+
+  if (favourites.includes(title)) {
+    // Remove from favourites
+    favourites = favourites.filter(f => f !== title);
+    $(this).removeClass('active')
+      .find('i').removeClass('fa-solid').addClass('fa-regular');
+  } else {
+    // Add to favourites
+    favourites.push(title);
+    $(this).addClass('active')
+      .find('i').removeClass('fa-regular').addClass('fa-solid');
+  }
+
+  // Save back to localStorage
+  localStorage.setItem('favourites', JSON.stringify(favourites));
 });
   </script>
 	
