@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Timed Chords MVP</title>
+  <style>
+    :root { --bg:#0f172a; --panel:#111827; --muted:#94a3b8; --accent:#22d3ee; --ok:#10b981; --warn:#f59e0b; --danger:#ef4444; --text:#e5e7eb; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Noto Sans", Arial, sans-serif; background:var(--bg); color:var(--text); }
+    header { padding:16px 20px; border-bottom:1px solid #1f2937; background:#0b1022; position:sticky; top:0; z-index:10; }
+    header h1 { margin:0; font-size:18px; letter-spacing:.2px; }
+
+    .wrap { display:grid; grid-template-columns: 420px 1fr; gap:16px; padding:16px; }
+    .panel { background:var(--panel); border:1px solid #1f2937; border-radius:14px; padding:14px; }
+    .panel h2 { margin:0 0 10px; font-size:14px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.1em; }
+    textarea { width:100%; min-height:260px; resize:vertical; padding:10px; border-radius:10px; background:#0b1220; color:var(--text); border:1px solid #243047; line-height:1.5; font-family: ui-monospace, Menlo, Consolas, monospace; }
+    input[type="text"], input[type="number"], input[type="url"] { width:100%; padding:10px; border-radius:10px; background:#0b1220; color:var(--text); border:1px solid #243047; }
+    label { display:block; font-size:12px; color:var(--muted); margin:8px 0 6px; }
+
+    .row { display:grid; grid-template-columns: repeat(12,1fr); gap:8px; align-items:end; }
+    .col-6 { grid-column: span 6; }
+    .col-4 { grid-column: span 4; }
+    .col-3 { grid-column: span 3; }
+    .col-8 { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+
+    button { padding:10px 12px; border-radius:10px; background:#0b1220; color:var(--text); border:1px solid #243047; cursor:pointer; }
+    button.primary { background: linear-gradient(180deg, #1b2a4a, #132342); border-color:#25436a; }
+    button.accent { background:#0b1a24; border-color:#155e75; box-shadow:inset 0 0 0 1px #155e75; }
+    button.success { background:#0b1f1a; border-color:#065f46; box-shadow:inset 0 0 0 1px #065f46; }
+    button.warn { background:#1e1608; border-color:#b45309; }
+    button:disabled { opacity:.5; cursor:not-allowed; }
+
+    .kbd { font-family: ui-monospace, Menlo, Consolas, monospace; padding:2px 6px; border-radius:6px; background:#0b1220; border:1px solid #243047; color:#cbd5e1; }
+
+    table { width:100%; border-collapse: collapse; font-size:13px; }
+    th, td { text-align:left; padding:8px; border-bottom:1px dashed #243047; vertical-align:top; }
+    th { color:#a8b1c7; font-weight:600; }
+    tr.highlight { background:rgba(34,211,238,.08); }
+
+    .progress { height:8px; background:#0b1220; border:1px solid #243047; border-radius:999px; overflow:hidden; }
+    .progress > div { height:100%; width:0%; background:linear-gradient(90deg, #22d3ee, #10b981); transition:width .1s linear; }
+
+    .bigTap { font-size:20px; padding:18px 16px; border:2px dashed #155e75; background:#04131a; }
+
+    .songView { padding:10px; border-radius:10px; background:#0b1220; border:1px solid #243047; white-space:pre-wrap; line-height:1.6; }
+    .songView .chord { color:#22d3ee; font-weight:700; }
+    .songView .bar { color:#7dd3fc; }
+
+    .pill { display:inline-block; padding:2px 8px; border-radius:999px; background:#0b1220; border:1px solid #243047; font-size:12px; color:#cbd5e1; }
+    .stack { display:flex; flex-wrap:wrap; gap:6px; }
+
+    .now { font-size:24px; font-weight:800; letter-spacing:.02em; }
+    .muted { color:var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Timed Chords MVP · ChordPro / Inline + Tap‑to‑Time</h1>
+  </header>
+
+  <div class="wrap">
+    <!-- LEFT: Inputs -->
+    <section class="panel">
+      <h2>1) Paste chorded lyrics</h2>
+      <textarea id="chordText"></textarea>
+      <div class="stack" style="margin-top:8px">
+        <span class="pill">Chord tags like <strong>[C]</strong> inside lyrics</span>
+        <span class="pill">Optional beats hint <strong>[C]{2}</strong></span>
+        <span class="pill">Barlines: <strong>|</strong></span>
+      </div>
+
+      <h2 style="margin-top:16px">2) Audio source</h2>
+      <div class="row">
+        <div class="col-12">
+          <label>Upload audio (MP3/MP4/WAV)</label>
+          <input id="audioFile" type="file" accept="audio/*,video/mp4" />
+          <audio id="audio" controls style="width:100%; margin-top:6px"></audio>
+        </div>
+        <div class="col-12">
+          <label>YouTube URL (optional)</label>
+          <div style="display:flex; gap:8px">
+            <input id="ytUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." />
+            <button id="loadYT" class="accent">Load</button>
+          </div>
+          <div id="ytWrap" style="margin-top:8px; aspect-ratio:16/9; background:#0b1220; border:1px solid #243047; border-radius:10px; overflow:hidden"></div>
+        </div>
+      </div>
+
+      <h2 style="margin-top:16px">3) Timing setup</h2>
+      <div class="row">
+        <div class="col-4">
+          <label>BPM</label>
+          <input id="bpm" type="number" min="20" max="240" value="92" />
+        </div>
+        <div class="col-4">
+          <label>Time signature</label>
+          <input id="timesig" type="text" value="4/4" />
+        </div>
+        <div class="col-4">
+          <label>Default beats per chord</label>
+          <input id="beatsDefault" type="number" min="1" max="16" value="4" />
+        </div>
+        <div class="col-12" style="display:flex; gap:8px; margin-top:8px">
+          <button id="parseBtn" class="primary">Parse chords</button>
+          <button id="buildBeatsBtn" class="success">Build timeline from BPM</button>
+        </div>
+      </div>
+
+      <h2 style="margin-top:16px">4) Tap to time (optional, more accurate)</h2>
+      <p class="muted" style="margin-top:-6px">Press the big button or hit <span class="kbd">Space</span> at each chord change while the song plays.</p>
+      <div class="row" style="margin-top:8px; align-items:stretch">
+        <div class="col-8">
+          <button id="tapBtn" class="bigTap">Tap chord change (<span class="kbd">Space</span>)</button>
+        </div>
+        <div class="col-4" style="display:flex; flex-direction:column; gap:8px">
+          <button id="undoTap" class="warn">Undo last tap</button>
+          <button id="clearTaps">Clear taps</button>
+          <button id="mapTaps" class="success">Map taps → timeline</button>
+        </div>
+        <div class="col-12">
+          <div class="progress"><div id="progressBar"></div></div>
+        </div>
+      </div>
+
+      <h2 style="margin-top:16px">5) Export</h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        <button id="exportJson" class="accent">Export JSON</button>
+        <button id="exportLrc">Export LRC (lyrics only)</button>
+      </div>
+    </section>
+
+    <!-- RIGHT: Preview & timeline -->
+    <section class="panel">
+      <h2>Song view</h2>
+      <div id="songView" class="songView"></div>
+      <div style="display:flex; align-items:center; gap:12px; margin-top:12px">
+        <div class="now">Now: <span id="nowChord">—</span></div>
+        <div class="pill">t=<span id="nowTime">0.00</span>s</div>
+      </div>
+
+      <h2 style="margin-top:16px">Timeline</h2>
+      <table>
+        <thead><tr><th>#</th><th>Chord</th><th>Start (s)</th><th>End (s)</th><th>Dur (s)</th></tr></thead>
+        <tbody id="timelineBody"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- YouTube IFrame API -->
+  <script>
+    let ytPlayer = null; let ytReady = false; let useYouTube = false;
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+    window.onYouTubeIframeAPIReady = function(){ ytReady = true; };
+  </script>
+
+  <script>
+  // ===== Utilities =====
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  const fmt = n => (Math.round(n*100)/100).toFixed(2);
+  function mmss(v){ const m=Math.floor(v/60); const s=v-m*60; return `${String(m).padStart(2,'0')}:${s.toFixed(2).padStart(5,'0')}`; }
+
+  // ===== Parsing =====
+  const chordRe = /\[([A-G][#b]?m?(?:maj7|m7|maj9|m9|9|7|sus2|sus4|add9|dim|aug|m|maj)?)(?:\/([A-G][#b]?m?))?\](?:\{(\d+)\})?/g;
+  function parseChordedLine(line){
+    const parts=[]; let last=0; let m; chordRe.lastIndex=0;
+    while((m=chordRe.exec(line))){
+      if(m.index>last) parts.push({type:'lyric', text: line.slice(last, m.index)});
+      parts.push({type:'chord', chord: (m[2]?`${m[1]}/${m[2]}`:m[1]), beats: m[3]?Number(m[3]):null});
+      last = chordRe.lastIndex;
+    }
+    if(last<line.length) parts.push({type:'lyric', text: line.slice(last)});
+    return parts;
+  }
+  function parseAll(text){
+    const lines = text.split(/\r?\n/);
+    const blocks = lines.map(ln=>({ raw: ln, parts: parseChordedLine(ln) }));
+    return blocks;
+  }
+  function renderSongView(blocks){
+    const out=[];
+    for(const b of blocks){
+      let line=""; chordRe.lastIndex=0;
+      for(const p of b.parts){
+        if(p.type==='lyric') line += p.text;
+        else if(p.type==='chord') line += `<span class="chord">[${p.chord}${p.beats?`{${p.beats}}`:''}]</span>`;
+      }
+      out.push(line.replace(/\|/g, '<span class="bar">|</span>'));
+    }
+    $('#songView').innerHTML = out.join('\n');
+  }
+
+  // ===== Timeline builders =====
+  function chordSequence(blocks){
+    const seq=[];
+    for(const b of blocks){
+      for(const p of b.parts){ if(p.type==='chord') seq.push({ chord:p.chord, beats:p.beats }); }
+    }
+    return seq;
+  }
+  function timelineFromBeats(seq, bpm, defaultBeats){
+    const spb = 60/Math.max(20, Math.min(300, bpm||92));
+    const tl=[]; let t=0;
+    for(const item of seq){
+      const beats = item.beats ?? defaultBeats ?? 4;
+      const dur = beats * spb;
+      tl.push({ chord:item.chord, start:t, end:t+dur });
+      t += dur;
+    }
+    return tl;
+  }
+  function mapTapsToTimeline(seq, taps){
+    const tl=[]; const n=seq.length; if(n===0) return tl;
+    for(let i=0;i<n;i++){
+      const start = taps[i] ?? (i? (tl[i-1].end) : 0);
+      const end   = (i<n-1) ? (taps[i+1] ?? start+2) : (start + 2);
+      tl.push({ chord: seq[i].chord, start, end });
+    }
+    return tl;
+  }
+
+  // ===== UI state =====
+  let blocks = [];
+  let seq = [];
+  let timeline = [];
+  let taps = [];
+
+  function refreshTimelineTable(){
+    const tbody = $('#timelineBody');
+    tbody.innerHTML = timeline.map((e,i)=>`<tr data-i="${i}"><td>${i+1}</td><td><strong>${e.chord}</strong></td><td>${fmt(e.start)}</td><td>${fmt(e.end)}</td><td>${fmt(e.end-e.start)}</td></tr>`).join('');
+  }
+
+  function highlightCurrent(t){
+    if(!timeline.length) return;
+    const i = timeline.findIndex(e=> t>=e.start && t<e.end);
+    $$('#timelineBody tr').forEach(tr=>tr.classList.remove('highlight'));
+    if(i>=0){
+      const rows = $$('#timelineBody tr');
+      rows[i]?.classList.add('highlight');
+      $('#nowChord').textContent = timeline[i].chord;
+    } else {
+      $('#nowChord').textContent = '—';
+    }
+  }
+
+  // ===== Audio / YT control =====
+  function currentTime(){
+    if(useYouTube && ytPlayer){ return ytPlayer.getCurrentTime(); }
+    return $('#audio').currentTime || 0;
+  }
+  function duration(){
+    if(useYouTube && ytPlayer){ return ytPlayer.getDuration() || 0; }
+    return $('#audio').duration || 0;
+  }
+  function play(){ if(useYouTube && ytPlayer) ytPlayer.playVideo(); else $('#audio').play(); }
+  function pause(){ if(useYouTube && ytPlayer) ytPlayer.pauseVideo(); else $('#audio').pause(); }
+
+  // ===== Actions =====
+  $('#parseBtn').addEventListener('click', ()=>{
+    blocks = parseAll($('#chordText').value.trim());
+    seq = chordSequence(blocks);
+    renderSongView(blocks);
+    if(!seq.length) alert('No chords found. Use [C] style tags.');
+  });
+
+  $('#buildBeatsBtn').addEventListener('click', ()=>{
+    const bpm = Number($('#bpm').value||92);
+    const defBeats = Number($('#beatsDefault').value||4);
+    timeline = timelineFromBeats(seq, bpm, defBeats);
+    refreshTimelineTable();
+  });
+
+  $('#audioFile').addEventListener('change', e=>{
+    const file = e.target.files?.[0];
+    if(!file) return;
+    const url = URL.createObjectURL(file);
+    const a = $('#audio');
+    a.src = url; useYouTube = false; taps=[];
+  });
+
+  $('#loadYT').addEventListener('click', ()=>{
+    const url = $('#ytUrl').value.trim();
+    const idMatch = url.match(/[?&]v=([\w-]{11})|youtu\.be\/([\w-]{11})/);
+    const id = (idMatch && (idMatch[1]||idMatch[2])) ? (idMatch[1]||idMatch[2]) : null;
+    if(!id){ alert('Could not parse YouTube video ID.'); return; }
+    if(!ytReady){ alert('YouTube API not ready yet. Try again.'); return; }
+    $('#ytWrap').innerHTML = '<div id="player"></div>';
+    ytPlayer = new YT.Player('player', { videoId: id, playerVars: { rel:0, playsinline:1 }, events: { onReady(){ useYouTube = true; taps=[]; } } });
+  });
+
+  function recordTap(){
+    if(!seq.length){ alert('Parse chords first.'); return; }
+    const t = currentTime();
+    if(!isFinite(t)) return;
+    if(taps.length >= seq.length){
+      // Replace last tap to allow correction
+      taps[taps.length-1] = t;
+    } else {
+      taps.push(t);
+    }
+    flash('#tapBtn');
+  }
+  $('#tapBtn').addEventListener('click', recordTap);
+  window.addEventListener('keydown', (e)=>{
+    const tag = (document.activeElement?.tagName||'').toLowerCase();
+    const inTyping = tag === 'input' || tag === 'textarea';
+    if(e.code==='Space' && !inTyping){ e.preventDefault(); recordTap(); }
+  });
+  $('#undoTap').addEventListener('click', ()=>{ taps.pop(); });
+  $('#clearTaps').addEventListener('click', ()=>{ taps=[]; });
+  $('#mapTaps').addEventListener('click', ()=>{
+    timeline = mapTapsToTimeline(seq, taps);
+    refreshTimelineTable();
+  });
+
+  // ===== Export =====
+  $('#exportJson').addEventListener('click', ()=>{
+    const payload = { meta:{ bpm:Number($('#bpm').value||92), timeSignature: $('#timesig').value, createdAt: new Date().toISOString() }, chords: timeline };
+    download('timed-chords.json', JSON.stringify(payload, null, 2));
+  });
+  $('#exportLrc').addEventListener('click', ()=>{
+    const lines = $('#chordText').value.split(/\r?\n/).map(s=>s.replace(chordRe, '').trim());
+    // naive: stamp each non-empty line sequentially from timeline starts (best-effort)
+    let idx=0; let out=[]; let t=0;
+    for(const line of lines){
+      if(!line) { out.push(''); continue; }
+      const stamp = timeline[idx]?.start ?? t;
+      out.push(`[${mmss(stamp)}] ${line}`);
+      t = stamp + 2;
+      if(idx < timeline.length-1) idx++;
+    }
+    download('lyrics.lrc', out.join('\n'));
+  });
+
+  function download(name, text){
+    const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+  }
+
+  // ===== Progress & highlight loop =====
+  function loop(){
+    const t = currentTime(); const d = duration();
+    if(isFinite(t)) $('#nowTime').textContent = fmt(t);
+    if(d>0) $('#progressBar').style.width = Math.min(100, (t/d)*100) + '%';
+    highlightCurrent(t);
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  function flash(sel){ const el=$(sel); el.style.transform='scale(0.98)'; el.style.opacity='0.85'; setTimeout(()=>{el.style.transform=''; el.style.opacity='';}, 120); }
+
+  // ===== Sample content =====
+  const sample = `{title: Following the Sun}\n{tempo: 92}\n{time: 4/4}\n\n[C]I'm follo[Em]wing the [F]sun | [G]watching it [C]shine\n[C]{2}We keep on [Em]{2}moving a[F]{2}long | to be a[G]{2}live\n\n[Am]Oh, it's a [G]beautiful [F]day | [C]when you're with [G]me\n[F]Hold on, and [G]you will [C]see\n`;
+  $('#chordText').value = sample;
+  blocks = parseAll(sample); seq = chordSequence(blocks); renderSongView(blocks);
+  </script>
+</body>
+</html>

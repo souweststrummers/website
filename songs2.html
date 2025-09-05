@@ -52,6 +52,7 @@
   <button id="Dice" title="Random"><i class="fa-solid fa-dice"></i></button>
   <button id="NZ" title="NZ"><i class="fa-solid fa-kiwi-bird"></i></button>
   <button id="Jazz" title="Rex"><i class="fa-solid fa-motorcycle"></i></button>
+  
   <button id="Unlisted" title="Unlisted"><i class="fa-solid fa-file"></i></button>
  <!-- 
   <button id="Rock" title="Rock"><i class="fa-solid fa-guitar"></i></button>
@@ -2412,6 +2413,7 @@ $(document).ready(function () {
         $('#searchBar').val("").trigger('keyup');
         $('#noFavourites').hide();
         $('#categoryButtons').hide();
+        $('#searchBar').focus();
     });
 
     $('#Dice').click(function () {
