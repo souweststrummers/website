@@ -317,7 +317,7 @@ a.link-nochange:hover {
 }
 
 .fav-btn:hover {
-  color: gold !important;
+  color: #dbdbdb !important;
 }
 
 .fav-btn.active i {
