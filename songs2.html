@@ -2354,28 +2354,32 @@
    <script>
 $(document).ready(function () {
     // Focus on search bar when page loads
-    $('#searchBar').focus();
+$('#searchBar').focus();
 
-    // Search functionality
-    $('#searchBar').on('keyup', function () {
-        $('#noFavourites').hide();
-        var value = $(this).val().toLowerCase();
-        var visibleCards = 0;
-		
-		 // If "pick" is typed, pick a random song number from 1 to 250
-        if (value === "pick") {
-            var randomNumber = Math.floor(Math.random() * 250) + 1;
-            value = randomNumber.toString()+"."; // Search by random number
-        }
+// Search functionality
+$('#searchBar').on('keyup', function () {
+    $('#noFavourites').hide();
+    var value = $(this).val().toLowerCase();
+    var visibleCards = 0;
 
-        $('.card').each(function () {
-            var match = $(this).data('name').toLowerCase().startsWith(value);
-            $(this).toggle(match);
-            if (match) visibleCards++;
-        });
+    // If "pick" is typed, pick a random song number from 1 to 250
+    if (value === "pick") {
+        var randomNumber = Math.floor(Math.random() * 250) + 1;
+        value = randomNumber.toString() + "."; // Search by random number
+    }
 
-        $('#noResults').toggle(visibleCards === 0);
+    // Decide whether to use startsWith or includes
+    var useStartsWith = /^[0-9]/.test(value); // true if value begins with a digit
+
+    $('.card').each(function () {
+        var name = $(this).data('name').toLowerCase();
+        var match = useStartsWith ? name.startsWith(value) : name.includes(value);
+        $(this).toggle(match);
+        if (match) visibleCards++;
     });
+
+    $('#noResults').toggle(visibleCards === 0);
+});
 	
 
     // Hide keyboard after 3s of inactivity
