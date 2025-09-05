@@ -2369,7 +2369,7 @@ $(document).ready(function () {
         }
 
         $('.card').each(function () {
-            var match = $(this).data('name').toLowerCase().includes(value);
+            var match = $(this).data('name').toLowerCase().startsWith(value);
             $(this).toggle(match);
             if (match) visibleCards++;
         });
