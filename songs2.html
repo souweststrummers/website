@@ -117,7 +117,7 @@
   </div>
 </a>
 <a class="link-nochange" href="pdfs/5-Are-You-Lonesome-Tonight.pdf">
-  <div class="card" data-name="5. Are You Lonesome Tonight | Elvis Presley | Rock Roll/Ballad">
+  <div class="card" data-name="5. Are You Lonesome Tonight | Elvis Presley | Rock Roll">
     <p>5. Are You Lonesome Tonight</p> 
  <img src="covers/art.jpg">
     <button aria-label="Add to favourites" class="fav-btn" title="Add to favourites">
@@ -2418,6 +2418,8 @@ $('#searchBar').on('keyup', function () {
         $('#noFavourites').hide();
         $('#categoryButtons').hide();
         $('#searchBar').focus();
+        clearTimeout(typingTimer);
+
     });
 
     $('#Dice').click(function () {
