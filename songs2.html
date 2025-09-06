@@ -2449,15 +2449,13 @@ $('#toggleCategories').click(function () {
     // Show/hide back-to-top button
     $(window).scroll(function () {
         $('#backToTop').toggle($(this).scrollTop() > 100);
-         $('#searchBar').blur();
+       //  $('#searchBar').blur();
     });
 
     // Scroll to top when button is clicked
     $('#backToTop').click(function () {
         $('html, body').animate({ scrollTop: 0 }, 'fast');
-        setTimeout(() => {
         $('#searchBar').focus();
-}, 2000);
     });
 });
 
