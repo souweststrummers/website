@@ -2449,7 +2449,9 @@ $('#toggleCategories').click(function () {
     // Show/hide back-to-top button
     $(window).scroll(function () {
         $('#backToTop').toggle($(this).scrollTop() > 100);
-        // $('#searchBar').blur();
+            if (document.activeElement === $('#searchBar')[0]) {
+        setTimeout(() => $('#searchBar').blur(), 50);
+    }
     });
 
     // Scroll to top when button is clicked
