@@ -2447,17 +2447,10 @@ $('#toggleCategories').click(function () {
 
 
     // Show/hide back-to-top button
-let wasVisible = false;
-
-$(window).on('scroll', function () {
-  const visible = $(this).scrollTop() > 100;
-  $('#backToTop').toggle(visible);
-
-  if (visible && !wasVisible && document.activeElement === $('#searchBar')[0]) {
-    $('#searchBar').blur();
-  }
-  wasVisible = visible;
-});
+    $(window).scroll(function () {
+        $('#backToTop').toggle($(this).scrollTop() > 100);
+        if ($('#backToTop').active) {$('#searchBar').blur();}
+    });
 
     // Scroll to top when button is clicked
     $('#backToTop').click(function () {
