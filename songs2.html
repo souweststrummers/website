@@ -2455,8 +2455,9 @@ $('#toggleCategories').click(function () {
     // Scroll to top when button is clicked
     $('#backToTop').click(function () {
         $('html, body').animate({ scrollTop: 0 }, 'fast');
+        setTimeout(() => {
         $('#searchBar').focus();
-        $('#searchBar').focus();
+}, 2000);
     });
 });
 
