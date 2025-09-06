@@ -18,6 +18,20 @@
   gtag('config', 'G-32CW6KG98H');
 </script>
 
+<style>
+  #backToTop {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .2s ease, visibility .2s ease;
+  }
+  #backToTop.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+</style>
+
 </head>
 <body>
 <div class="navbar">
@@ -2446,10 +2460,27 @@ $('#toggleCategories').click(function () {
 
 
 
-    // Show/hide back-to-top button
-    $(window).scroll(function () {
-        $('#backToTop').toggle($(this).scrollTop() > 100);
-    });
+const $win = $(window);
+const $btn = $('#backToTop');
+const $sb  = $('#searchBar');
+
+let wasVisible = false;
+
+$win.on('scroll', () => {
+  const visible = $win.scrollTop() > 100;
+
+  // Only do work when state changes
+  if (visible !== wasVisible) {
+    $btn.toggleClass('is-visible', visible);
+
+    // Blur only once when the button first appears
+    if (visible && document.activeElement === $sb[0]) {
+      $sb.blur();
+    }
+
+    wasVisible = visible;
+  }
+});
 
     // Scroll to top when button is clicked
     $('#backToTop').click(function () {
