@@ -2446,32 +2446,17 @@ $('#toggleCategories').click(function () {
 
 
 
-let isAutoScrolling = false;
-
-$(window).on('scroll', function () {
-  $('#backToTop').toggle($(this).scrollTop() > 100);
-
-  // Only blur on user-driven scrolls
-  if (!isAutoScrolling && document.activeElement === $('#searchBar')[0]) {
-    $('#searchBar').blur();
-  }
-});
-
-$('#backToTop').on('click', function (e) {
-  e.preventDefault();                 // if it's an <a href="#">
-
-  isAutoScrolling = true;
-  $('html, body')
-    .stop(true)                       // cancel any in-flight animations
-    .animate({ scrollTop: 0 }, 200, function () {
-      isAutoScrolling = false;
-
-      // Note: on iOS Safari, programmatic focus won’t always open the keyboard.
-      $('#searchBar').focus();
+    // Show/hide back-to-top button
+    $(window).scroll(function () {
+        $('#backToTop').toggle($(this).scrollTop() > 100);
+        // $('#searchBar').blur();
     });
-});
 
-
+    // Scroll to top when button is clicked
+    $('#backToTop').click(function () {
+        $('html, body').animate({ scrollTop: 0 }, 'fast');
+        $('#searchBar').focus();
+    });
 });
 
 
