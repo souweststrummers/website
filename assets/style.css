@@ -153,6 +153,12 @@ img {padding-top:10px;}
     gap: 10px;
 }
 
+.songs-container {
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
 .card {
     display: flex;
     position: relative;
