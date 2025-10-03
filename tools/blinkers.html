@@ -180,13 +180,15 @@ $('#category-select').on('change', filterCards);
         location.reload();
     });
 
+    const $backToTop = $('#backToTop');
+
     // Show/hide back-to-top button
-    $(window).scroll(function () {
-        $('#backToTop').toggle($(this).scrollTop() > 100);
-    });
+    $(window).on('scroll', function () {
+        $backToTop.toggleClass('is-visible', $(this).scrollTop() > 100);
+    }).trigger('scroll');
 
     // Scroll to top when button is clicked
-    $('#backToTop').click(function () {
+    $backToTop.on('click', function () {
         $('html, body').animate({ scrollTop: 0 }, 'fast');
     });
 });
