@@ -2355,9 +2355,14 @@ $('#searchBar').on('keyup', function () {
     var useStartsWith = /^[0-9]/.test(value); // true if value begins with a digit
 
     $('.card').each(function () {
-        var name = $(this).data('name').toLowerCase();
+        var $card = $(this);
+        var name = $card.data('name').toLowerCase();
         var match = useStartsWith ? name.startsWith(value) : name.includes(value);
-        $(this).toggle(match);
+        var $link = $card.closest('a.link-nochange');
+
+        $card.toggle(match);
+        $link.toggle(match);
+
         if (match) visibleCards++;
     });
 
@@ -2455,23 +2460,30 @@ let favourites = JSON.parse(localStorage.getItem('favourites')) || [];
 
 $('#ShowFavs').click(function () {
   if (favourites.length === 0) {
-    // hide all cards
-    $('.card').hide();
-    // show message
+    $('.card').each(function () {
+      $(this).hide();
+      $(this).closest('a.link-nochange').hide();
+    });
     $('#noFavourites').show();
   } else {
     $('.card').each(function () {
-      const title = $(this).data('name');
-      $(this).toggle(favourites.includes(title));
+      const $card = $(this);
+      const isFavourite = favourites.includes($card.data('name'));
+      $card.toggle(isFavourite);
+      $card.closest('a.link-nochange').toggle(isFavourite);
     });
-    // hide message
     $('#noFavourites').hide();
   }
+  $('#noResults').hide();
 });
 
 $('#ShowAll').click(function () {
-  $('.card').show();
+  $('.card').each(function () {
+    $(this).show();
+    $(this).closest('a.link-nochange').show();
+  });
   $('#noFavourites').hide();
+  $('#noResults').hide();
 });
 
 
