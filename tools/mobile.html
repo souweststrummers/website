@@ -1564,16 +1564,21 @@ $(document).ready(function () {
     });
 
 
-    // Hide keyboard after 1.5s of inactivity
-    let typingTimer;
-    const doneTypingInterval = 1500;
+    // Hide keyboard after 1.5s of inactivity (disabled on iOS to avoid premature blur)
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
 
-    $('#searchBar').on('input', function () {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(() => $('#searchBar').blur(), doneTypingInterval);
-    }).on('keydown', function () {
-        clearTimeout(typingTimer);
-    });
+    if (!isIOS) {
+        let typingTimer;
+        const doneTypingInterval = 1500;
+
+        $('#searchBar').on('input', function () {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => $('#searchBar').blur(), doneTypingInterval);
+        }).on('keydown', function () {
+            clearTimeout(typingTimer);
+        });
+    }
 
     // Toggle menu
     $('.menu-icon').click(function () {
