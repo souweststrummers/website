@@ -41,8 +41,8 @@ a:focus {
 img {padding-top:10px;}
 
 .navbar {
-    background: rgba(15, 23, 42, 0.95);
-    padding: 18px 24px;
+    background: rgba(15, 23, 42, 0.82);
+    padding: 14px 24px;
     text-align: center;
     position: sticky;
     top: 0;
@@ -65,13 +65,14 @@ img {padding-top:10px;}
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-radius: 999px;
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.35);
     color: #fff;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
+    text-decoration: none;
     transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -82,6 +83,7 @@ img {padding-top:10px;}
     border-color: rgba(255, 255, 255, 0.65);
     transform: translateY(-2px);
     box-shadow: none;
+    text-decoration: none;
 }
 
 .menu-icon {
@@ -228,6 +230,12 @@ img {padding-top:10px;}
     z-index: 9999;
 }
 
+#backToTop i {
+    color: #ffffff;
+    margin-right: 8px;
+    transition: color 0.25s ease;
+}
+
 #backToTop.is-visible {
     opacity: 1;
     visibility: visible;
@@ -238,8 +246,12 @@ img {padding-top:10px;}
 
 #backToTop:hover,
 #backToTop:focus {
-    background: #1d4ed8;
     box-shadow: 0 14px 26px rgba(29, 78, 216, 0.45);
+}
+
+#backToTop:hover i,
+#backToTop:focus i {
+    color: #1d4ed8;
 }
 
 @keyframes backToTopPulse {
@@ -396,7 +408,7 @@ a.link-nochange:hover {
 }
 
 .subnav {
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.85);
     padding: 24px 20px;
     border-radius: 18px;
     position: sticky;
@@ -414,16 +426,19 @@ a.link-nochange:hover {
     display: block;
     padding: 10px 12px;
     margin: 0;
-    color: #1f2933;
+    color: rgba(31, 41, 51, 0.7);
     font-weight: 600;
     border-radius: 12px;
-    transition: background 0.2s ease, color 0.2s ease;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .subnav a:hover,
 .subnav a:focus {
-    background: rgba(29, 78, 216, 0.08);
+    background: rgba(29, 78, 216, 0.12);
     color: #1d4ed8;
+    transform: translateX(2px);
+    text-decoration: none;
 }
 
 #learn,
