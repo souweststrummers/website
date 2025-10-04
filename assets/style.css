@@ -41,7 +41,7 @@ a:focus {
 img {padding-top:10px;}
 
 .navbar {
-    background: transparent;
+    background: rgba(75, 85, 99, 0.95);
     padding: 20px 24px;
     text-align: center;
     position: absolute;
@@ -131,7 +131,7 @@ img {padding-top:10px;}
 
 .banner {
     width: 100%;
-    height: 240px;
+    height: 360px;
     background: url('banner.png') no-repeat center center;
     background-size: cover;
     cursor: default;
@@ -257,19 +257,19 @@ img {padding-top:10px;}
 
 #backToTop:hover,
 #backToTop:focus {
-    box-shadow: 0 14px 26px rgba(29, 78, 216, 0.45);
-    color: #1d4ed8;
+    box-shadow: 0 14px 26px rgba(15, 23, 42, 0.35);
+    color: #ffffff;
 }
 
 @keyframes backToTopPulse {
     0%,
     100% {
         transform: translateY(0);
-        box-shadow: 0 14px 26px rgba(29, 78, 216, 0.35);
+        box-shadow: 0 14px 26px rgba(15, 23, 42, 0.3);
     }
     50% {
         transform: translateY(-6px);
-        box-shadow: 0 22px 32px rgba(29, 78, 216, 0.45);
+        box-shadow: 0 22px 32px rgba(15, 23, 42, 0.38);
     }
 }
 
