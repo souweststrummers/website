@@ -269,7 +269,7 @@ img {padding-top:10px;}
     visibility: hidden;
     transform: translateY(16px);
     pointer-events: none;
-    transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease, color 0.25s ease;
+    transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease, color 0.25s ease, background 0.25s ease;
     z-index: 9999;
 }
 
@@ -289,8 +289,14 @@ img {padding-top:10px;}
 
 #backToTop:hover,
 #backToTop:focus {
-    box-shadow: 0 14px 26px rgba(15, 23, 42, 0.35);
+    background: #555;
     color: #ffffff;
+    box-shadow: 0 14px 26px rgba(15, 23, 42, 0.35);
+}
+
+#backToTop:hover i,
+#backToTop:focus i {
+    color: currentColor;
 }
 
 @keyframes backToTopPulse {
@@ -519,11 +525,15 @@ a.link-nochange:hover {
 }
 
 .fav-btn:hover {
-  color: #1d4ed8 !important;
+  color: #d4af37 !important;
+}
+
+.fav-btn:hover i {
+  color: #d4af37 !important;
 }
 
 .fav-btn.active i {
-  color: gold !important;
+  color: #d4af37 !important;
 }
 
 .fa-solid {color:#000 !important; }
