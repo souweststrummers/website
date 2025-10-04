@@ -103,6 +103,8 @@ img {padding-top:10px;}
 @media (max-width: 600px) {
     .navbar {
         padding: 20px;
+        background: linear-gradient(135deg, rgba(107, 114, 128, 0.95), rgba(55, 65, 81, 0.95));
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.28);
     }
     .menu-icon {
         display: block;
@@ -111,7 +113,7 @@ img {padding-top:10px;}
         display: none;
         flex-direction: column;
         gap: 12px;
-        background: rgba(15, 23, 42, 0.95);
+        background: rgba(55, 65, 81, 0.94);
         position: absolute;
         top: 100%;
         left: 0;
