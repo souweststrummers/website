@@ -41,12 +41,10 @@ a:focus {
 img {padding-top:10px;}
 
 .navbar {
-    background: rgba(75, 85, 99, 0.95);
+    background: rgba(99, 107, 121, 0.95);
     padding: 20px 24px;
     text-align: center;
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
     width: 100%;
     z-index: 1000;
     box-shadow: none;
@@ -103,7 +101,7 @@ img {padding-top:10px;}
 @media (max-width: 600px) {
     .navbar {
         padding: 20px;
-        background: rgba(75, 85, 99, 0.95);
+        background: rgba(99, 107, 121, 0.95);
         box-shadow: 0 12px 30px rgba(15, 23, 42, 0.28);
     }
     .menu-icon {
@@ -131,7 +129,7 @@ img {padding-top:10px;}
 
 .banner {
     width: 100%;
-    height: 360px;
+    height: 190px;
     background: url('banner.png') no-repeat center center;
     background-size: cover;
     cursor: default;
