@@ -183,6 +183,11 @@ img {padding-top:10px;}
     color:#000 !important;
 }
 
+#clearSearch {
+    padding: 10px 18px;
+    font-size: 18px;
+}
+
 .card-container {
     display: flex;
     flex-wrap: wrap;
