@@ -99,7 +99,7 @@
                     <div class="last-clicked"><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></div>
                 </div>
                 <div class="song-actions">
-                    <a class="song-link" href="pdfs/1-All-I-Have-to-Do-Is-Dream.pdf" target="_blank" rel="noopener">Open song</a>
+                    <a class="song-link" href="pdfs/1-All-I-Have-to-Do-Is-Dream.pdf">Open song</a>
                 </div>
             </div>
 
@@ -110,7 +110,7 @@
                     <div class="last-clicked"><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></div>
                 </div>
                 <div class="song-actions">
-                    <a class="song-link" href="pdfs/4-April-Sun-In-Cuba.pdf" target="_blank" rel="noopener">Open song</a>
+                    <a class="song-link" href="pdfs/4-April-Sun-In-Cuba.pdf">Open song</a>
                 </div>
             </div>
 
@@ -121,7 +121,7 @@
                     <div class="last-clicked"><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></div>
                 </div>
                 <div class="song-actions">
-                    <a class="song-link" href="pdfs/8-Bad-Moon-Rising.pdf" target="_blank" rel="noopener">Open song</a>
+                    <a class="song-link" href="pdfs/8-Bad-Moon-Rising.pdf">Open song</a>
                 </div>
             </div>
         </div>
@@ -146,8 +146,25 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
         }
 
-        function formatTimestamp(timestamp) {
-            return new Date(timestamp).toLocaleString();
+        function formatWeekDescription(timestamp) {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const clickedDate = new Date(timestamp);
+            const clickedDay = new Date(clickedDate.getFullYear(), clickedDate.getMonth(), clickedDate.getDate());
+            const diffInMs = today - clickedDay;
+            const diffInWeeks = Math.floor(diffInMs / (7 * 24 * 60 * 60 * 1000));
+
+            if (diffInWeeks <= 0) return 'this week';
+            if (diffInWeeks === 1) return 'last week';
+            return `${diffInWeeks} weeks ago`;
+        }
+
+        function formatDateOnly(timestamp) {
+            return new Date(timestamp).toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
         }
 
         function updateDisplay(history) {
@@ -155,7 +172,10 @@
                 const songId = card.getAttribute('data-song-id');
                 const lastClickText = card.querySelector('.last-click-text');
                 if (history[songId]) {
-                    lastClickText.textContent = `Last clicked: ${formatTimestamp(history[songId])}`;
+                    const dateRecorded = history[songId];
+                    const weekDescription = formatWeekDescription(dateRecorded);
+                    const dateLabel = formatDateOnly(dateRecorded);
+                    lastClickText.textContent = `Last clicked: ${weekDescription} (${dateLabel})`;
                 } else {
                     lastClickText.textContent = 'Never clicked';
                 }
