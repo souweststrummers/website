@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Songs 2 - Click Tracking Test</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Lightweight layout tweaks for the test page */
+        body {
+            background: #f8f8f8;
+        }
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .song-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        .song-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .song-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .song-meta {
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .last-clicked {
+            font-size: 0.85rem;
+            color: #2c3e50;
+        }
+        .last-clicked i {
+            margin-right: 6px;
+            color: #0a7c2f;
+        }
+        .song-actions a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: #e9eef5;
+            border-radius: 6px;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+        }
+        .song-actions a:hover {
+            background: #dce5f1;
+        }
+        #clearStorage {
+            margin-top: 18px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #e74c3c;
+            color: #fff;
+            cursor: pointer;
+        }
+        #clearStorage:hover {
+            background: #cf3f30;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <span class="menu-icon">&#9776;</span>
+        <div class="nav-links">
+            <a class="nav-item" href="index.html">Home</a>
+            <a class="nav-item" href="songs2.html">Songs 2</a>
+        </div>
+    </div>
+    <div class="banner"></div>
+
+    <main>
+        <h1><i class="fa-solid fa-music"></i> Songs (click tracking test)</h1>
+        <p>This lightweight page tracks the last time a song link was clicked and stores that information in <code>localStorage</code>.</p>
+
+        <div id="songsList">
+            <div class="song-card" data-song-id="song-1">
+                <div class="song-details">
+                    <div class="song-title">1. All I Have to Do Is Dream</div>
+                    <div class="song-meta">The Everly Brothers · Rock/Pop</div>
+                    <div class="last-clicked"><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></div>
+                </div>
+                <div class="song-actions">
+                    <a class="song-link" href="pdfs/1-All-I-Have-to-Do-Is-Dream.pdf" target="_blank" rel="noopener">Open song</a>
+                </div>
+            </div>
+
+            <div class="song-card" data-song-id="song-2">
+                <div class="song-details">
+                    <div class="song-title">2. April Sun In Cuba</div>
+                    <div class="song-meta">Dragon · Rock</div>
+                    <div class="last-clicked"><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></div>
+                </div>
+                <div class="song-actions">
+                    <a class="song-link" href="pdfs/4-April-Sun-In-Cuba.pdf" target="_blank" rel="noopener">Open song</a>
+                </div>
+            </div>
+
+            <div class="song-card" data-song-id="song-3">
+                <div class="song-details">
+                    <div class="song-title">3. Bad Moon Rising</div>
+                    <div class="song-meta">Creedence Clearwater Revival · Rock</div>
+                    <div class="last-clicked"><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></div>
+                </div>
+                <div class="song-actions">
+                    <a class="song-link" href="pdfs/8-Bad-Moon-Rising.pdf" target="_blank" rel="noopener">Open song</a>
+                </div>
+            </div>
+        </div>
+
+        <button id="clearStorage" type="button">Clear stored click times</button>
+    </main>
+
+    <script>
+        const STORAGE_KEY = 'songLastClicked';
+
+        function loadClickHistory() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                return stored ? JSON.parse(stored) : {};
+            } catch (error) {
+                console.error('Unable to parse localStorage entry', error);
+                return {};
+            }
+        }
+
+        function saveClickHistory(history) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+        }
+
+        function formatTimestamp(timestamp) {
+            return new Date(timestamp).toLocaleString();
+        }
+
+        function updateDisplay(history) {
+            document.querySelectorAll('.song-card').forEach(card => {
+                const songId = card.getAttribute('data-song-id');
+                const lastClickText = card.querySelector('.last-click-text');
+                if (history[songId]) {
+                    lastClickText.textContent = `Last clicked: ${formatTimestamp(history[songId])}`;
+                } else {
+                    lastClickText.textContent = 'Never clicked';
+                }
+            });
+        }
+
+        function registerClickHandlers(history) {
+            document.querySelectorAll('.song-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    const card = link.closest('.song-card');
+                    const songId = card.getAttribute('data-song-id');
+                    history[songId] = Date.now();
+                    saveClickHistory(history);
+                    updateDisplay(history);
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const history = loadClickHistory();
+            updateDisplay(history);
+            registerClickHandlers(history);
+
+            document.getElementById('clearStorage').addEventListener('click', () => {
+                localStorage.removeItem(STORAGE_KEY);
+                Object.keys(history).forEach(key => delete history[key]);
+                updateDisplay(history);
+            });
+        });
+    </script>
+</body>
+</html>
