@@ -22,11 +22,29 @@
             gap: 10px;
             margin-bottom: 10px;
         }
-        .search-bar {
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        .search-row {
             display: flex;
             align-items: center;
             gap: 10px;
             width: 100%;
+            flex-wrap: wrap;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 260px;
             background: #fff;
             border: 1px solid #d7dde2;
             border-radius: 10px;
@@ -43,6 +61,34 @@
             font-size: 1rem;
             padding: 6px 4px;
             background: transparent;
+        }
+        .search-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #d7dde2;
+            background: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s ease, transform 0.1s ease-in-out, box-shadow 0.15s ease;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        }
+        .icon-button:hover {
+            background: #f3f4f6;
+            transform: translateY(-1px);
+        }
+        .icon-button.active {
+            background: #fff1f2;
+            border-color: #fb7185;
+            color: #e11d48;
+            box-shadow: 0 2px 6px rgba(225, 29, 72, 0.2);
         }
         .songs-grid {
             display: flex;
@@ -141,28 +187,42 @@
         .favorite-btn .fa-heart {
             transition: transform 0.1s ease-in-out;
         }
-        .actions-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .listen-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #0a6ebd;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .listen-link i {
-            color: #e63946;
-        }
         .top-actions {
             display: inline-flex;
             align-items: center;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .action-buttons {
+            display: inline-flex;
+            align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .listen-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #e5e7eb;
+            background: #fff6f5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #e63946;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            transition: background 0.15s ease, transform 0.1s ease-in-out, box-shadow 0.15s ease;
+        }
+        .listen-link:hover {
+            background: #ffe3df;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(230, 57, 70, 0.25);
+        }
+        .listen-link i {
+            color: inherit;
         }
         .last-clicked {
             display: inline-flex;
@@ -170,7 +230,6 @@
             gap: 8px;
             color: #1f2933;
             font-size: 0.95rem;
-            margin-left: auto;
         }
         .last-clicked i {
             color: #0a7c2f;
@@ -204,10 +263,26 @@
         <div class="page-header">
             <h1><i class="fa-solid fa-music"></i> Songs (play tracking test)</h1>
             <p>This page tracks the last time a song link was played and stores that information in <code>localStorage</code>. Songs are shown in horizontal cards with artist, genre, favourites, and a quick link to listen on YouTube.</p>
-            <label class="search-bar" for="songSearch">
-                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                <input id="songSearch" type="search" placeholder="Search by title, artist, or genre" aria-label="Search songs">
-            </label>
+            <div class="search-row">
+                <label class="search-bar" for="songSearch">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <input id="songSearch" type="search" placeholder="Search by title, artist, or genre" aria-label="Search songs">
+                </label>
+                <div class="search-actions" aria-label="Search helpers">
+                    <button id="clearSearch" class="icon-button" type="button" title="Clear search">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                        <span class="sr-only">Clear search</span>
+                    </button>
+                    <button id="favoritesFilter" class="icon-button" type="button" title="Show favourites">
+                        <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                        <span class="sr-only">Show favourites only</span>
+                    </button>
+                    <button id="randomSong" class="icon-button" type="button" title="Random song">
+                        <i class="fa-solid fa-dice" aria-hidden="true"></i>
+                        <span class="sr-only">Play a random song</span>
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div id="songsList" class="songs-grid" aria-live="polite"></div>
@@ -226,25 +301,30 @@
                 title: 'All I Have to Do Is Dream',
                 artist: 'The Everly Brothers',
                 genre: 'Rock/Pop',
-                pdf: 'pdfs/1-All-I-Have-to-Do-Is-Dream.pdf'
+                pdf: 'pdfs/1-All-I-Have-to-Do-Is-Dream.pdf',
+                dataName: '1. All I Have to Do Is Dream | The Everly Brothers | Rock/Pop'
             },
             {
                 id: 'song-2',
-                number: '2.',
+                number: '4.',
                 title: 'April Sun In Cuba',
                 artist: 'Dragon',
                 genre: 'Rock',
-                pdf: 'pdfs/4-April-Sun-In-Cuba.pdf'
+                pdf: 'pdfs/4-April-Sun-In-Cuba.pdf',
+                dataName: '4. April Sun In Cuba | Dragon | Rock'
             },
             {
                 id: 'song-3',
-                number: '3.',
+                number: '8.',
                 title: 'Bad Moon Rising',
                 artist: 'Creedence Clearwater Revival',
                 genre: 'Rock',
-                pdf: 'pdfs/8-Bad-Moon-Rising.pdf'
+                pdf: 'pdfs/8-Bad-Moon-Rising.pdf',
+                dataName: '8. Bad Moon Rising | Creedence Clearwater Revival | Rock'
             }
         ];
+
+        let favoritesFilterActive = false;
 
         function loadStoredObject(key) {
             try {
@@ -330,11 +410,17 @@
         }
 
         function registerClickHandlers(history) {
-            document.querySelectorAll('.song-link').forEach(link => {
+            document.querySelectorAll('.pdf-link').forEach(link => {
                 link.addEventListener('click', (event) => {
                     event.stopPropagation();
                     const songId = link.getAttribute('data-song-id');
                     handleSongPlay(songId, history);
+                });
+            });
+
+            document.querySelectorAll('.listen-link').forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.stopPropagation();
                 });
             });
 
@@ -356,7 +442,7 @@
             });
         }
 
-        function registerFavoriteHandlers(favorites) {
+        function registerFavoriteHandlers(favorites, history) {
             document.querySelectorAll('.favorite-btn').forEach(button => {
                 button.addEventListener('click', (event) => {
                     event.stopPropagation();
@@ -368,6 +454,7 @@
                     }
                     saveStoredObject(FAVORITES_KEY, favorites);
                     updateFavoriteDisplay(favorites);
+                    applySearchFilter(history, favorites);
                 });
             });
         }
@@ -376,6 +463,7 @@
             const card = document.createElement('article');
             card.className = 'song-card';
             card.setAttribute('data-song-id', song.id);
+            card.setAttribute('data-name', song.dataName || `${song.number} ${song.title} | ${song.artist} | ${song.genre}`);
             card.setAttribute('role', 'link');
             card.tabIndex = 0;
 
@@ -396,9 +484,10 @@
             titleGroup.className = 'title-group';
 
             const songLink = document.createElement('a');
-            songLink.className = 'link-nochange song-title song-link';
+            songLink.className = 'link-nochange song-title pdf-link';
             songLink.href = song.pdf;
             songLink.setAttribute('data-song-id', song.id);
+            songLink.setAttribute('data-name', song.dataName || `${song.number} ${song.title} | ${song.artist} | ${song.genre}`);
             songLink.textContent = `${song.number} ${song.title}`;
 
             const metaRow = document.createElement('div');
@@ -412,11 +501,13 @@
             titleGroup.append(songLink, metaRow);
 
             const listenLink = document.createElement('a');
-            listenLink.className = 'listen-link song-link';
+            listenLink.className = 'listen-link';
             listenLink.href = formatYoutubeLink(song.title);
             listenLink.setAttribute('data-song-id', song.id);
             listenLink.setAttribute('aria-label', 'Listen on YouTube');
             listenLink.title = 'Listen on YouTube';
+            listenLink.target = '_blank';
+            listenLink.rel = 'noopener noreferrer';
             listenLink.innerHTML = '<i class="fa-brands fa-youtube" aria-hidden="true"></i>';
 
             const favoriteButton = document.createElement('button');
@@ -427,20 +518,19 @@
 
             const topActions = document.createElement('div');
             topActions.className = 'top-actions';
-            topActions.append(favoriteButton, listenLink);
-
-            top.append(titleGroup, topActions);
-
-            const actionsRow = document.createElement('div');
-            actionsRow.className = 'actions-row';
-
             const lastClickWrapper = document.createElement('div');
             lastClickWrapper.className = 'last-clicked';
             lastClickWrapper.innerHTML = '<i class="fa-regular fa-clock"></i> <span class="last-click-text">Never played</span>';
 
-            actionsRow.append(lastClickWrapper);
+            const actionButtons = document.createElement('div');
+            actionButtons.className = 'action-buttons';
+            actionButtons.append(favoriteButton, listenLink);
 
-            content.append(top, actionsRow);
+            topActions.append(lastClickWrapper, actionButtons);
+
+            top.append(titleGroup, topActions);
+
+            content.append(top);
             card.append(coverWrapper, content);
 
             return card;
@@ -458,13 +548,15 @@
             updateDisplay(history);
             updateFavoriteDisplay(favorites);
             registerClickHandlers(history);
-            registerFavoriteHandlers(favorites);
+            registerFavoriteHandlers(favorites, history);
         }
 
         function applySearchFilter(history, favorites) {
             const query = document.getElementById('songSearch').value.trim().toLowerCase();
             const filteredSongs = songs.filter(song => {
-                return [song.title, song.artist, song.genre].some(field => field.toLowerCase().includes(query));
+                const matchesQuery = [song.number, song.title, song.artist, song.genre].some(field => field.toLowerCase().includes(query));
+                const matchesFavorites = !favoritesFilterActive || favorites[song.id];
+                return matchesQuery && matchesFavorites;
             });
             renderSongs(filteredSongs, history, favorites);
         }
@@ -476,6 +568,37 @@
             renderSongs(songs, history, favorites);
 
             document.getElementById('songSearch').addEventListener('input', () => applySearchFilter(history, favorites));
+
+            document.getElementById('clearSearch').addEventListener('click', () => {
+                const searchInput = document.getElementById('songSearch');
+                searchInput.value = '';
+                searchInput.focus();
+                applySearchFilter(history, favorites);
+            });
+
+            document.getElementById('favoritesFilter').addEventListener('click', () => {
+                favoritesFilterActive = !favoritesFilterActive;
+                document.getElementById('favoritesFilter').classList.toggle('active', favoritesFilterActive);
+                applySearchFilter(history, favorites);
+            });
+
+            document.getElementById('randomSong').addEventListener('click', () => {
+                const searchInput = document.getElementById('songSearch');
+                const query = searchInput.value.trim().toLowerCase();
+                const filteredSongs = songs.filter(song => {
+                    const matchesQuery = [song.number, song.title, song.artist, song.genre].some(field => field.toLowerCase().includes(query));
+                    const matchesFavorites = !favoritesFilterActive || favorites[song.id];
+                    return matchesQuery && matchesFavorites;
+                });
+
+                if (filteredSongs.length === 0) {
+                    return;
+                }
+
+                const selection = filteredSongs[Math.floor(Math.random() * filteredSongs.length)];
+                handleSongPlay(selection.id, history);
+                window.open(selection.pdf, '_blank');
+            });
 
             document.getElementById('clearStorage').addEventListener('click', () => {
                 localStorage.removeItem(STORAGE_KEY);
