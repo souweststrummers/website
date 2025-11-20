@@ -13,55 +13,35 @@
             background: #f8f8f8;
         }
         main {
-            max-width: 900px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 20px;
         }
         .song-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            margin: 8px 0;
-            border-radius: 8px;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-        }
-        .song-details {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .song-title {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        .song-meta {
-            color: #555;
-            font-size: 0.9rem;
-        }
-        .last-clicked {
-            font-size: 0.85rem;
-            color: #2c3e50;
-        }
-        .last-clicked i {
-            margin-right: 6px;
-            color: #0a7c2f;
-        }
-        .song-actions a {
-            color: #2c3e50;
             text-decoration: none;
-            font-weight: 600;
+            color: inherit;
+        }
+        .song-card .song-meta {
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 6px;
+        }
+        .song-card .last-clicked {
+            font-size: 0.9rem;
+            color: #1f2933;
+            margin-top: 10px;
+        }
+        .song-card .last-clicked em {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 12px;
-            background: #e9eef5;
-            border-radius: 6px;
-            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+            font-style: italic;
         }
-        .song-actions a:hover {
-            background: #dce5f1;
+        .song-card .last-clicked i {
+            color: #0a7c2f;
+        }
+        #songsList {
+            margin-top: 12px;
         }
         #clearStorage {
             margin-top: 18px;
@@ -91,39 +71,33 @@
         <h1><i class="fa-solid fa-music"></i> Songs (click tracking test)</h1>
         <p>This lightweight page tracks the last time a song link was clicked and stores that information in <code>localStorage</code>.</p>
 
-        <div id="songsList">
-            <div class="song-card" data-song-id="song-1">
-                <div class="song-details">
-                    <div class="song-title">1. All I Have to Do Is Dream</div>
+        <div id="songsList" class="card-container songs-container">
+            <a class="link-nochange song-link" data-song-id="song-1" href="pdfs/1-All-I-Have-to-Do-Is-Dream.pdf">
+                <div class="card song-card">
+                    <p>1. All I Have to Do Is Dream</p>
+                    <img src="covers/art.jpg" alt="Album art for All I Have to Do Is Dream">
                     <div class="song-meta">The Everly Brothers · Rock/Pop</div>
-                    <div class="last-clicked"><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></div>
+                    <div class="last-clicked"><em><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></em></div>
                 </div>
-                <div class="song-actions">
-                    <a class="song-link" href="pdfs/1-All-I-Have-to-Do-Is-Dream.pdf">Open song</a>
-                </div>
-            </div>
+            </a>
 
-            <div class="song-card" data-song-id="song-2">
-                <div class="song-details">
-                    <div class="song-title">2. April Sun In Cuba</div>
+            <a class="link-nochange song-link" data-song-id="song-2" href="pdfs/4-April-Sun-In-Cuba.pdf">
+                <div class="card song-card">
+                    <p>2. April Sun In Cuba</p>
+                    <img src="covers/art.jpg" alt="Album art for April Sun In Cuba">
                     <div class="song-meta">Dragon · Rock</div>
-                    <div class="last-clicked"><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></div>
+                    <div class="last-clicked"><em><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></em></div>
                 </div>
-                <div class="song-actions">
-                    <a class="song-link" href="pdfs/4-April-Sun-In-Cuba.pdf">Open song</a>
-                </div>
-            </div>
+            </a>
 
-            <div class="song-card" data-song-id="song-3">
-                <div class="song-details">
-                    <div class="song-title">3. Bad Moon Rising</div>
+            <a class="link-nochange song-link" data-song-id="song-3" href="pdfs/8-Bad-Moon-Rising.pdf">
+                <div class="card song-card">
+                    <p>3. Bad Moon Rising</p>
+                    <img src="covers/art.jpg" alt="Album art for Bad Moon Rising">
                     <div class="song-meta">Creedence Clearwater Revival · Rock</div>
-                    <div class="last-clicked"><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></div>
+                    <div class="last-clicked"><em><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></em></div>
                 </div>
-                <div class="song-actions">
-                    <a class="song-link" href="pdfs/8-Bad-Moon-Rising.pdf">Open song</a>
-                </div>
-            </div>
+            </a>
         </div>
 
         <button id="clearStorage" type="button">Clear stored click times</button>
@@ -154,6 +128,7 @@
             const diffInMs = today - clickedDay;
             const diffInWeeks = Math.floor(diffInMs / (7 * 24 * 60 * 60 * 1000));
 
+            if (diffInMs === 0) return 'today';
             if (diffInWeeks <= 0) return 'this week';
             if (diffInWeeks === 1) return 'last week';
             return `${diffInWeeks} weeks ago`;
@@ -161,16 +136,15 @@
 
         function formatDateOnly(timestamp) {
             return new Date(timestamp).toLocaleDateString(undefined, {
-                year: 'numeric',
                 month: 'short',
                 day: 'numeric'
             });
         }
 
         function updateDisplay(history) {
-            document.querySelectorAll('.song-card').forEach(card => {
-                const songId = card.getAttribute('data-song-id');
-                const lastClickText = card.querySelector('.last-click-text');
+            document.querySelectorAll('.song-link').forEach(link => {
+                const songId = link.getAttribute('data-song-id');
+                const lastClickText = link.querySelector('.last-click-text');
                 if (history[songId]) {
                     const dateRecorded = history[songId];
                     const weekDescription = formatWeekDescription(dateRecorded);
@@ -185,8 +159,7 @@
         function registerClickHandlers(history) {
             document.querySelectorAll('.song-link').forEach(link => {
                 link.addEventListener('click', () => {
-                    const card = link.closest('.song-card');
-                    const songId = card.getAttribute('data-song-id');
+                    const songId = link.getAttribute('data-song-id');
                     history[songId] = Date.now();
                     saveClickHistory(history);
                     updateDisplay(history);
