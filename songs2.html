@@ -67,6 +67,9 @@
             align-items: center;
             gap: 8px;
         }
+        #favoritesFilter i {
+            color: #ec4899;
+        }
         .icon-button {
             width: 40px;
             height: 40px;
@@ -173,19 +176,33 @@
             border-radius: 999px;
             cursor: pointer;
             font-size: 1rem;
-            color: #ef4444;
+            color: #ec4899;
             padding: 8px 10px;
             line-height: 1;
-            transition: background 0.15s ease, transform 0.1s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 38px;
+            min-height: 38px;
+            transition: background 0.15s ease, transform 0.1s ease-in-out, box-shadow 0.15s ease;
         }
         .favorite-btn:hover {
-            background: #ffe8e6;
+            background: #fff0f6;
+            box-shadow: 0 2px 6px rgba(236, 72, 153, 0.2);
+        }
+        .favorite-btn.active {
+            background: #ffe4f0;
+            border-color: #f472b6;
+            box-shadow: 0 2px 8px rgba(244, 114, 182, 0.3);
         }
         .favorite-btn.active .fa-heart {
             transform: scale(1.15);
         }
         .favorite-btn .fa-heart {
             transition: transform 0.1s ease-in-out;
+            width: 1.1em;
+            text-align: center;
+            color: #ec4899;
         }
         .top-actions {
             display: inline-flex;
@@ -573,6 +590,8 @@
                 const searchInput = document.getElementById('songSearch');
                 searchInput.value = '';
                 searchInput.focus();
+                favoritesFilterActive = false;
+                document.getElementById('favoritesFilter').classList.remove('active');
                 applySearchFilter(history, favorites);
             });
 
@@ -596,8 +615,9 @@
                 }
 
                 const selection = filteredSongs[Math.floor(Math.random() * filteredSongs.length)];
-                handleSongPlay(selection.id, history);
-                window.open(selection.pdf, '_blank');
+                searchInput.value = selection.title;
+                searchInput.focus();
+                applySearchFilter(history, favorites);
             });
 
             document.getElementById('clearStorage').addEventListener('click', () => {
