@@ -21,11 +21,6 @@
             text-decoration: none;
             color: inherit;
         }
-        .song-card .song-meta {
-            color: #555;
-            font-size: 0.95rem;
-            margin-top: 6px;
-        }
         .song-card .last-clicked {
             font-size: 0.9rem;
             color: #1f2933;
@@ -39,6 +34,10 @@
         }
         .song-card .last-clicked i {
             color: #0a7c2f;
+        }
+        .song-card img {
+            width: 110px;
+            height: 110px;
         }
         #songsList {
             margin-top: 12px;
@@ -68,39 +67,36 @@
     <div class="banner"></div>
 
     <main>
-        <h1><i class="fa-solid fa-music"></i> Songs (click tracking test)</h1>
-        <p>This lightweight page tracks the last time a song link was clicked and stores that information in <code>localStorage</code>.</p>
+        <h1><i class="fa-solid fa-music"></i> Songs (play tracking test)</h1>
+        <p>This lightweight page tracks the last time a song link was played and stores that information in <code>localStorage</code>.</p>
 
         <div id="songsList" class="card-container songs-container">
             <a class="link-nochange song-link" data-song-id="song-1" href="pdfs/1-All-I-Have-to-Do-Is-Dream.pdf">
                 <div class="card song-card">
                     <p>1. All I Have to Do Is Dream</p>
+                    <div class="last-clicked"><em><i class="fa-regular fa-clock"></i><span class="last-click-text">Never played</span></em></div>
                     <img src="covers/art.jpg" alt="Album art for All I Have to Do Is Dream">
-                    <div class="song-meta">The Everly Brothers · Rock/Pop</div>
-                    <div class="last-clicked"><em><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></em></div>
                 </div>
             </a>
 
             <a class="link-nochange song-link" data-song-id="song-2" href="pdfs/4-April-Sun-In-Cuba.pdf">
                 <div class="card song-card">
                     <p>2. April Sun In Cuba</p>
+                    <div class="last-clicked"><em><i class="fa-regular fa-clock"></i><span class="last-click-text">Never played</span></em></div>
                     <img src="covers/art.jpg" alt="Album art for April Sun In Cuba">
-                    <div class="song-meta">Dragon · Rock</div>
-                    <div class="last-clicked"><em><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></em></div>
                 </div>
             </a>
 
             <a class="link-nochange song-link" data-song-id="song-3" href="pdfs/8-Bad-Moon-Rising.pdf">
                 <div class="card song-card">
                     <p>3. Bad Moon Rising</p>
+                    <div class="last-clicked"><em><i class="fa-regular fa-clock"></i><span class="last-click-text">Never played</span></em></div>
                     <img src="covers/art.jpg" alt="Album art for Bad Moon Rising">
-                    <div class="song-meta">Creedence Clearwater Revival · Rock</div>
-                    <div class="last-clicked"><em><i class="fa-regular fa-clock"></i><span class="last-click-text">Never clicked</span></em></div>
                 </div>
             </a>
         </div>
 
-        <button id="clearStorage" type="button">Clear stored click times</button>
+        <button id="clearStorage" type="button">Clear stored play times</button>
     </main>
 
     <script>
@@ -149,9 +145,9 @@
                     const dateRecorded = history[songId];
                     const weekDescription = formatWeekDescription(dateRecorded);
                     const dateLabel = formatDateOnly(dateRecorded);
-                    lastClickText.textContent = `Last clicked: ${weekDescription} (${dateLabel})`;
+                    lastClickText.textContent = `Last played: ${weekDescription} (${dateLabel})`;
                 } else {
-                    lastClickText.textContent = 'Never clicked';
+                    lastClickText.textContent = 'Never played';
                 }
             });
         }
