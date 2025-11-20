@@ -133,7 +133,8 @@
         function formatDateOnly(timestamp) {
             return new Date(timestamp).toLocaleDateString(undefined, {
                 month: 'short',
-                day: 'numeric'
+                day: 'numeric',
+                year: 'numeric'
             });
         }
 
@@ -143,9 +144,16 @@
                 const lastClickText = link.querySelector('.last-click-text');
                 if (history[songId]) {
                     const dateRecorded = history[songId];
-                    const weekDescription = formatWeekDescription(dateRecorded);
-                    const dateLabel = formatDateOnly(dateRecorded);
-                    lastClickText.textContent = `Last played: ${weekDescription} (${dateLabel})`;
+                    const monthAgoMs = 30 * 24 * 60 * 60 * 1000;
+                    const isOlderThanMonth = Date.now() - dateRecorded >= monthAgoMs;
+
+                    if (isOlderThanMonth) {
+                        const dateLabel = formatDateOnly(dateRecorded);
+                        lastClickText.textContent = `Last played: ${dateLabel}`;
+                    } else {
+                        const weekDescription = formatWeekDescription(dateRecorded);
+                        lastClickText.textContent = `Last played: ${weekDescription}`;
+                    }
                 } else {
                     lastClickText.textContent = 'Never played';
                 }
