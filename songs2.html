@@ -52,13 +52,40 @@
         }
         .song-card {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            gap: 14px;
+            align-items: center;
             padding: 14px 16px;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
             border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+        .song-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+        }
+        .cover-thumb {
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid #e5e7eb;
+            background: #f3f4f6;
+        }
+        .cover-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
         }
         .card-top {
             display: flex;
@@ -75,6 +102,9 @@
             font-size: 1.05rem;
             font-weight: 700;
             color: #1f2933;
+            margin: 0;
+            padding: 0;
+            text-align: left;
         }
         .song-title:hover {
             text-decoration: underline;
@@ -129,12 +159,18 @@
         .listen-link i {
             color: #e63946;
         }
+        .top-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
         .last-clicked {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             color: #1f2933;
             font-size: 0.95rem;
+            margin-left: auto;
         }
         .last-clicked i {
             color: #0a7c2f;
@@ -275,6 +311,12 @@
             document.querySelectorAll('.song-card').forEach(card => setLastPlayed(card, history));
         }
 
+        function handleSongPlay(songId, history) {
+            history[songId] = Date.now();
+            saveStoredObject(STORAGE_KEY, history);
+            updateDisplay(history);
+        }
+
         function updateFavoriteDisplay(favorites) {
             document.querySelectorAll('.favorite-btn').forEach(button => {
                 const songId = button.getAttribute('data-song-id');
@@ -289,18 +331,36 @@
 
         function registerClickHandlers(history) {
             document.querySelectorAll('.song-link').forEach(link => {
-                link.addEventListener('click', () => {
+                link.addEventListener('click', (event) => {
+                    event.stopPropagation();
                     const songId = link.getAttribute('data-song-id');
-                    history[songId] = Date.now();
-                    saveStoredObject(STORAGE_KEY, history);
-                    updateDisplay(history);
+                    handleSongPlay(songId, history);
+                });
+            });
+
+            document.querySelectorAll('.song-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const songId = card.getAttribute('data-song-id');
+                    handleSongPlay(songId, history);
+                    window.location.href = songs.find(item => item.id === songId)?.pdf || '#';
+                });
+
+                card.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        const songId = card.getAttribute('data-song-id');
+                        handleSongPlay(songId, history);
+                        window.location.href = songs.find(item => item.id === songId)?.pdf || '#';
+                    }
                 });
             });
         }
 
         function registerFavoriteHandlers(favorites) {
             document.querySelectorAll('.favorite-btn').forEach(button => {
-                button.addEventListener('click', () => {
+                button.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
                     const songId = button.getAttribute('data-song-id');
                     favorites[songId] = !favorites[songId];
                     if (!favorites[songId]) {
@@ -316,6 +376,18 @@
             const card = document.createElement('article');
             card.className = 'song-card';
             card.setAttribute('data-song-id', song.id);
+            card.setAttribute('role', 'link');
+            card.tabIndex = 0;
+
+            const coverWrapper = document.createElement('div');
+            coverWrapper.className = 'cover-thumb';
+            const coverImg = document.createElement('img');
+            coverImg.src = song.cover || 'covers/art.jpg';
+            coverImg.alt = `${song.title} cover`;
+            coverWrapper.appendChild(coverImg);
+
+            const content = document.createElement('div');
+            content.className = 'card-content';
 
             const top = document.createElement('div');
             top.className = 'card-top';
@@ -339,32 +411,38 @@
 
             titleGroup.append(songLink, metaRow);
 
+            const listenLink = document.createElement('a');
+            listenLink.className = 'listen-link song-link';
+            listenLink.href = formatYoutubeLink(song.title);
+            listenLink.setAttribute('data-song-id', song.id);
+            listenLink.setAttribute('aria-label', 'Listen on YouTube');
+            listenLink.title = 'Listen on YouTube';
+            listenLink.innerHTML = '<i class="fa-brands fa-youtube" aria-hidden="true"></i>';
+
             const favoriteButton = document.createElement('button');
             favoriteButton.className = 'favorite-btn';
             favoriteButton.setAttribute('data-song-id', song.id);
             favoriteButton.setAttribute('aria-label', 'Add to favourites');
             favoriteButton.innerHTML = '<i class="fa-regular fa-heart"></i>';
 
-            top.append(titleGroup, favoriteButton);
+            const topActions = document.createElement('div');
+            topActions.className = 'top-actions';
+            topActions.append(favoriteButton, listenLink);
+
+            top.append(titleGroup, topActions);
 
             const actionsRow = document.createElement('div');
             actionsRow.className = 'actions-row';
-
-            const listenLink = document.createElement('a');
-            listenLink.className = 'listen-link song-link';
-            listenLink.href = formatYoutubeLink(song.title);
-            listenLink.target = '_blank';
-            listenLink.rel = 'noopener noreferrer';
-            listenLink.setAttribute('data-song-id', song.id);
-            listenLink.innerHTML = '<i class="fa-brands fa-youtube"></i> Listen on YouTube';
 
             const lastClickWrapper = document.createElement('div');
             lastClickWrapper.className = 'last-clicked';
             lastClickWrapper.innerHTML = '<i class="fa-regular fa-clock"></i> <span class="last-click-text">Never played</span>';
 
-            actionsRow.append(listenLink, lastClickWrapper);
+            actionsRow.append(lastClickWrapper);
 
-            card.append(top, actionsRow);
+            content.append(top, actionsRow);
+            card.append(coverWrapper, content);
+
             return card;
         }
 
