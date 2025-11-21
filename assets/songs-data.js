@@ -642,10 +642,10 @@ const songsData = [
     "id": "song-72",
     "number": "72.",
     "title": "Maureen",
-    "artist": "Unknown Artist",
-    "genre": "Unknown Genre",
+    "artist": "Eddie Low",
+    "genre": "Country",
     "pdf": "pdfs/72-Maureen.pdf",
-    "dataName": "72. Maureen learn | Unknown Artist | Unknown Genre"
+    "dataName": "72. Maureen learn | Eddie Low | Country"
   },
   {
     "id": "song-73",
@@ -678,10 +678,10 @@ const songsData = [
     "id": "song-76",
     "number": "76.",
     "title": "Hands Of My Heart",
-    "artist": "Unknown Artist",
-    "genre": "Unknown Genre",
+    "artist": "Dennis Marsh",
+    "genre": "Country/Gospel",
     "pdf": "pdfs/76-Hands-Of-My-Heart.pdf",
-    "dataName": "76. Hands Of My Heart | Unknown Artist | Unknown Genre"
+    "dataName": "76. Hands Of My Heart | Dennis Marsh | Country/Gospel"
   },
   {
     "id": "song-77",
@@ -1479,10 +1479,10 @@ const songsData = [
     "id": "song-165",
     "number": "165.",
     "title": "History",
-    "artist": "Unknown Artist",
-    "genre": "Unknown Genre",
+    "artist": "One Direction",
+    "genre": "Pop",
     "pdf": "pdfs/165-History.pdf",
-    "dataName": "165. History | Unknown Artist | Unknown Genre"
+    "dataName": "165. History | One Direction | Pop"
   },
   {
     "id": "song-166",
@@ -1524,10 +1524,10 @@ const songsData = [
     "id": "song-170",
     "number": "170.",
     "title": "House Of Love",
-    "artist": "Unknown Artist",
-    "genre": "Unknown Genre",
+    "artist": "East 17",
+    "genre": "Pop",
     "pdf": "pdfs/170-House-Of-Love.pdf",
-    "dataName": "170. House Of Love learn | Unknown Artist | Unknown Genre"
+    "dataName": "170. House Of Love learn | East 17 | Pop"
   },
   {
     "id": "song-171",
@@ -2019,10 +2019,10 @@ const songsData = [
     "id": "song-225",
     "number": "225.",
     "title": "Must Be Love",
-    "artist": "Unknown",
+    "artist": "Don Williams",
     "genre": "Pop",
     "pdf": "pdfs/225-Must-Be-Love.pdf",
-    "dataName": "225. Must Be Love | Unknown | Pop"
+    "dataName": "225. Must Be Love | Don Williams | Pop"
   },
   {
     "id": "song-226",
@@ -2046,10 +2046,10 @@ const songsData = [
     "id": "song-228",
     "number": "228.",
     "title": "St Peter's Rendevous",
-    "artist": "Unknown",
+    "artist": "Sharon O'Neill",
     "genre": "Pop",
     "pdf": "pdfs/228-St-Peter's-Rendevous.pdf",
-    "dataName": "228. St Peter's Rendevous | Unknown | Pop"
+    "dataName": "228. St Peter's Rendevous | Sharon O'Neill | Pop"
   },
   {
     "id": "song-229",
@@ -2091,10 +2091,10 @@ const songsData = [
     "id": "song-233",
     "number": "233.",
     "title": "Island Queen",
-    "artist": "Unknown",
+    "artist": "Herbs",
     "genre": "Pop",
     "pdf": "pdfs/233-Island-Queen.pdf",
-    "dataName": "233. Island Queen | Unknown | Pop"
+    "dataName": "233. Island Queen | Herbs | Pop"
   },
   {
     "id": "song-234",
@@ -2199,10 +2199,10 @@ const songsData = [
     "id": "song-245",
     "number": "245.",
     "title": "Cant Let Go",
-    "artist": "Unknown",
+    "artist": "Lucinda Williams",
     "genre": "Rock",
     "pdf": "pdfs/245.Cant-Let-Go.pdf",
-    "dataName": "245.Cant Let Go learn | Unknown | Rock"
+    "dataName": "245.Cant Let Go learn | Lucinda Williams | Rock"
   },
   {
     "id": "song-246",
