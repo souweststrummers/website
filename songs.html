@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <title>Songs - Sou'West Strummers</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<link rel="stylesheet" href="assets/style.css">
+    <script src="assets/site.js"></script>
+        <link rel="stylesheet" href="assets/style.css">
 
 	<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-32CW6KG98H"></script>
@@ -21,15 +22,13 @@
 </head>
 <body>
 <div class="navbar">
-	<span class="menu-icon">&#9776;</span>
-<div class="nav-links">
-		<div class="nav-links">
-        <a class="nav-item" href="index.html">Home</a>
-        <a class="nav-item" href="songs.html">Songs</a>
-		<a class="nav-item" href="events.html">Events</a>
-		<a class="nav-item" href="library.html">Library</a>
-		</div>
-		</div>
+        <span class="menu-icon" aria-label="Toggle navigation" aria-expanded="false">&#9776;</span>
+        <div class="nav-links">
+            <a class="nav-item" href="index.html">Home</a>
+            <a class="nav-item" href="songs.html">Songs</a>
+            <a class="nav-item" href="events.html">Events</a>
+            <a class="nav-item" href="library.html">Library</a>
+        </div>
     </div>
     <div class="banner"></div>
 	
@@ -2342,6 +2341,7 @@ $('#searchBar').focus();
 // Search functionality
 $('#searchBar').on('keyup', function () {
     $('#noFavourites').hide();
+    $('.card').removeClass('random-highlight');
     var value = $(this).val().toLowerCase();
     var visibleCards = 0;
 
@@ -2381,25 +2381,6 @@ $('#searchBar').on('keyup', function () {
         clearTimeout(typingTimer);
     });
 
-     // Mobile menu toggle & icon swap
-      const $menu = $('.menu-icon'),
-            $nav  = $('.nav-links');
-
-      $menu.on('click', e => {
-        e.stopPropagation();
-        $nav.toggleClass('active');
-        // swap icon
-        $menu.html( $nav.hasClass('active') ? '&#10005;' : '&#9776;');
-      });
-
-      // close if click outside
-      $(document).on('click', e => {
-        if ($nav.hasClass('active') && !$(e.target).closest('.nav-links, .menu-icon').length) {
-          $nav.removeClass('active');
-          $menu.html('&#9776;');
-        }
-      });
-
     // Clear search bar when clicking clear button
     $('#clearSearch').click(function () {
         $('#searchBar').val("").trigger('keyup');
@@ -2411,7 +2392,22 @@ $('#searchBar').on('keyup', function () {
     });
 
     $('#Dice').click(function () {
-        $('#searchBar').val("pick").trigger('keyup');
+        const $visibleCards = $('.card:visible');
+        if (!$visibleCards.length) {
+            $('#noResults').show();
+            return;
+        }
+
+        $visibleCards.removeClass('random-highlight');
+        const randomCard = $($visibleCards[Math.floor(Math.random() * $visibleCards.length)]);
+        const $link = randomCard.closest('a.link-nochange');
+
+        randomCard.addClass('random-highlight');
+
+        if ($link.length) {
+            $('html, body').animate({ scrollTop: randomCard.offset().top - 80 }, 400);
+            $link.focus();
+        }
     });
     $('#NZ').click(function () {
         $('#searchBar').val("Aotearoa").trigger('keyup');
