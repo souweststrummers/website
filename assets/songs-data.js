@@ -12,10 +12,10 @@ const songsData = [
     "id": "song-2",
     "number": "2.",
     "title": "All Of Me",
-    "artist": "Jazz /Pop",
-    "genre": "",
+    "artist": "Gerald Marks & Seymour Simons",
+    "genre": "Jazz /Pop",
     "pdf": "pdfs/2-All-Of-Me-.pdf",
-    "dataName": "2. All Of Me  | Jazz /Pop"
+    "dataName": "2. All Of Me | Gerald Marks & Seymour Simons | Jazz /Pop"
   },
   {
     "id": "song-3",
@@ -93,10 +93,10 @@ const songsData = [
     "id": "song-11",
     "number": "11.",
     "title": "Black Velvet Band",
-    "artist": "Traditional/Various (e.g., The Dubliners)",
+    "artist": "Luke Kelly and The Dubliners",
     "genre": "Irish Folk",
     "pdf": "pdfs/11-Black-Velvet-Band.pdf",
-    "dataName": "11. Black Velvet Band | Traditional/Various (e.g., The Dubliners) | Irish Folk"
+    "dataName": "11. Black Velvet Band | Luke Kelly and The Dubliners | Irish Folk"
   },
   {
     "id": "song-12",
@@ -147,10 +147,10 @@ const songsData = [
     "id": "song-17",
     "number": "17.",
     "title": "Bye Bye Blackbird",
-    "artist": "Standard (e.g., Peggy Lee, Ella Fitzgerald)",
+    "artist": "Ray Henderson",
     "genre": "Jazz/Traditional Pop",
     "pdf": "pdfs/17-Bye-Bye-Blackbird.pdf",
-    "dataName": "17. Bye Bye Blackbird | Standard (e.g., Peggy Lee, Ella Fitzgerald) | Jazz/Traditional Pop"
+    "dataName": "17. Bye Bye Blackbird | Ray Henderson | Jazz/Traditional Pop"
   },
   {
     "id": "song-18",
@@ -345,10 +345,10 @@ const songsData = [
     "id": "song-39",
     "number": "39.",
     "title": "Five Foot Two",
-    "artist": "1920s Standard",
+    "artist": "Gene Austin",
     "genre": "Traditional/Pop Standard",
     "pdf": "pdfs/39-Five-Foot-Two.pdf",
-    "dataName": "39. Five Foot Two | 1920s Standard | Traditional/Pop Standard"
+    "dataName": "39. Five Foot Two | Gene Austin | Traditional/Pop Standard"
   },
   {
     "id": "song-40",
@@ -444,10 +444,10 @@ const songsData = [
     "id": "song-50",
     "number": "50.",
     "title": "Hoki Mai",
-    "artist": "Traditional (Aotearoa NZ)",
+    "artist": "Henare Waitoa",
     "genre": "Waiata",
     "pdf": "pdfs/50-Hoki-Mai.pdf",
-    "dataName": "50. Hoki Mai | Traditional (Aotearoa NZ) | Waiata"
+    "dataName": "50. Hoki Mai | Henare Waitoa | Waiata"
   },
   {
     "id": "song-51",
@@ -507,10 +507,10 @@ const songsData = [
     "id": "song-57",
     "number": "57.",
     "title": "I'll Fly Away",
-    "artist": "Albert E. Brumley (popularized by various)",
+    "artist": "Alison Krauss and Gillian Welch",
     "genre": "Gospel",
     "pdf": "pdfs/57-I'll-Fly-Away.pdf",
-    "dataName": "57. I'll Fly Away | Albert E. Brumley (popularized by various) | Gospel"
+    "dataName": "57. I'll Fly Away | Alison Krauss and Gillian Welch | Gospel"
   },
   {
     "id": "song-58",
@@ -633,10 +633,10 @@ const songsData = [
     "id": "song-71",
     "number": "71.",
     "title": "Mairi's Wedding",
-    "artist": "Traditional (Scottish)",
+    "artist": "The High Kings",
     "genre": "Folk",
     "pdf": "pdfs/71-Mairi's-Wedding.pdf",
-    "dataName": "71. Mairi's Wedding learn | Traditional (Scottish) | Folk"
+    "dataName": "71. Mairi's Wedding learn | The High Kings | Folk"
   },
   {
     "id": "song-72",
@@ -723,10 +723,10 @@ const songsData = [
     "id": "song-81",
     "number": "81.",
     "title": "Pokarekare Ana",
-    "artist": "Traditional (Aotearoa NZ)",
+    "artist": "Paraire Tomoana",
     "genre": "Waiata",
     "pdf": "pdfs/81-Pokarekare-Ana.pdf",
-    "dataName": "81. Pokarekare Ana | Traditional (Aotearoa NZ) | Waiata"
+    "dataName": "81. Pokarekare Ana | Paraire Tomoana | Waiata"
   },
   {
     "id": "song-82",
@@ -903,10 +903,10 @@ const songsData = [
     "id": "song-101",
     "number": "101.",
     "title": "This Train Is Bound For Glory",
-    "artist": "Traditional (popularized by Woody Guthrie)",
+    "artist": "Old Crow Medicine Show",
     "genre": "Gospel/Folk",
     "pdf": "pdfs/101-This-Train-Is-Bound-For-Glory.pdf",
-    "dataName": "101. This Train Is Bound For Glory | Traditional (popularized by Woody Guthrie) | Gospel/Folk"
+    "dataName": "101. This Train Is Bound For Glory | Old Crow Medicine Show | Gospel/Folk"
   },
   {
     "id": "song-102",
@@ -1254,10 +1254,10 @@ const songsData = [
     "id": "song-140",
     "number": "140.",
     "title": "The Bare Necessities",
-    "artist": "Disney (The Jungle Book)",
+    "artist": "The Jive Aces",
     "genre": "Soundtrack/Traditional Pop",
     "pdf": "pdfs/140-The-Bare-Necessities.pdf",
-    "dataName": "140. The Bare Necessities | Disney (The Jungle Book) | Soundtrack/Traditional Pop"
+    "dataName": "140. The Bare Necessities | The Jive Aces | Soundtrack/Traditional Pop"
   },
   {
     "id": "song-141",
@@ -1290,10 +1290,10 @@ const songsData = [
     "id": "song-144",
     "number": "144.",
     "title": "Bring Me Sunshine",
-    "artist": "Jive Aces (popular version)",
+    "artist": "Willie Nelson",
     "genre": "Swing/Pop",
     "pdf": "pdfs/144-Bring-Me-Sunshine.pdf",
-    "dataName": "144. Bring Me Sunshine | Jive Aces (popular version) | Swing/Pop"
+    "dataName": "144. Bring Me Sunshine | Willie Nelson | Swing/Pop"
   },
   {
     "id": "song-145",
@@ -1524,10 +1524,10 @@ const songsData = [
     "id": "song-170",
     "number": "170.",
     "title": "House Of Love",
-    "artist": "East 17",
+    "artist": "Vika and Linda Bull",
     "genre": "Pop",
     "pdf": "pdfs/170-House-Of-Love.pdf",
-    "dataName": "170. House Of Love learn | East 17 | Pop"
+    "dataName": "170. House Of Love learn | Vika and Linda Bull | Pop"
   },
   {
     "id": "song-171",
@@ -1569,10 +1569,10 @@ const songsData = [
     "id": "song-175",
     "number": "175.",
     "title": "I'll See You In My Dreams",
-    "artist": "Joe Brown (popular uke version)/Standard",
+    "artist": "Joe Brown",
     "genre": "Traditional Pop",
     "pdf": "pdfs/175-I'll-See-You-In-My-Dreams.pdf",
-    "dataName": "175. I'll See You In My Dreams | Joe Brown (popular uke version)/Standard | Traditional Pop"
+    "dataName": "175. I'll See You In My Dreams | Joe Brown | Traditional Pop"
   },
   {
     "id": "song-176",
@@ -1677,10 +1677,10 @@ const songsData = [
     "id": "song-187",
     "number": "187.",
     "title": "On The Sunny Side Of The Street",
-    "artist": "Jazz Standard",
+    "artist": "Louis Armstrong",
     "genre": "Jazz/Traditional Pop",
     "pdf": "pdfs/187-On-The-Sunny-Side-Of-The-Street.pdf",
-    "dataName": "187. On The Sunny Side Of The Street | Jazz Standard | Jazz/Traditional Pop"
+    "dataName": "187. On The Sunny Side Of The Street | Louis Armstrong | Jazz/Traditional Pop"
   },
   {
     "id": "song-188",
@@ -2010,10 +2010,10 @@ const songsData = [
     "id": "song-224",
     "number": "224.",
     "title": "Big Aroha",
-    "artist": "Aotearoa NZ (community waiata)",
+    "artist": "The Slacks",
     "genre": "Pop/Waiata",
     "pdf": "pdfs/224-Big-Aroha.pdf",
-    "dataName": "224. Big Aroha | Aotearoa NZ (community waiata) | Pop/Waiata"
+    "dataName": "224. Big Aroha | Aotearoa NZ The Slacks | Pop/Waiata"
   },
   {
     "id": "song-225",
