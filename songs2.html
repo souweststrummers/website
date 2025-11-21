@@ -442,8 +442,9 @@
             });
         }
 
-        function formatYoutubeLink(title) {
-            const query = encodeURIComponent(`${title} site:youtube.com`);
+        function formatYoutubeLink(title, artist) {
+            const searchTerm = artist ? `${title} ${artist}` : title;
+            const query = encodeURIComponent(`${searchTerm} site:youtube.com`);
             return `https://www.google.com/search?q=${query}&btnI=1`;
         }
 
@@ -592,7 +593,7 @@
 
             const listenLink = document.createElement('a');
             listenLink.className = 'listen-link';
-            listenLink.href = formatYoutubeLink(song.title);
+            listenLink.href = formatYoutubeLink(song.title, song.artist);
             listenLink.setAttribute('data-song-id', song.id);
             listenLink.setAttribute('aria-label', 'Listen on YouTube');
             listenLink.title = 'Listen on YouTube';
