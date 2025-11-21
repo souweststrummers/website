@@ -65,7 +65,7 @@ const songsData = [
   {
     "id": "song-8",
     "number": "8.",
-    "title": "Bad Moon Rising learn",
+    "title": "Bad Moon Rising",
     "artist": "Creedence Clearwater Revival",
     "genre": "Rock",
     "pdf": "pdfs/8-Bad-Moon-Rising.pdf",
@@ -326,7 +326,7 @@ const songsData = [
   {
     "id": "song-37",
     "number": "37.",
-    "title": "I'm Into Something Good learn",
+    "title": "I'm Into Something Good",
     "artist": "Herman's Hermits",
     "genre": "Pop/Rock",
     "pdf": "pdfs/37-I'm-Into-Something-Good.pdf",
@@ -335,7 +335,7 @@ const songsData = [
   {
     "id": "song-38",
     "number": "38.",
-    "title": "Fisherman's Blues learn",
+    "title": "Fisherman's Blues",
     "artist": "The Waterboys",
     "genre": "Folk Rock",
     "pdf": "pdfs/38-Fisherman's-Blues.pdf",
@@ -398,7 +398,7 @@ const songsData = [
   {
     "id": "song-45",
     "number": "45.",
-    "title": "Hard Times Come Again No More learn",
+    "title": "Hard Times Come Again No More",
     "artist": "Stephen Foster",
     "genre": "Traditional/Folk",
     "pdf": "pdfs/45-Hard-Times-Come-Again-No-More.pdf",
@@ -407,7 +407,7 @@ const songsData = [
   {
     "id": "song-46",
     "number": "46.",
-    "title": "Have You Ever Seen The Rain learn",
+    "title": "Have You Ever Seen The Rain",
     "artist": "Creedence Clearwater Revival",
     "genre": "Rock",
     "pdf": "pdfs/46-Have-You-Ever-Seen-The-Rain.pdf",
@@ -425,7 +425,7 @@ const songsData = [
   {
     "id": "song-48",
     "number": "48.",
-    "title": "Hey Soul Sister learn",
+    "title": "Hey Soul Sister",
     "artist": "Train",
     "genre": "Pop",
     "pdf": "pdfs/48-Hey-Soul-Sister.pdf",
@@ -452,7 +452,7 @@ const songsData = [
   {
     "id": "song-51",
     "number": "51.",
-    "title": "I Can Never Take The Place Of Your Man learn",
+    "title": "I Can Never Take The Place Of Your Man",
     "artist": "Prince",
     "genre": "Pop/Rock",
     "pdf": "pdfs/51-I-Can-Never-Take-The-Place-Of-Your-Man.pdf",
@@ -560,7 +560,7 @@ const songsData = [
   {
     "id": "song-63",
     "number": "63.",
-    "title": "Dance the Night Away learn",
+    "title": "Dance the Night Away",
     "artist": "The Mavericks",
     "genre": "Country/Pop",
     "pdf": "pdfs/63-Dance-the-Night-Away.pdf",
@@ -632,7 +632,7 @@ const songsData = [
   {
     "id": "song-71",
     "number": "71.",
-    "title": "Mairi's Wedding learn",
+    "title": "Mairi's Wedding",
     "artist": "Traditional (Scottish)",
     "genre": "Folk",
     "pdf": "pdfs/71-Mairi's-Wedding.pdf",
@@ -641,7 +641,7 @@ const songsData = [
   {
     "id": "song-72",
     "number": "72.",
-    "title": "Maureen learn",
+    "title": "Maureen",
     "artist": "Unknown Artist",
     "genre": "Unknown Genre",
     "pdf": "pdfs/72-Maureen.pdf",
@@ -695,7 +695,7 @@ const songsData = [
   {
     "id": "song-78",
     "number": "78.",
-    "title": "Nga Iwi E learn",
+    "title": "Nga Iwi E",
     "artist": "Aotearoa NZ",
     "genre": "Waiata/Protest",
     "pdf": "pdfs/78-Nga-Iwi-E-.pdf",
@@ -740,7 +740,7 @@ const songsData = [
   {
     "id": "song-83",
     "number": "83.",
-    "title": "Rivers Of Babylon learn",
+    "title": "Rivers Of Babylon",
     "artist": "Boney M.",
     "genre": "Disco/Reggae",
     "pdf": "pdfs/83-Rivers-Of-Babylon.pdf",
@@ -749,7 +749,7 @@ const songsData = [
   {
     "id": "song-84",
     "number": "84.",
-    "title": "Runaround Sue learn",
+    "title": "Runaround Sue",
     "artist": "Dion",
     "genre": "Rock \u2019n\u2019 Roll",
     "pdf": "pdfs/84-Runaround-Sue.pdf",
@@ -821,7 +821,7 @@ const songsData = [
   {
     "id": "song-92",
     "number": "92.",
-    "title": "Sorrow learn",
+    "title": "Sorrow",
     "artist": "David Bowie",
     "genre": "Pop/Rock",
     "pdf": "pdfs/92-Sorrow.pdf",
@@ -848,7 +848,7 @@ const songsData = [
   {
     "id": "song-95",
     "number": "95.",
-    "title": "Sugar Town learn",
+    "title": "Sugar Town",
     "artist": "Nancy Sinatra",
     "genre": "Pop",
     "pdf": "pdfs/95-Sugar-Town.pdf",
@@ -857,7 +857,7 @@ const songsData = [
   {
     "id": "song-96",
     "number": "96.",
-    "title": "Sweet About Me learn",
+    "title": "Sweet About Me",
     "artist": "Gabriella Cilmi",
     "genre": "Pop",
     "pdf": "pdfs/96-Sweet-About-Me.pdf",
@@ -929,7 +929,7 @@ const songsData = [
   {
     "id": "song-104",
     "number": "104.",
-    "title": "Price Tag learn",
+    "title": "Price Tag",
     "artist": "Jessie J",
     "genre": "Pop",
     "pdf": "pdfs/104-Price-Tag.pdf",
@@ -947,7 +947,7 @@ const songsData = [
   {
     "id": "song-106",
     "number": "106.",
-    "title": "Youre The One That I Want learn",
+    "title": "Youre The One That I Want",
     "artist": "John Travolta & Olivia Newton\u2011John",
     "genre": "Pop",
     "pdf": "pdfs/106-Youre-The-One-That-I-Want.pdf",
@@ -983,7 +983,7 @@ const songsData = [
   {
     "id": "song-110",
     "number": "110.",
-    "title": "You Ain't Going Nowhere learn",
+    "title": "You Ain't Going Nowhere",
     "artist": "The Byrds",
     "genre": "Folk Rock",
     "pdf": "pdfs/110-You-Ain't-Going-Nowhere.pdf",
@@ -1019,7 +1019,7 @@ const songsData = [
   {
     "id": "song-114",
     "number": "114.",
-    "title": "Jolene learn",
+    "title": "Jolene",
     "artist": "Dolly Parton",
     "genre": "Country",
     "pdf": "pdfs/114-Jolene.pdf",
@@ -1037,7 +1037,7 @@ const songsData = [
   {
     "id": "song-116",
     "number": "116.",
-    "title": "Memories Are Made Of This learn",
+    "title": "Memories Are Made Of This",
     "artist": "Dean Martin",
     "genre": "Pop",
     "pdf": "pdfs/116-Memories-Are-Made-Of-This.pdf",
@@ -1055,7 +1055,7 @@ const songsData = [
   {
     "id": "song-118",
     "number": "118.",
-    "title": "Ring Of Fire learn",
+    "title": "Ring Of Fire",
     "artist": "Johnny Cash",
     "genre": "Country",
     "pdf": "pdfs/118-Ring-Of-Fire.pdf",
@@ -1091,7 +1091,7 @@ const songsData = [
   {
     "id": "song-122",
     "number": "122.",
-    "title": "The Gambler learn",
+    "title": "The Gambler",
     "artist": "Kenny Rogers",
     "genre": "Country",
     "pdf": "pdfs/122-The-Gambler.pdf",
@@ -1145,7 +1145,7 @@ const songsData = [
   {
     "id": "song-128",
     "number": "128.",
-    "title": "Walking After Midnight learn",
+    "title": "Walking After Midnight",
     "artist": "Patsy Cline",
     "genre": "Country",
     "pdf": "pdfs/128-Walking-After-Midnight.pdf",
@@ -1154,7 +1154,7 @@ const songsData = [
   {
     "id": "song-129",
     "number": "129.",
-    "title": "Margaritaville learn",
+    "title": "Margaritaville",
     "artist": "Jimmy Buffett",
     "genre": "Country/Soft Rock",
     "pdf": "pdfs/129-Margaritaville.pdf",
@@ -1235,7 +1235,7 @@ const songsData = [
   {
     "id": "song-138",
     "number": "138.",
-    "title": "Banks Of The Ohio learn",
+    "title": "Banks Of The Ohio",
     "artist": "Olivia Newton-John",
     "genre": "Folk/Country",
     "pdf": "pdfs/138-Banks-Of-The-Ohio.pdf",
@@ -1343,7 +1343,7 @@ const songsData = [
   {
     "id": "song-150",
     "number": "150.",
-    "title": "Cracklin' Rosie learn",
+    "title": "Cracklin' Rosie",
     "artist": "Neil Diamond",
     "genre": "Pop/Rock",
     "pdf": "pdfs/150-Cracklin'-Rosie.pdf",
@@ -1361,7 +1361,7 @@ const songsData = [
   {
     "id": "song-152",
     "number": "152.",
-    "title": "Don't Worry Be Happy learn",
+    "title": "Don't Worry Be Happy",
     "artist": "Bobby McFerrin",
     "genre": "Reggae/Pop",
     "pdf": "pdfs/152-Don't-Worry-Be-Happy.pdf",
@@ -1424,7 +1424,7 @@ const songsData = [
   {
     "id": "song-159",
     "number": "159.",
-    "title": "Good Riddance(Time Of Your Life) learn",
+    "title": "Good Riddance(Time Of Your Life)",
     "artist": "Green Day",
     "genre": "Alternative Rock",
     "pdf": "pdfs/159-Good-Riddance(Time-Of-Your-Life).pdf",
@@ -1469,7 +1469,7 @@ const songsData = [
   {
     "id": "song-164",
     "number": "164.",
-    "title": "Hey Baby learn",
+    "title": "Hey Baby",
     "artist": "Bruce Channel",
     "genre": "Rock \u2019n\u2019 Roll/Pop",
     "pdf": "pdfs/164-Hey-Baby.pdf",
@@ -1487,7 +1487,7 @@ const songsData = [
   {
     "id": "song-166",
     "number": "166.",
-    "title": "Ho Hey learn",
+    "title": "Ho Hey",
     "artist": "The Lumineers",
     "genre": "Folk Rock",
     "pdf": "pdfs/166-Ho-Hey.pdf",
@@ -1523,7 +1523,7 @@ const songsData = [
   {
     "id": "song-170",
     "number": "170.",
-    "title": "House Of Love learn",
+    "title": "House Of Love",
     "artist": "Unknown Artist",
     "genre": "Unknown Genre",
     "pdf": "pdfs/170-House-Of-Love.pdf",
@@ -1586,7 +1586,7 @@ const songsData = [
   {
     "id": "song-177",
     "number": "177.",
-    "title": "I'm Yours learn",
+    "title": "I'm Yours",
     "artist": "Jason Mraz",
     "genre": "Pop",
     "pdf": "pdfs/177-I'm-Yours.pdf",
@@ -1748,7 +1748,7 @@ const songsData = [
   {
     "id": "song-195",
     "number": "195.",
-    "title": "Shake It Off learn",
+    "title": "Shake It Off",
     "artist": "Taylor Swift",
     "genre": "Pop",
     "pdf": "pdfs/195-Shake-It-Off.pdf",
@@ -1874,7 +1874,7 @@ const songsData = [
   {
     "id": "song-209",
     "number": "209.",
-    "title": "What's Up learn",
+    "title": "What's Up",
     "artist": "4 Non Blondes",
     "genre": "Alternative Rock",
     "pdf": "pdfs/209-What's-Up.pdf",
@@ -1919,7 +1919,7 @@ const songsData = [
   {
     "id": "song-214",
     "number": "214.",
-    "title": "You Never Can Tell learn",
+    "title": "You Never Can Tell",
     "artist": "Chuck Berry",
     "genre": "Rock \u2019n\u2019 Roll",
     "pdf": "pdfs/214-You-Never-Can-Tell.pdf",
@@ -1964,7 +1964,7 @@ const songsData = [
   {
     "id": "song-219",
     "number": "219.",
-    "title": "Speed Of The Sound Of Loneliness learn",
+    "title": "Speed Of The Sound Of Loneliness",
     "artist": "John Prine",
     "genre": "Folk",
     "pdf": "pdfs/219-Speed-Of-The-Sound-Of-Loneliness.pdf",
@@ -1982,7 +1982,7 @@ const songsData = [
   {
     "id": "song-221",
     "number": "221.",
-    "title": "Sydney from a 747 learn",
+    "title": "Sydney from a 747",
     "artist": "Paul Kelly",
     "genre": "Rock/Pop",
     "pdf": "pdfs/221-Sydney-from-a-747.pdf",
@@ -2036,7 +2036,7 @@ const songsData = [
   {
     "id": "song-227",
     "number": "227.",
-    "title": "I Love a Rainy Night learn",
+    "title": "I Love a Rainy Night",
     "artist": "Eddie Rabbitt",
     "genre": "Country",
     "pdf": "pdfs/227-I-Love-a-Rainy-Night.pdf",
@@ -2054,7 +2054,7 @@ const songsData = [
   {
     "id": "song-229",
     "number": "229.",
-    "title": "Rockabilly Rebel learn",
+    "title": "Rockabilly Rebel",
     "artist": "Matchbox",
     "genre": "Rockabilly",
     "pdf": "pdfs/229-Rockabilly-Rebel.pdf",
@@ -2108,7 +2108,7 @@ const songsData = [
   {
     "id": "song-235",
     "number": "235.",
-    "title": "End Of The Line learn",
+    "title": "End Of The Line",
     "artist": "Traveling Wilburys",
     "genre": "Rock",
     "pdf": "pdfs/235-End-Of-The-Line.pdf",
@@ -2135,7 +2135,7 @@ const songsData = [
   {
     "id": "song-238",
     "number": "238.",
-    "title": "Octopus's Garden learn",
+    "title": "Octopus's Garden",
     "artist": "The Beatles",
     "genre": "Pop/Rock",
     "pdf": "pdfs/238-Octopus's-Garden.pdf",
@@ -2153,7 +2153,7 @@ const songsData = [
   {
     "id": "song-240",
     "number": "240.",
-    "title": "Pretty Flamingo learn",
+    "title": "Pretty Flamingo",
     "artist": "Manfred Mann",
     "genre": "Pop/Rock",
     "pdf": "pdfs/240-Pretty-Flamingo.pdf",
@@ -2198,7 +2198,7 @@ const songsData = [
   {
     "id": "song-245",
     "number": "245.",
-    "title": "Cant Let Go learn",
+    "title": "Cant Let Go",
     "artist": "Unknown",
     "genre": "Rock",
     "pdf": "pdfs/245.Cant-Let-Go.pdf",
@@ -2225,7 +2225,7 @@ const songsData = [
   {
     "id": "song-248",
     "number": "248.",
-    "title": "Rockin' All Over The World learn",
+    "title": "Rockin' All Over The World",
     "artist": "Status Quo",
     "genre": "Rock",
     "pdf": "pdfs/248-Rockin'-All-Over-The-World.pdf",
@@ -2243,7 +2243,7 @@ const songsData = [
   {
     "id": "song-250",
     "number": "250.",
-    "title": "Listen To The Music learn",
+    "title": "Listen To The Music",
     "artist": "The Doobie Brothers",
     "genre": "Rock",
     "pdf": "pdfs/250-Listen-To-The-Music.pdf",
