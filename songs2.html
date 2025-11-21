@@ -395,6 +395,8 @@
         <div id="songsList" class="songs-grid" aria-live="polite"></div>
     </main>
 
+    <button id="backToTop"><i class="fa-solid fa-angle-up"></i> Back to Top</button>
+
     <script src="assets/songs-data.js"></script>
     <script>
         const STORAGE_KEY = 'songLastClicked';
@@ -639,13 +641,19 @@
             registerFavoriteHandlers(favorites, history);
         }
 
-        function applySearchFilter(history, favorites) {
-            const query = document.getElementById('songSearch').value.trim().toLowerCase();
-            const filteredSongs = songs.filter(song => {
-                const matchesQuery = [song.number, song.title, song.artist, song.genre].some(field => field.toLowerCase().includes(query));
+        function getFilteredSongs(query, favorites) {
+            const normalized = query.trim().toLowerCase();
+
+            return songs.filter(song => {
+                const matchesQuery = [song.number, song.title, song.artist, song.genre].some(field => field.toLowerCase().includes(normalized));
                 const matchesFavorites = !favoritesFilterActive || favorites[song.id];
                 return matchesQuery && matchesFavorites;
             });
+        }
+
+        function applySearchFilter(history, favorites) {
+            const query = document.getElementById('songSearch').value;
+            const filteredSongs = getFilteredSongs(query, favorites);
             renderSongs(filteredSongs, history, favorites);
         }
 
@@ -675,11 +683,7 @@
             document.getElementById('randomSong').addEventListener('click', () => {
                 const searchInput = document.getElementById('songSearch');
                 const query = searchInput.value.trim().toLowerCase();
-                const filteredSongs = songs.filter(song => {
-                    const matchesQuery = [song.number, song.title, song.artist, song.genre].some(field => field.toLowerCase().includes(query));
-                    const matchesFavorites = !favoritesFilterActive || favorites[song.id];
-                    return matchesQuery && matchesFavorites;
-                });
+                const filteredSongs = getFilteredSongs(query, favorites);
 
                 if (filteredSongs.length === 0) {
                     return;
@@ -687,17 +691,21 @@
 
                 const selection = filteredSongs[Math.floor(Math.random() * filteredSongs.length)];
 
+                searchInput.value = `${selection.number}.`;
                 applySearchFilter(history, favorites);
+            });
 
-                requestAnimationFrame(() => {
-                    document.querySelectorAll('.song-card').forEach(card => card.classList.remove('random-highlight'));
-                    const chosenCard = document.querySelector(`.song-card[data-song-id="${selection.id}"]`);
-                    if (chosenCard) {
-                        chosenCard.classList.add('random-highlight');
-                        chosenCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        chosenCard.focus();
-                    }
-                });
+            const backToTop = document.getElementById('backToTop');
+            const toggleBackToTop = () => {
+                backToTop.classList.toggle('is-visible', window.scrollY > 100);
+            };
+
+            window.addEventListener('scroll', toggleBackToTop);
+            toggleBackToTop();
+
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                document.getElementById('songSearch').blur();
             });
 
         });
