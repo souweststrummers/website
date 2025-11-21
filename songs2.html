@@ -373,7 +373,7 @@
             <div class="search-row">
                 <label class="search-bar" for="songSearch">
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                    <input id="songSearch" type="search" placeholder="Search by title, artist, or genre" aria-label="Search songs">
+                    <input id="songSearch" type="search" placeholder="Search by title, artist, genre, or keywords" aria-label="Search songs">
                 </label>
                 <div class="search-actions" aria-label="Search helpers">
                     <button id="clearSearch" class="icon-button" type="button" title="Clear search">
@@ -645,7 +645,11 @@
             const normalized = query.trim().toLowerCase();
 
             return songs.filter(song => {
-                const matchesQuery = [song.number, song.title, song.artist, song.genre].some(field => field.toLowerCase().includes(normalized));
+                const searchFields = [song.number, song.title, song.artist, song.genre, song.dataName]
+                    .filter(Boolean)
+                    .map(field => field.toLowerCase());
+
+                const matchesQuery = searchFields.some(field => field.includes(normalized));
                 const matchesFavorites = !favoritesFilterActive || favorites[song.id];
                 return matchesQuery && matchesFavorites;
             });
