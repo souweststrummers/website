@@ -34,10 +34,10 @@
         }
         .search-row {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: stretch;
             gap: 10px;
             width: 100%;
-            flex-wrap: wrap;
         }
         .search-bar {
             display: flex;
@@ -76,6 +76,8 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            justify-content: center;
+            width: 100%;
         }
         #favoritesFilter i {
             color: #ec4899 !important;
@@ -110,8 +112,9 @@
             margin-top: 16px;
         }
         .song-card {
-            display: flex;
-            gap: 14px;
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 16px;
             align-items: center;
             padding: 14px 16px;
             background: #fff;
@@ -145,17 +148,22 @@
             flex-direction: column;
             gap: 10px;
             flex: 1;
+            text-align: center;
+            align-items: center;
+            width: 100%;
         }
         .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: start;
+            gap: 12px;
+            width: 100%;
         }
         .title-group {
             display: flex;
             flex-direction: column;
             gap: 4px;
+            align-items: center;
         }
         .song-title {
             font-size: 1.05rem;
@@ -163,7 +171,7 @@
             color: #1f2933;
             margin: 0;
             padding: 0;
-            text-align: left;
+            text-align: center;
         }
         .song-title:hover {
             text-decoration: underline;
@@ -174,6 +182,7 @@
             flex-wrap: wrap;
             color: #374151;
             font-size: 0.95rem;
+            justify-content: center;
         }
         .meta-row span {
             display: inline-flex;
@@ -217,10 +226,11 @@
         }
         .top-actions {
             display: inline-flex;
-            align-items: center;
-            gap: 12px;
+            align-items: flex-end;
+            gap: 10px;
             justify-content: flex-end;
-            flex-wrap: wrap;
+            flex-direction: column;
+            text-align: right;
         }
         .action-buttons {
             display: inline-flex;
@@ -259,12 +269,13 @@
             gap: 8px;
             color: #1f2933;
             font-size: 0.95rem;
+            justify-content: center;
         }
         .last-clicked i {
             color: #0a7c2f;
         }
         #clearStorage {
-            margin-top: 18px;
+            margin: 18px auto 0;
             padding: 10px 16px;
             border: none;
             border-radius: 8px;
@@ -272,9 +283,21 @@
             color: #fff;
             cursor: pointer;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            display: block;
         }
         #clearStorage:hover {
             background: #cf3f30;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 16px;
+            }
+
+            .card-top {
+                gap: 12px;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -394,6 +417,11 @@
         function formatYoutubeLink(title) {
             const query = encodeURIComponent(`${title} site:youtube.com`);
             return `https://www.google.com/search?q=${query}&btnI=1`;
+        }
+
+        function truncateArtist(name) {
+            if (name.length <= 7) return name;
+            return `${name.slice(0, 7)}…`;
         }
 
         function setLastPlayed(card, history) {
@@ -522,7 +550,8 @@
             const metaRow = document.createElement('div');
             metaRow.className = 'meta-row';
             const artistSpan = document.createElement('span');
-            artistSpan.innerHTML = `<i class="fa-solid fa-user" aria-hidden="true"></i> ${song.artist}`;
+            artistSpan.setAttribute('title', song.artist);
+            artistSpan.innerHTML = `<i class="fa-solid fa-user" aria-hidden="true"></i> ${truncateArtist(song.artist)}`;
             const genreSpan = document.createElement('span');
             genreSpan.innerHTML = `<i class="fa-solid fa-tag" aria-hidden="true"></i> ${song.genre}`;
             metaRow.append(artistSpan, genreSpan);
@@ -555,7 +584,7 @@
             actionButtons.className = 'action-buttons';
             actionButtons.append(favoriteButton, listenLink);
 
-            topActions.append(lastClickWrapper, actionButtons);
+            topActions.append(actionButtons, lastClickWrapper);
 
             top.append(titleGroup, topActions);
 
