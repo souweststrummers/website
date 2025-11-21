@@ -462,13 +462,13 @@
 
                 if (isOlderThanMonth) {
                     const dateLabel = formatDateOnly(dateRecorded);
-                    lastClickText.textContent = `Last played: ${dateLabel}`;
+                    lastClickText.textContent = dateLabel;
                 } else {
                     const weekDescription = formatWeekDescription(dateRecorded);
-                    lastClickText.textContent = `Last played: ${weekDescription}`;
+                    lastClickText.textContent = weekDescription;
                 }
             } else {
-                lastClickText.textContent = 'Never played';
+                lastClickText.textContent = 'Not yet';
             }
         }
 
@@ -610,7 +610,7 @@
             topActions.className = 'top-actions';
             const lastClickWrapper = document.createElement('div');
             lastClickWrapper.className = 'last-clicked';
-            lastClickWrapper.innerHTML = '<i class="fa-regular fa-clock"></i> <span class="last-click-text">Never played</span>';
+            lastClickWrapper.innerHTML = '<i class="fa-regular fa-clock"></i> <span class="last-click-text">Not yet</span>';
 
             const actionButtons = document.createElement('div');
             actionButtons.className = 'action-buttons';
@@ -681,18 +681,23 @@
             });
 
             document.getElementById('randomSong').addEventListener('click', () => {
-                const searchInput = document.getElementById('songSearch');
-                const query = searchInput.value.trim().toLowerCase();
-                const filteredSongs = getFilteredSongs(query, favorites);
+                const visibleCards = Array.from(document.querySelectorAll('.song-card'))
+                    .filter(card => card.offsetParent !== null);
 
-                if (filteredSongs.length === 0) {
+                if (!visibleCards.length) {
                     return;
                 }
 
-                const selection = filteredSongs[Math.floor(Math.random() * filteredSongs.length)];
+                visibleCards.forEach(card => card.classList.remove('random-highlight'));
+                const randomCard = visibleCards[Math.floor(Math.random() * visibleCards.length)];
 
-                searchInput.value = `${selection.number}.`;
-                applySearchFilter(history, favorites);
+                randomCard.classList.add('random-highlight');
+                randomCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                const link = randomCard.querySelector('.pdf-link');
+                if (link) {
+                    link.focus();
+                }
             });
 
             const backToTop = document.getElementById('backToTop');
