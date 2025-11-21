@@ -184,12 +184,15 @@
             font-size: 0.95rem;
             justify-content: flex-start;
         }
-        .meta-row span {
+        .meta-row > span {
             display: inline-flex;
             align-items: center;
             gap: 6px;
         }
-        .artist-short {
+        .meta-row .artist-full {
+            display: inline-flex;
+        }
+        .meta-row .artist-short {
             display: none;
         }
         .favorite-btn {
@@ -345,12 +348,17 @@
                 width: 100%;
             }
 
-            .artist-full {
+            .meta-row .artist-full {
                 display: none;
             }
 
-            .artist-short {
+            .meta-row .artist-short {
                 display: inline-flex;
+            }
+
+            .cover-thumb {
+                width: 80px;
+                height: 80px;
             }
         }
     </style>

@@ -170,6 +170,10 @@ img {padding-top:10px;}
     cursor: default;
 }
 
+.navbar + .banner {
+    margin-top: 12px;
+}
+
 #searchBar {
     width: 80%;
     padding: 10px;
