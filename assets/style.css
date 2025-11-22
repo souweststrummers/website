@@ -160,8 +160,10 @@ img {padding-top:10px;}
     .nav-links.active {
         display: flex;
     }
-    .nav-item {
+    .nav-links .nav-item {
         width: 100%;
+    }
+    .nav-item {
         justify-content: center;
         padding: 8px 12px;
     }
