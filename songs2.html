@@ -679,6 +679,7 @@
 
             const results = [];
             const addedIds = new Set();
+            const excludeNextPreview = normalized.includes('learn');
 
             matchedIndices.forEach(index => {
                 const song = songs[index];
@@ -688,7 +689,7 @@
                 }
 
                 const nextSong = songs[index + 1];
-                if (nextSong && !addedIds.has(nextSong.id)) {
+                if (!excludeNextPreview && nextSong && !addedIds.has(nextSong.id)) {
                     results.push({ ...nextSong, isPreview: true });
                     addedIds.add(nextSong.id);
                 }
