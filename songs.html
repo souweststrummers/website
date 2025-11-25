@@ -2440,7 +2440,7 @@ $('#searchBar').on('keyup', function () {
     });
 
     $('#Dice').click(function () {
-        highlightRandomCard();
+        $('#searchBar').val('pick').trigger('keyup').focus();
     });
     $('#NZ').click(function () {
         $('#searchBar').val("Aotearoa").trigger('keyup');
