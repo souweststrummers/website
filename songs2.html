@@ -133,6 +133,10 @@
             outline: 2px solid #f97316;
             box-shadow: 0 8px 18px rgba(249, 115, 22, 0.25);
         }
+        .song-card.next-preview {
+            opacity: 0.55;
+            filter: grayscale(0.15);
+        }
         .cover-thumb {
             width: 64px;
             height: 64px;
@@ -442,8 +446,9 @@
             });
         }
 
-        function formatYoutubeLink(title) {
-            const query = encodeURIComponent(`${title} site:youtube.com`);
+        function formatYoutubeLink(title, artist) {
+            const searchTerm = artist ? `${title} ${artist}` : title;
+            const query = encodeURIComponent(`${searchTerm} site:youtube.com`);
             return `https://www.google.com/search?q=${query}&btnI=1`;
         }
 
@@ -547,6 +552,9 @@
         function createSongCard(song) {
             const card = document.createElement('article');
             card.className = 'song-card';
+            if (song.isPreview) {
+                card.classList.add('next-preview');
+            }
             card.setAttribute('data-song-id', song.id);
             card.setAttribute('data-name', song.dataName || `${song.number} ${song.title} | ${song.artist} | ${song.genre}`);
             card.setAttribute('role', 'link');
@@ -592,7 +600,7 @@
 
             const listenLink = document.createElement('a');
             listenLink.className = 'listen-link';
-            listenLink.href = formatYoutubeLink(song.title);
+            listenLink.href = formatYoutubeLink(song.title, song.artist);
             listenLink.setAttribute('data-song-id', song.id);
             listenLink.setAttribute('aria-label', 'Listen on YouTube');
             listenLink.title = 'Listen on YouTube';
@@ -643,16 +651,50 @@
 
         function getFilteredSongs(query, favorites) {
             const normalized = query.trim().toLowerCase();
+            const isNumberSearch = /^[0-9]/.test(normalized);
 
-            return songs.filter(song => {
+            if (!normalized) {
+                return songs.filter(song => {
+                    const matchesFavorites = !favoritesFilterActive || favorites[song.id];
+                    return matchesFavorites;
+                });
+            }
+
+            const matchedIndices = [];
+
+            songs.forEach((song, index) => {
                 const searchFields = [song.number, song.title, song.artist, song.genre, song.dataName]
                     .filter(Boolean)
                     .map(field => field.toLowerCase());
 
-                const matchesQuery = searchFields.some(field => field.includes(normalized));
+                const matchesQuery = searchFields.some(field =>
+                    isNumberSearch ? field.startsWith(normalized) : field.includes(normalized)
+                );
                 const matchesFavorites = !favoritesFilterActive || favorites[song.id];
-                return matchesQuery && matchesFavorites;
+
+                if (matchesQuery && matchesFavorites) {
+                    matchedIndices.push(index);
+                }
             });
+
+            const results = [];
+            const addedIds = new Set();
+
+            matchedIndices.forEach(index => {
+                const song = songs[index];
+                if (!addedIds.has(song.id)) {
+                    results.push(song);
+                    addedIds.add(song.id);
+                }
+
+                const nextSong = songs[index + 1];
+                if (nextSong && !addedIds.has(nextSong.id)) {
+                    results.push({ ...nextSong, isPreview: true });
+                    addedIds.add(nextSong.id);
+                }
+            });
+
+            return results;
         }
 
         function applySearchFilter(history, favorites) {
