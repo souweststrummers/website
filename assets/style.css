@@ -256,6 +256,11 @@ img {padding-top:10px;}
     box-shadow: 0 28px 60px rgba(249, 115, 22, 0.35);
 }
 
+.card.next-preview {
+    opacity: 0.55;
+    filter: grayscale(0.15);
+}
+
 .card[data-name*="🎓"]::before {
     content: "🎓";
     position: absolute;

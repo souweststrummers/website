@@ -2346,7 +2346,21 @@ $('#searchBar').on('keyup', function () {
     $('#noFavourites').hide();
     $('.card').removeClass('random-highlight');
     var value = $(this).val().toLowerCase();
+    var trimmedValue = value.trim();
     var visibleCards = 0;
+    var matchedIndices = [];
+
+    const $cards = $('.card');
+    $cards.removeClass('next-preview');
+
+    if (!trimmedValue) {
+        $cards.each(function () {
+            $(this).show();
+            $(this).closest('a.link-nochange').show();
+        });
+        $('#noResults').hide();
+        return;
+    }
 
     // If "pick" is typed, pick a random song number from 1 to 250
     if (value === "pick") {
@@ -2357,7 +2371,7 @@ $('#searchBar').on('keyup', function () {
     // Decide whether to use startsWith or includes
     var useStartsWith = /^[0-9]/.test(value); // true if value begins with a digit
 
-    $('.card').each(function () {
+    $cards.each(function (index) {
         var $card = $(this);
         var name = $card.data('name').toLowerCase();
         var match = useStartsWith ? name.startsWith(value) : name.includes(value);
@@ -2366,7 +2380,19 @@ $('#searchBar').on('keyup', function () {
         $card.toggle(match);
         $link.toggle(match);
 
-        if (match) visibleCards++;
+        if (match) {
+            visibleCards++;
+            matchedIndices.push(index);
+        }
+    });
+
+    matchedIndices.forEach(function (index) {
+        var $nextCard = $cards.eq(index + 1);
+        if ($nextCard.length) {
+            var $nextLink = $nextCard.closest('a.link-nochange');
+            $nextCard.addClass('next-preview').show();
+            $nextLink.show();
+        }
     });
 
     $('#noResults').toggle(visibleCards === 0);
@@ -2458,6 +2484,7 @@ let favourites = JSON.parse(localStorage.getItem('favourites')) || [];
 
 
 $('#ShowFavs').click(function () {
+  $('.card').removeClass('next-preview');
   if (favourites.length === 0) {
     $('.card').each(function () {
       $(this).hide();
@@ -2477,6 +2504,7 @@ $('#ShowFavs').click(function () {
 });
 
 $('#ShowAll').click(function () {
+  $('.card').removeClass('next-preview');
   $('.card').each(function () {
     $(this).show();
     $(this).closest('a.link-nochange').show();
