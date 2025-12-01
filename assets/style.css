@@ -576,7 +576,7 @@ a.link-nochange:hover {
 
 .fa-solid {color:#000 !important; }
 
-.fav-btn {
+.fav-btn { 
   position: absolute;
   bottom: 4px;
   right: 4px;
@@ -585,4 +585,167 @@ a.link-nochange:hover {
   cursor: pointer;
   font-size: 1.2em;
   color: #dbdbdb !important;
+}
+
+.holiday-corner {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 180px;
+  height: 240px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  z-index: 1150;
+  pointer-events: none;
+}
+
+.christmas-tree {
+  position: relative;
+  width: 140px;
+  height: 210px;
+}
+
+.tree-section {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 70px solid transparent;
+  border-right: 70px solid transparent;
+  border-bottom: 70px solid #1f7a3a;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.15));
+}
+
+.section-1 { top: 10px; }
+.section-2 { top: 50px; border-bottom-color: #239344; }
+.section-3 { top: 90px; border-bottom-color: #2cad4f; }
+
+.tree-trunk {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 32px;
+  height: 40px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #8b5a2b, #6d3f1c);
+  border-radius: 4px;
+}
+
+.tree-star {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #f9d65c;
+  font-size: 26px;
+  text-shadow: 0 0 10px rgba(249, 214, 92, 0.8);
+}
+
+.tree-lights {
+  position: absolute;
+  inset: 0;
+}
+
+.tree-lights .light {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffdf6c;
+  box-shadow: 0 0 8px rgba(255, 223, 108, 0.8);
+  animation: twinkle 2.6s infinite ease-in-out;
+}
+
+.tree-lights .light:nth-child(1) { top: 38px; left: 36%; animation-delay: 0.2s; }
+.tree-lights .light:nth-child(2) { top: 60px; left: 62%; animation-delay: 0.6s; }
+.tree-lights .light:nth-child(3) { top: 82px; left: 48%; animation-delay: 1s; }
+.tree-lights .light:nth-child(4) { top: 106px; left: 30%; animation-delay: 1.4s; }
+.tree-lights .light:nth-child(5) { top: 130px; left: 64%; animation-delay: 1.8s; }
+.tree-lights .light:nth-child(6) { top: 154px; left: 44%; animation-delay: 2.2s; }
+.tree-lights .light:nth-child(7) { top: 118px; left: 55%; animation-delay: 2.6s; }
+.tree-lights .light:nth-child(8) { top: 78px; left: 32%; animation-delay: 3s; }
+
+@keyframes twinkle {
+  0%, 100% { background: #ffdf6c; box-shadow: 0 0 8px rgba(255, 223, 108, 0.8); }
+  25% { background: #ff6b6b; box-shadow: 0 0 10px rgba(255, 107, 107, 0.8); }
+  50% { background: #71c7ec; box-shadow: 0 0 10px rgba(113, 199, 236, 0.8); }
+  75% { background: #8df27f; box-shadow: 0 0 10px rgba(141, 242, 127, 0.8); }
+}
+
+.present {
+  position: relative;
+  width: 54px;
+  height: 44px;
+  border-radius: 6px;
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.2);
+}
+
+.present:before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 42px;
+  height: 10px;
+  border-radius: 6px 6px 0 0;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.present-red { background: linear-gradient(135deg, #f35a5a, #c92626); }
+.present-blue { background: linear-gradient(135deg, #6bb5ff, #2f7bdc); }
+
+.ribbon {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 4px;
+}
+
+.ribbon-vertical {
+  width: 10px;
+  height: 100%;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+.ribbon-horizontal {
+  height: 10px;
+  width: 100%;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.snow-container {
+  position: fixed;
+  inset: 0;
+  height: 140vh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1200;
+}
+
+.snowflake {
+  position: absolute;
+  top: -10%;
+  color: #fff;
+  opacity: 0.9;
+  animation-name: snowfall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes snowfall {
+  0% { transform: translateY(-10vh); }
+  100% { transform: translateY(140vh); }
+}
+
+@media (max-width: 700px) {
+  .holiday-corner {
+    transform: scale(0.8);
+    right: 8px;
+    bottom: 8px;
+  }
 }

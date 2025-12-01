@@ -51,7 +51,35 @@
       <!-- add as many slides as you like -->
     </div>
   </div>
-  
+
+  <div class="holiday-corner" aria-hidden="true">
+    <div class="present present-red">
+      <span class="ribbon ribbon-vertical"></span>
+      <span class="ribbon ribbon-horizontal"></span>
+    </div>
+    <div class="present present-blue">
+      <span class="ribbon ribbon-vertical"></span>
+      <span class="ribbon ribbon-horizontal"></span>
+    </div>
+    <div class="christmas-tree">
+      <div class="tree-star">★</div>
+      <div class="tree-section section-1"></div>
+      <div class="tree-section section-2"></div>
+      <div class="tree-section section-3"></div>
+      <div class="tree-trunk"></div>
+      <div class="tree-lights">
+        <span class="light"></span>
+        <span class="light"></span>
+        <span class="light"></span>
+        <span class="light"></span>
+        <span class="light"></span>
+        <span class="light"></span>
+        <span class="light"></span>
+        <span class="light"></span>
+      </div>
+    </div>
+  </div>
+
   <script>
     $(function(){
       // slideshow
@@ -63,6 +91,29 @@
         idx = (idx + 1) % slideCount;
         slides.eq(idx).fadeIn(600).addClass('active');
       }, 10000);
+    });
+
+    // brief snowfall effect on load
+    window.addEventListener('load', () => {
+      const snowContainer = document.createElement('div');
+      snowContainer.className = 'snow-container';
+      document.body.appendChild(snowContainer);
+
+      const snowflakeCount = 80;
+      for (let i = 0; i < snowflakeCount; i++) {
+        const flake = document.createElement('span');
+        flake.className = 'snowflake';
+        flake.textContent = '•';
+        flake.style.left = `${Math.random() * 100}%`;
+        flake.style.fontSize = `${8 + Math.random() * 10}px`;
+        flake.style.animationDuration = `${6 + Math.random() * 6}s`;
+        flake.style.animationDelay = `${Math.random() * 2}s`;
+        snowContainer.appendChild(flake);
+      }
+
+      setTimeout(() => {
+        snowContainer.remove();
+      }, 5000);
     });
   </script>
 </body>
