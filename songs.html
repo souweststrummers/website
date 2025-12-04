@@ -133,10 +133,6 @@
             outline: 2px solid #f97316;
             box-shadow: 0 8px 18px rgba(249, 115, 22, 0.25);
         }
-        .song-card.next-preview {
-            opacity: 0.55;
-            filter: grayscale(0.15);
-        }
         .cover-thumb {
             width: 64px;
             height: 64px;
@@ -555,9 +551,6 @@
         function createSongCard(song) {
             const card = document.createElement('article');
             card.className = 'song-card';
-            if (song.isPreview) {
-                card.classList.add('next-preview');
-            }
             card.setAttribute('data-song-id', song.id);
             card.setAttribute('data-name', song.dataName || `${song.number} ${song.title} | ${song.artist} | ${song.genre}`);
             card.setAttribute('role', 'link');
@@ -680,25 +673,7 @@
                 }
             });
 
-            const results = [];
-            const addedIds = new Set();
-            const excludeNextPreview = normalized.includes('learn');
-
-            matchedIndices.forEach(index => {
-                const song = songs[index];
-                if (!addedIds.has(song.id)) {
-                    results.push(song);
-                    addedIds.add(song.id);
-                }
-
-                const nextSong = songs[index + 1];
-                if (!excludeNextPreview && nextSong && !addedIds.has(nextSong.id)) {
-                    results.push({ ...nextSong, isPreview: true });
-                    addedIds.add(nextSong.id);
-                }
-            });
-
-            return results;
+            return matchedIndices.map(index => songs[index]);
         }
 
         function applySearchFilter(history, favorites) {
