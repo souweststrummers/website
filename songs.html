@@ -40,6 +40,36 @@
             gap: 12px;
             width: 100%;
         }
+        .view-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            border: 1px solid #d7dde2;
+            border-radius: 12px;
+            padding: 6px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        }
+        .view-toggle button {
+            border: none;
+            background: transparent;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #111827;
+            font-weight: 600;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .view-toggle button:hover {
+            background: #f3f4f6;
+        }
+        .view-toggle button.active {
+            background: #111827;
+            color: #fff;
+        }
         .search-bar {
             display: flex;
             align-items: center;
@@ -112,6 +142,11 @@
             gap: 12px;
             margin-top: 16px;
         }
+        .songs-grid.grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
         .song-card {
             display: grid;
             grid-template-columns: 80px 1fr;
@@ -133,6 +168,12 @@
             outline: 2px solid #f97316;
             box-shadow: 0 8px 18px rgba(249, 115, 22, 0.25);
         }
+        .song-card.grid-card {
+            grid-template-columns: 1fr;
+            text-align: center;
+            align-items: center;
+            gap: 12px;
+        }
         .cover-thumb {
             width: 64px;
             height: 64px;
@@ -141,6 +182,12 @@
             flex-shrink: 0;
             border: 1px solid #e5e7eb;
             background: #f3f4f6;
+        }
+        .song-card.grid-card .cover-thumb {
+            margin: 0 auto;
+            width: 100%;
+            max-width: 180px;
+            height: 180px;
         }
         .cover-thumb img {
             width: 100%;
@@ -157,12 +204,20 @@
             align-items: flex-start;
             width: 100%;
         }
+        .song-card.grid-card .card-content {
+            align-items: center;
+            text-align: center;
+        }
         .card-top {
             display: grid;
             grid-template-columns: 1fr auto;
             align-items: start;
             gap: 12px;
             width: 100%;
+        }
+        .song-card.grid-card .card-top {
+            grid-template-columns: 1fr;
+            justify-items: center;
         }
         .title-group {
             display: flex;
@@ -177,6 +232,9 @@
             margin: 0;
             padding: 0;
             text-align: left;
+        }
+        .song-card.grid-card .song-title {
+            text-align: center;
         }
         .song-title:hover {
             text-decoration: underline;
@@ -193,6 +251,9 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+        }
+        .song-card.grid-card .meta-row {
+            display: none;
         }
         .meta-row .artist-full {
             display: inline-flex;
@@ -243,12 +304,23 @@
             flex-direction: column;
             text-align: right;
         }
+        .song-card.grid-card .top-actions {
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+        }
         .action-buttons {
             display: inline-flex;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
             justify-content: flex-end;
+        }
+        .song-card.grid-card .action-buttons {
+            justify-content: center;
+            width: 100%;
         }
         .listen-link {
             width: 40px;
@@ -264,6 +336,10 @@
             font-weight: 600;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             transition: background 0.15s ease, transform 0.1s ease-in-out, box-shadow 0.15s ease;
+        }
+        .song-card.grid-card .listen-link,
+        .song-card.grid-card .last-clicked {
+            display: none;
         }
         .listen-link:hover {
             background: #ffe3df;
@@ -300,6 +376,12 @@
             .search-actions {
                 width: 100%;
                 justify-content: center;
+            }
+
+            .view-toggle {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
             }
 
             .card-top {
@@ -378,6 +460,16 @@
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                     <input id="songSearch" type="search" placeholder="Search by title, artist, genre, or keywords" aria-label="Search songs">
                 </label>
+                <div class="view-toggle" role="group" aria-label="Change song layout">
+                    <button id="listView" type="button" class="active" title="Show list view">
+                        <i class="fa-solid fa-list" aria-hidden="true"></i>
+                        <span>List</span>
+                    </button>
+                    <button id="gridView" type="button" title="Show grid view">
+                        <i class="fa-solid fa-border-all" aria-hidden="true"></i>
+                        <span>Grid</span>
+                    </button>
+                </div>
                 <div class="search-actions" aria-label="Search helpers">
                     <button id="clearSearch" class="icon-button" type="button" title="Clear search">
                         <i class="fa-solid fa-xmark" aria-hidden="true"></i>
@@ -404,10 +496,12 @@
     <script>
         const STORAGE_KEY = 'songLastClicked';
         const FAVORITES_KEY = 'songFavorites';
+        const VIEW_MODE_KEY = 'songsViewMode';
 
         const songs = songsData;
 
         let favoritesFilterActive = false;
+        let viewMode = 'list';
 
         function loadStoredObject(key) {
             try {
@@ -416,6 +510,16 @@
             } catch (error) {
                 console.error('Unable to parse localStorage entry', error);
                 return {};
+            }
+        }
+
+        function loadStoredString(key, fallback) {
+            try {
+                const stored = localStorage.getItem(key);
+                return stored || fallback;
+            } catch (error) {
+                console.error('Unable to read localStorage entry', error);
+                return fallback;
             }
         }
 
@@ -548,9 +652,9 @@
             });
         }
 
-        function createSongCard(song) {
+        function createSongCard(song, mode) {
             const card = document.createElement('article');
-            card.className = 'song-card';
+            card.className = `song-card ${mode === 'grid' ? 'grid-card' : ''}`.trim();
             card.setAttribute('data-song-id', song.id);
             card.setAttribute('data-name', song.dataName || `${song.number} ${song.title} | ${song.artist} | ${song.genre}`);
             card.setAttribute('role', 'link');
@@ -633,9 +737,11 @@
         function renderSongs(list, history, favorites) {
             const container = document.getElementById('songsList');
             container.innerHTML = '';
+            container.classList.toggle('grid-view', viewMode === 'grid');
+            container.classList.toggle('list-view', viewMode !== 'grid');
 
             list.forEach(song => {
-                const card = createSongCard(song);
+                const card = createSongCard(song, viewMode);
                 container.appendChild(card);
             });
 
@@ -682,10 +788,29 @@
             renderSongs(filteredSongs, history, favorites);
         }
 
+        function updateViewToggleButtons() {
+            const listButton = document.getElementById('listView');
+            const gridButton = document.getElementById('gridView');
+
+            if (!listButton || !gridButton) return;
+
+            listButton.classList.toggle('active', viewMode === 'list');
+            gridButton.classList.toggle('active', viewMode === 'grid');
+        }
+
+        function setViewMode(mode, history, favorites) {
+            viewMode = mode;
+            localStorage.setItem(VIEW_MODE_KEY, mode);
+            updateViewToggleButtons();
+            applySearchFilter(history, favorites);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const history = loadStoredObject(STORAGE_KEY);
             const favorites = loadStoredObject(FAVORITES_KEY);
 
+            viewMode = loadStoredString(VIEW_MODE_KEY, 'list');
+            updateViewToggleButtons();
             renderSongs(songs, history, favorites);
 
             document.getElementById('songSearch').addEventListener('input', () => applySearchFilter(history, favorites));
@@ -704,6 +829,9 @@
                 document.getElementById('favoritesFilter').classList.toggle('active', favoritesFilterActive);
                 applySearchFilter(history, favorites);
             });
+
+            document.getElementById('listView').addEventListener('click', () => setViewMode('list', history, favorites));
+            document.getElementById('gridView').addEventListener('click', () => setViewMode('grid', history, favorites));
 
             document.getElementById('randomSong').addEventListener('click', () => {
                 const visibleCards = Array.from(document.querySelectorAll('.song-card'))
