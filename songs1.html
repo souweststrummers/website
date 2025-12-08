@@ -20,7 +20,7 @@
 </script>
 
 </head>
-<body>
+<body class="songs1-controls">
 <div class="navbar">
         <span class="menu-icon" aria-label="Toggle navigation" aria-expanded="false">&#9776;</span>
         <div class="nav-links">
@@ -48,19 +48,19 @@
 </button>
 
 <!-- Category button container -->
-<div id="categoryButtons" style="display:none; margin-top:10px;">
+<div id="categoryButtons">
   <button id="ShowFavs" title="Favourites"><i class="fa-solid fa-star"></i></button>
   <button id="Dice" title="Random"><i class="fa-solid fa-dice"></i></button>
   <button id="NZ" title="Aotearoa"><i class="fa-solid fa-kiwi-bird"></i></button>
   <br><br>
 </div>
 
-<div id="noFavourites" style="display:none; text-align:center; margin:20px;">
+<div id="noFavourites">
   <i class="fa-regular fa-star"></i> You have no favourites yet. Click the star on a song to add one.
 </div>
     <div id="noResults">No song found <i class="fa-regular fa-face-sad-tear"></i>, please check your spelling</div>
     <div class="card-container songs-container">
-	<button id="backToTop"><i class="fa-solid fa-angle-up" style="color:white !important"></i> Back to Top</button>
+        <button id="backToTop"><i class="fa-solid fa-angle-up"></i> Back to Top</button>
 
 <!-- Add new songs below, please put them in numbered order -->
 <a class="link-nochange" href="pdfs/1-All-I-Have-to-Do-Is-Dream.pdf">
