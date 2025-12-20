@@ -7,6 +7,7 @@
     <title>Darfield Midwinter Strum - Sou'West Strummers Events</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<link rel="stylesheet" href="assets/style.css">
+    <script src="assets/app.js" defer></script>
 <style>
 	html {
   scroll-behavior: smooth;
@@ -30,10 +31,14 @@ iframe {max-width: 100%;}
     <div class="navbar">
 	<span class="menu-icon">&#9776;</span>
         <div class="nav-links">
-        <a class="nav-item" href="index.html">Home</a>
-        <a class="nav-item" href="songs.html">Songs</a>
-		<a class="nav-item" href="events.html">Events</a>
-		<a class="nav-item" href="library.html">Library</a>
+        <a class="nav-item" href="index.html" data-i18n="nav.home">Home</a>
+        <a class="nav-item" href="songs.html" data-i18n="nav.songs">Songs</a>
+		<a class="nav-item" href="events.html" data-i18n="nav.events">Events</a>
+		<a class="nav-item" href="library.html" data-i18n="nav.library">Library</a>
+        <div class="translate-control">
+          <button class="nav-item translate-button" type="button" data-translate-button data-i18n="translate.label">Translate</button>
+          <select id="languageSelect" class="translate-select" data-i18n-aria="translate.select"></select>
+        </div>
 		</div>
     </div>
     <div class="midwinter-banner" id="banner"></div>

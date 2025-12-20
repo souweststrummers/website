@@ -87,6 +87,32 @@ img {padding-top:10px;}
     transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.25s ease, transform 0.2s ease;
 }
 
+.translate-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.translate-button {
+    cursor: pointer;
+    font: inherit;
+}
+
+.translate-select {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: 600;
+    background: #fff;
+    color: #0f172a;
+}
+
+.translate-select:focus {
+    outline: 2px solid #94a3b8;
+    outline-offset: 2px;
+}
+
 .nav-item:hover,
 .nav-item:focus {
     color: #0f172a;
