@@ -7,6 +7,7 @@
     <title>Events - Sou'West Strummers</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<link rel="stylesheet" href="assets/style.css">
+    <script src="assets/translate.js" defer></script>
 </head>
 <body>
     <div class="navbar">
@@ -16,6 +17,21 @@
         <a class="nav-item" href="songs.html">Songs</a>
 		<a class="nav-item" href="events.html">Events</a>
 		<a class="nav-item" href="library.html">Library</a>
+        <div class="translate-control">
+          <button class="nav-item translate-button" type="button" data-translate-button>
+            <i class="fa-solid fa-language"></i> Translate
+          </button>
+          <select id="language-select" class="translate-select" aria-label="Select language">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="it">Italiano</option>
+            <option value="pt">Português</option>
+            <option value="zh">中文</option>
+            <option value="ja">日本語</option>
+          </select>
+        </div>
 
 		</div>
     </div>
