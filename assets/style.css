@@ -594,8 +594,8 @@ a.link-nochange:hover {
 
 .font-size-controls {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-wrap: wrap;
+    align-items: center;
     gap: 8px;
 }
 
@@ -609,6 +609,10 @@ a.link-nochange:hover {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.font-size-button:hover {
+    background: #e2e8f0;
 }
 
 .font-size-button.is-active,
