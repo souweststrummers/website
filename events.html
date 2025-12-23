@@ -21,7 +21,7 @@
     </div>
     <div class="banner"></div>
 	<h1><i class="fa-solid fa-thumbtack"></i> Events</h1>
-    <span id="events-update-date" data-date="2025-12-24" hidden></span>
+    <span id="events-update-date" data-date="2025-12-22" hidden></span>
 	
 	<h2><i class="fa-solid fa-arrow-right"></i> 2026</h2>
 	<div class="event-container">
@@ -80,11 +80,8 @@ Tickets on sale from May 2026
       if ($alert.length && updateDate) {
         const updateTimestamp = Date.parse(updateDate);
         if (!Number.isNaN(updateTimestamp)) {
-          const lastVisit = Number(localStorage.getItem('events-last-visit'));
-          if (!lastVisit || lastVisit < updateTimestamp) {
-            $alert.addClass('is-visible');
-          }
           localStorage.setItem('events-last-visit', Date.now().toString());
+          $alert.removeClass('is-visible');
         }
       }
 
