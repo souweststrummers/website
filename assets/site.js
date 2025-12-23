@@ -36,5 +36,27 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', initMobileMenu);
+  function initEventsNavAlert() {
+    const alert = document.querySelector('#events-nav .nav-alert');
+    const updateDateElement = document.querySelector('#events-update-date');
+    if (!alert || !updateDateElement) return;
+
+    const updateDate = updateDateElement.dataset.date;
+    if (!updateDate) return;
+
+    const updateTimestamp = Date.parse(updateDate);
+    if (Number.isNaN(updateTimestamp)) return;
+
+    const lastVisit = Number(localStorage.getItem('events-last-visit'));
+    if (!lastVisit || lastVisit < updateTimestamp) {
+      alert.classList.add('is-visible');
+    }
+
+    localStorage.setItem('events-last-visit', Date.now().toString());
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initMobileMenu();
+    initEventsNavAlert();
+  });
 })();

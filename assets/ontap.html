@@ -31,11 +31,12 @@
         <div class="nav-links">
         <a class="nav-item" href="index.html">Home</a>
         <a class="nav-item" href="songs.html">Songs</a>
-		<a class="nav-item" href="events.html">Events</a>
+		<a class="nav-item" href="events.html" id="events-nav">Events<span class="nav-alert" aria-hidden="true"></span></a>
 		<a class="nav-item" href="library.html">Library</a>
 		</div>
     </div>
     <div class="midwinter-banner" id="banner"></div>
+    <span id="events-update-date" data-date="2025-12-24" hidden></span>
 
 <h1 id="top"><i class="fa-solid fa-microphone-lines"></i> ON TAP - Rock Band</h1>
 <div style="text-align:left; padding:20px 15% 20px 15%;">
@@ -79,6 +80,19 @@ Ps. I will expect anyone who comes to join in singing on  <a href="pdfs/241-Flow
     $(document).ready(function(){
    const $menu = $('.menu-icon'),
             $nav  = $('.nav-links');
+
+      const $alert = $('#events-nav .nav-alert');
+      const updateDate = $('#events-update-date').data('date');
+      if ($alert.length && updateDate) {
+        const updateTimestamp = Date.parse(updateDate);
+        if (!Number.isNaN(updateTimestamp)) {
+          const lastVisit = Number(localStorage.getItem('events-last-visit'));
+          if (!lastVisit || lastVisit < updateTimestamp) {
+            $alert.addClass('is-visible');
+          }
+          localStorage.setItem('events-last-visit', Date.now().toString());
+        }
+      }
 
       $menu.on('click', e => {
         e.stopPropagation();

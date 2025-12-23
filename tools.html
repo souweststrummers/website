@@ -15,11 +15,12 @@
         <div class="nav-links">
         <a class="nav-item" href="index.html">Home</a>
         <a class="nav-item" href="songs.html">Songs</a>
-		<a class="nav-item" href="events.html">Events</a>
+		<a class="nav-item" href="events.html" id="events-nav">Events<span class="nav-alert" aria-hidden="true"></span></a>
 		<a class="nav-item" href="library.html">Library</a>
 		</div>
     </div>
     <div class="banner"></div>
+    <span id="events-update-date" data-date="2025-12-24" hidden></span>
 	<h1><i class="fa-solid fa-screwdriver-wrench"></i> Tools</h1>
     <a href="tools/blinkers.html"><i class="fa-solid fa-crow"></i> Blinkers</a><br>
     <a href="tools/calendar.html"><i class="fa-solid fa-calendar-plus"></i> Calendar</a><br>
@@ -35,6 +36,19 @@
         $(document).ready(function(){
    const $menu = $('.menu-icon'),
             $nav  = $('.nav-links');
+
+      const $alert = $('#events-nav .nav-alert');
+      const updateDate = $('#events-update-date').data('date');
+      if ($alert.length && updateDate) {
+        const updateTimestamp = Date.parse(updateDate);
+        if (!Number.isNaN(updateTimestamp)) {
+          const lastVisit = Number(localStorage.getItem('events-last-visit'));
+          if (!lastVisit || lastVisit < updateTimestamp) {
+            $alert.addClass('is-visible');
+          }
+          localStorage.setItem('events-last-visit', Date.now().toString());
+        }
+      }
 
       $menu.on('click', e => {
         e.stopPropagation();
