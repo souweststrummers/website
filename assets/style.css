@@ -109,10 +109,10 @@ img {padding-top:10px;}
 
 .nav-alert {
     position: absolute;
-    top: 4px;
-    right: 6px;
-    width: 10px;
-    height: 10px;
+    top: -6px;
+    right: -6px;
+    width: 12px;
+    height: 12px;
     border-radius: 999px;
     background: #dc2626;
     box-shadow: 0 0 0 2px #f8fafc;
