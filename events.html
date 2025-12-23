@@ -21,7 +21,7 @@
     </div>
     <div class="banner"></div>
 	<h1><i class="fa-solid fa-thumbtack"></i> Events</h1>
-    <span id="events-update-date" data-date="2025-12-22" hidden></span>
+    <span id="events-update-date" data-date="2025-12-22" data-delay-hours="1" hidden></span>
 	
 	<h2><i class="fa-solid fa-arrow-right"></i> 2026</h2>
 	<div class="event-container">
@@ -76,11 +76,17 @@ Tickets on sale from May 2026
             $nav  = $('.nav-links');
 
       const $alert = $('#events-nav .nav-alert');
-      const updateDate = $('#events-update-date').data('date');
+      const $updateDateElement = $('#events-update-date');
+      const updateDate = $updateDateElement.data('date');
       if ($alert.length && updateDate) {
         const updateTimestamp = Date.parse(updateDate);
         if (!Number.isNaN(updateTimestamp)) {
-          localStorage.setItem('events-last-visit', Date.now().toString());
+          const now = Date.now();
+          const firstVisit = Number(localStorage.getItem('events-first-visit'));
+          if (!firstVisit) {
+            localStorage.setItem('events-first-visit', now.toString());
+          }
+          localStorage.setItem('events-last-visit', now.toString());
           $alert.removeClass('is-visible');
         }
       }

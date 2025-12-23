@@ -42,17 +42,34 @@
     if (!alert || !updateDateElement) return;
 
     const updateDate = updateDateElement.dataset.date;
+    const delayHours = Number(updateDateElement.dataset.delayHours || '0');
     if (!updateDate) return;
 
     const updateTimestamp = Date.parse(updateDate);
     if (Number.isNaN(updateTimestamp)) return;
 
+    const now = Date.now();
+    const delayMs = Math.max(0, delayHours) * 60 * 60 * 1000;
+    const firstVisit = Number(localStorage.getItem('events-first-visit'));
+    if (!firstVisit) {
+      localStorage.setItem('events-first-visit', now.toString());
+      localStorage.setItem('events-last-visit', now.toString());
+      return;
+    }
+
+    if (now - firstVisit < delayMs) {
+      localStorage.setItem('events-last-visit', now.toString());
+      return;
+    }
+
+    const today = new Date();
+    const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     const lastVisit = Number(localStorage.getItem('events-last-visit'));
-    if (!lastVisit || lastVisit < updateTimestamp) {
+    if (updateDate !== todayString && (!lastVisit || lastVisit < updateTimestamp)) {
       alert.classList.add('is-visible');
     }
 
-    localStorage.setItem('events-last-visit', Date.now().toString());
+    localStorage.setItem('events-last-visit', now.toString());
   }
 
   document.addEventListener('DOMContentLoaded', () => {
