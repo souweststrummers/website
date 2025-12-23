@@ -42,7 +42,7 @@ ul li {
                 </div>
     </div>
 <div id="banner" class="banner"></div>
-<span id="events-update-date" data-date="2025-12-22" hidden></span>
+<span id="events-update-date" data-date="2025-12-22" data-delay-hours="1" hidden></span>
 <button id="backToTop"><i class="fa-solid fa-angle-up" style="color:white !important"></i> Back to Top</button>
 
 <div class="library-layout">
@@ -155,15 +155,29 @@ If you prefer a physical copy of the songs, song books can be purchased on Thurs
             $nav  = $('.nav-links');
 
       const $alert = $('#events-nav .nav-alert');
-      const updateDate = $('#events-update-date').data('date');
+      const $updateDateElement = $('#events-update-date');
+      const updateDate = $updateDateElement.data('date');
+      const delayHours = Number($updateDateElement.data('delay-hours') || 0);
       if ($alert.length && updateDate) {
         const updateTimestamp = Date.parse(updateDate);
         if (!Number.isNaN(updateTimestamp)) {
-          const lastVisit = Number(localStorage.getItem('events-last-visit'));
-          if (!lastVisit || lastVisit < updateTimestamp) {
-            $alert.addClass('is-visible');
+          const now = Date.now();
+          const delayMs = Math.max(0, delayHours) * 60 * 60 * 1000;
+          const firstVisit = Number(localStorage.getItem('events-first-visit'));
+          if (!firstVisit) {
+            localStorage.setItem('events-first-visit', now.toString());
+            localStorage.setItem('events-last-visit', now.toString());
+          } else if (now - firstVisit < delayMs) {
+            localStorage.setItem('events-last-visit', now.toString());
+          } else {
+            const today = new Date();
+            const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            const lastVisit = Number(localStorage.getItem('events-last-visit'));
+            if (updateDate !== todayString && (!lastVisit || lastVisit < updateTimestamp)) {
+              $alert.addClass('is-visible');
+            }
+            localStorage.setItem('events-last-visit', now.toString());
           }
-          localStorage.setItem('events-last-visit', Date.now().toString());
         }
       }
 
