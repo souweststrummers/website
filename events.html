@@ -88,7 +88,11 @@ Tickets on sale from May 2026
           }
 
           localStorage.setItem('events-last-visit', now.toString());
-          $alert.removeClass('is-visible');
+          if (typeof window.refreshEventsNavAlert === 'function') {
+            window.refreshEventsNavAlert();
+          } else {
+            $alert.removeClass('is-visible');
+          }
         }
       }
         });
