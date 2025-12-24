@@ -81,11 +81,6 @@ Tickets on sale from May 2026
         const updateTimestamp = Date.parse(updateDate);
         if (!Number.isNaN(updateTimestamp)) {
           const now = Date.now();
-          const storedFirstVisit = Number(localStorage.getItem('site-first-visit'));
-          if (!storedFirstVisit) {
-            const legacyFirstVisit = Number(localStorage.getItem('events-first-visit'));
-            localStorage.setItem('site-first-visit', (legacyFirstVisit || now).toString());
-          }
 
           localStorage.setItem('events-last-visit', now.toString());
           if (typeof window.refreshEventsNavAlert === 'function') {

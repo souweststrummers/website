@@ -154,32 +154,6 @@ If you prefer a physical copy of the songs, song books can be purchased on Thurs
    const $menu = $('.menu-icon'),
             $nav  = $('.nav-links');
 
-      const $alert = $('#events-nav .nav-alert');
-      const $updateDateElement = $('#events-update-date');
-      const updateDate = $updateDateElement.data('date');
-      const delayHours = Number($updateDateElement.data('delay-hours') || 0);
-      if ($alert.length && updateDate) {
-        const updateTimestamp = Date.parse(updateDate);
-        if (!Number.isNaN(updateTimestamp)) {
-          const now = Date.now();
-          const delayMs = Math.max(0, delayHours) * 60 * 60 * 1000;
-          let firstVisit = Number(localStorage.getItem('site-first-visit'));
-          if (!firstVisit) {
-            const legacyFirstVisit = Number(localStorage.getItem('events-first-visit'));
-            firstVisit = legacyFirstVisit || now;
-            localStorage.setItem('site-first-visit', firstVisit.toString());
-          }
-          if (now - firstVisit >= delayMs) {
-            const today = new Date();
-            const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-            const lastVisit = Number(localStorage.getItem('events-last-visit'));
-            if (updateDate !== todayString && (!lastVisit || lastVisit < updateTimestamp)) {
-              $alert.addClass('is-visible');
-            }
-          }
-        }
-      }
-
       $menu.on('click', e => {
         e.stopPropagation();
         $nav.toggleClass('active');
