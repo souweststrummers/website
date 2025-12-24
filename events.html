@@ -7,6 +7,7 @@
     <title>Events - Sou'West Strummers</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<link rel="stylesheet" href="assets/style.css">
+    <script src="assets/site.js"></script>
     <script src="assets/font-size.js"></script>
 </head>
 <body>
@@ -72,12 +73,10 @@ Tickets on sale from May 2026
 
  <script>
         $(document).ready(function(){
-   const $menu = $('.menu-icon'),
-            $nav  = $('.nav-links');
-
       const $alert = $('#events-nav .nav-alert');
       const $updateDateElement = $('#events-update-date');
       const updateDate = $updateDateElement.data('date');
+
       if ($alert.length && updateDate) {
         const updateTimestamp = Date.parse(updateDate);
         if (!Number.isNaN(updateTimestamp)) {
@@ -87,25 +86,11 @@ Tickets on sale from May 2026
             const legacyFirstVisit = Number(localStorage.getItem('events-first-visit'));
             localStorage.setItem('site-first-visit', (legacyFirstVisit || now).toString());
           }
+
           localStorage.setItem('events-last-visit', now.toString());
           $alert.removeClass('is-visible');
         }
       }
-
-      $menu.on('click', e => {
-        e.stopPropagation();
-        $nav.toggleClass('active');
-        // swap icon
-        $menu.html( $nav.hasClass('active') ? '&#10005;' : '&#9776;');
-      });
-
-      // close if click outside
-      $(document).on('click', e => {
-        if ($nav.hasClass('active') && !$(e.target).closest('.nav-links, .menu-icon').length) {
-          $nav.removeClass('active');
-          $menu.html('&#9776;');
-        }
-      });
         });
     </script>
 

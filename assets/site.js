@@ -49,7 +49,7 @@
     return firstVisit;
   }
 
-  function initEventsNavAlert() {
+  function initEventsNavAlert(now = Date.now()) {
     const alert = document.querySelector('#events-nav .nav-alert');
     const updateDateElement = document.querySelector('#events-update-date');
     if (!alert || !updateDateElement) return;
@@ -61,23 +61,23 @@
     const updateTimestamp = Date.parse(updateDate);
     if (Number.isNaN(updateTimestamp)) return;
 
-    const now = Date.now();
     const delayMs = Math.max(0, delayHours) * 60 * 60 * 1000;
     const firstVisit = ensureSiteFirstVisit(now);
-
-    if (now - firstVisit < delayMs) {
-      return;
-    }
-
-    const today = new Date();
-    const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     const lastEventsVisit = Number(localStorage.getItem(EVENTS_LAST_VISIT_KEY));
-    if (updateDate !== todayString && (!lastEventsVisit || lastEventsVisit < updateTimestamp)) {
+    const hasNeverVisitedEvents = !lastEventsVisit;
+
+    const today = new Date(now);
+    const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const hasNewEventsUpdate = updateDate !== todayString && (hasNeverVisitedEvents || lastEventsVisit < updateTimestamp);
+    const withinDelayWindow = now - firstVisit < delayMs;
+
+    if (hasNewEventsUpdate && (!withinDelayWindow || hasNeverVisitedEvents)) {
       alert.classList.add('is-visible');
     }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    ensureSiteFirstVisit(Date.now());
     initMobileMenu();
     initEventsNavAlert();
   });
