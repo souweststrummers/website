@@ -90,20 +90,19 @@ Ps. I will expect anyone who comes to join in singing on  <a href="pdfs/241-Flow
         if (!Number.isNaN(updateTimestamp)) {
           const now = Date.now();
           const delayMs = Math.max(0, delayHours) * 60 * 60 * 1000;
-          const firstVisit = Number(localStorage.getItem('events-first-visit'));
+          let firstVisit = Number(localStorage.getItem('site-first-visit'));
           if (!firstVisit) {
-            localStorage.setItem('events-first-visit', now.toString());
-            localStorage.setItem('events-last-visit', now.toString());
-          } else if (now - firstVisit < delayMs) {
-            localStorage.setItem('events-last-visit', now.toString());
-          } else {
+            const legacyFirstVisit = Number(localStorage.getItem('events-first-visit'));
+            firstVisit = legacyFirstVisit || now;
+            localStorage.setItem('site-first-visit', firstVisit.toString());
+          }
+          if (now - firstVisit >= delayMs) {
             const today = new Date();
             const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
             const lastVisit = Number(localStorage.getItem('events-last-visit'));
             if (updateDate !== todayString && (!lastVisit || lastVisit < updateTimestamp)) {
               $alert.addClass('is-visible');
             }
-            localStorage.setItem('events-last-visit', now.toString());
           }
         }
       }

@@ -36,6 +36,19 @@
     });
   }
 
+  const SITE_FIRST_VISIT_KEY = 'site-first-visit';
+  const EVENTS_LAST_VISIT_KEY = 'events-last-visit';
+
+  function ensureSiteFirstVisit(now) {
+    const storedFirstVisit = Number(localStorage.getItem(SITE_FIRST_VISIT_KEY));
+    if (storedFirstVisit) return storedFirstVisit;
+
+    const legacyFirstVisit = Number(localStorage.getItem('events-first-visit'));
+    const firstVisit = legacyFirstVisit || now;
+    localStorage.setItem(SITE_FIRST_VISIT_KEY, firstVisit.toString());
+    return firstVisit;
+  }
+
   function initEventsNavAlert() {
     const alert = document.querySelector('#events-nav .nav-alert');
     const updateDateElement = document.querySelector('#events-update-date');
@@ -50,26 +63,18 @@
 
     const now = Date.now();
     const delayMs = Math.max(0, delayHours) * 60 * 60 * 1000;
-    const firstVisit = Number(localStorage.getItem('events-first-visit'));
-    if (!firstVisit) {
-      localStorage.setItem('events-first-visit', now.toString());
-      localStorage.setItem('events-last-visit', now.toString());
-      return;
-    }
+    const firstVisit = ensureSiteFirstVisit(now);
 
     if (now - firstVisit < delayMs) {
-      localStorage.setItem('events-last-visit', now.toString());
       return;
     }
 
     const today = new Date();
     const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    const lastVisit = Number(localStorage.getItem('events-last-visit'));
-    if (updateDate !== todayString && (!lastVisit || lastVisit < updateTimestamp)) {
+    const lastEventsVisit = Number(localStorage.getItem(EVENTS_LAST_VISIT_KEY));
+    if (updateDate !== todayString && (!lastEventsVisit || lastEventsVisit < updateTimestamp)) {
       alert.classList.add('is-visible');
     }
-
-    localStorage.setItem('events-last-visit', now.toString());
   }
 
   document.addEventListener('DOMContentLoaded', () => {
