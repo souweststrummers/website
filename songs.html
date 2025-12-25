@@ -234,6 +234,9 @@
             padding: 0;
             text-align: left;
         }
+        .song-number {
+            font-weight: 800;
+        }
         .song-card.grid-card .song-title {
             text-align: center;
         }
@@ -524,8 +527,8 @@
         }
 
         function truncateArtist(name) {
-            if (name.length <= 7) return name;
-            return `${name.slice(0, 7)}…`;
+            if (name.length <= 18) return name;
+            return `${name.slice(0, 18)}…`;
         }
 
         function setLastPlayed(card, history) {
@@ -643,7 +646,7 @@
             songLink.href = song.pdf;
             songLink.setAttribute('data-song-id', song.id);
             songLink.setAttribute('data-name', song.dataName || `${song.number} ${song.title} | ${song.artist}`);
-            songLink.textContent = `${song.number} ${song.title}`;
+            songLink.innerHTML = `<span class="song-number">${song.number}</span> ${song.title}`;
 
             const metaRow = document.createElement('div');
             metaRow.className = 'meta-row';
