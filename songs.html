@@ -158,9 +158,9 @@
         .song-card {
             display: grid;
             grid-template-columns: 80px 1fr;
-            gap: 16px;
+            gap: 12px;
             align-items: center;
-            padding: 14px 16px;
+            padding: 12px 14px;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
@@ -211,6 +211,7 @@
             text-align: left;
             align-items: flex-start;
             width: 100%;
+            min-width: 0;
         }
         .song-card.grid-card .card-content {
             align-items: center;
@@ -222,6 +223,7 @@
             align-items: start;
             gap: 12px;
             width: 100%;
+            min-width: 0;
         }
         .song-card.grid-card .card-top {
             grid-template-columns: 1fr;
@@ -232,6 +234,8 @@
             flex-direction: column;
             gap: 4px;
             align-items: flex-start;
+            width: 100%;
+            min-width: 0;
         }
         .song-title {
             font-size: 1.05rem;
@@ -240,6 +244,13 @@
             margin: 0;
             padding: 0;
             text-align: left;
+            display: inline-block;
+            line-height: 1.25;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
         .song-card.grid-card .song-title {
             text-align: center;
@@ -259,12 +270,17 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            min-width: 0;
         }
         .song-card.grid-card .meta-row {
             display: none;
         }
         .meta-row .artist-full {
             display: inline-flex;
+            max-width: 260px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .meta-row .artist-short {
             display: none;
@@ -307,10 +323,11 @@
         .top-actions {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             justify-content: flex-end;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             text-align: right;
+            min-width: 0;
         }
         .song-card.grid-card .top-actions {
             flex-direction: row;
@@ -322,9 +339,11 @@
         .action-buttons {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            gap: 10px;
+            flex-wrap: nowrap;
             justify-content: flex-end;
+            min-width: 0;
+            flex-shrink: 1;
         }
         .song-card.grid-card .action-buttons {
             justify-content: center;
@@ -365,6 +384,11 @@
             color: #1f2933;
             font-size: 0.95rem;
             justify-content: center;
+            white-space: nowrap;
+            min-width: 0;
+            max-width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .last-clicked i {
             color: #0a7c2f;
