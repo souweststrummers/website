@@ -262,7 +262,7 @@
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
-            color: #374151;
+            color: #6b7280;
             font-size: 0.95rem;
             justify-content: flex-start;
         }
@@ -284,6 +284,9 @@
         }
         .meta-row .artist-short {
             display: none;
+        }
+        .meta-row i {
+            color: #9ca3af;
         }
         .favorite-btn {
             background: none;
@@ -323,7 +326,7 @@
         .top-actions {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             justify-content: flex-end;
             flex-wrap: nowrap;
             text-align: right;
@@ -339,7 +342,7 @@
         .action-buttons {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: nowrap;
             justify-content: flex-end;
             min-width: 0;
@@ -380,7 +383,7 @@
         .last-clicked {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             color: #1f2933;
             font-size: 0.95rem;
             justify-content: center;
@@ -590,8 +593,8 @@
         }
 
         function truncateArtist(name) {
-            if (name.length <= 7) return name;
-            return `${name.slice(0, 7)}…`;
+            if (name.length <= 10) return name;
+            return `${name.slice(0, 10).trimEnd()}…`;
         }
 
         function setLastPlayed(card, history) {
