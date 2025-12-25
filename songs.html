@@ -61,15 +61,18 @@
             align-items: center;
             gap: 6px;
             font-weight: 600;
-            opacity: 0.5;
-            transition: background 0.15s ease, color 0.15s ease;
+            opacity: 0.7;
+            transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
         }
         .view-toggle button:hover {
             background: #e2e8f0;
+            opacity: 0.95;
         }
         .view-toggle button.active {
-            background: #e2e8f0;
-            opacity: 0.5;
+            background: #334155;
+            color: #fff;
+            opacity: 1;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
         }
         .search-bar {
             display: flex;
@@ -137,6 +140,10 @@
             color: #e11d48;
             box-shadow: 0 2px 6px rgba(225, 29, 72, 0.2);
         }
+        .listen-link,
+        .meta-row .genre-label {
+            display: none !important;
+        }
         .songs-grid {
             display: flex;
             flex-direction: column;
@@ -151,9 +158,9 @@
         .song-card {
             display: grid;
             grid-template-columns: 80px 1fr;
-            gap: 16px;
+            gap: 12px;
             align-items: center;
-            padding: 14px 16px;
+            padding: 12px 14px;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
@@ -204,6 +211,7 @@
             text-align: left;
             align-items: flex-start;
             width: 100%;
+            min-width: 0;
         }
         .song-card.grid-card .card-content {
             align-items: center;
@@ -215,6 +223,7 @@
             align-items: start;
             gap: 12px;
             width: 100%;
+            min-width: 0;
         }
         .song-card.grid-card .card-top {
             grid-template-columns: 1fr;
@@ -225,6 +234,8 @@
             flex-direction: column;
             gap: 4px;
             align-items: flex-start;
+            width: 100%;
+            min-width: 0;
         }
         .song-title {
             font-size: 1.05rem;
@@ -233,6 +244,13 @@
             margin: 0;
             padding: 0;
             text-align: left;
+            display: inline-block;
+            line-height: 1.25;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
         .song-card.grid-card .song-title {
             text-align: center;
@@ -244,7 +262,7 @@
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
-            color: #374151;
+            color: #6b7280;
             font-size: 0.95rem;
             justify-content: flex-start;
         }
@@ -252,15 +270,23 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            min-width: 0;
         }
         .song-card.grid-card .meta-row {
             display: none;
         }
         .meta-row .artist-full {
             display: inline-flex;
+            max-width: 260px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .meta-row .artist-short {
             display: none;
+        }
+        .meta-row i {
+            color: #9ca3af;
         }
         .favorite-btn {
             background: none;
@@ -299,11 +325,12 @@
         }
         .top-actions {
             display: inline-flex;
-            align-items: flex-end;
-            gap: 10px;
+            align-items: center;
+            gap: 6px;
             justify-content: flex-end;
-            flex-direction: column;
+            flex-wrap: nowrap;
             text-align: right;
+            min-width: 0;
         }
         .song-card.grid-card .top-actions {
             flex-direction: row;
@@ -315,9 +342,11 @@
         .action-buttons {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            gap: 6px;
+            flex-wrap: nowrap;
             justify-content: flex-end;
+            min-width: 0;
+            flex-shrink: 1;
         }
         .song-card.grid-card .action-buttons {
             justify-content: center;
@@ -354,10 +383,15 @@
         .last-clicked {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             color: #1f2933;
             font-size: 0.95rem;
             justify-content: center;
+            white-space: nowrap;
+            min-width: 0;
+            max-width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .last-clicked i {
             color: #0a7c2f;
@@ -369,20 +403,28 @@
             }
 
             .search-row {
-                flex-direction: column;
+                flex-direction: row;
+                flex-wrap: wrap;
                 align-items: stretch;
                 gap: 10px;
             }
 
             .search-actions {
-                width: 100%;
+                flex: 1 1 auto;
                 justify-content: center;
+                gap: 10px;
             }
 
             .view-toggle {
-                width: 100%;
+                flex: 1 1 auto;
                 justify-content: center;
                 flex-wrap: wrap;
+                min-width: 240px;
+            }
+
+            .search-bar {
+                flex: 1 1 100%;
+                width: 100%;
             }
 
             .card-top {
@@ -423,11 +465,15 @@
             }
 
             .meta-row .artist-full {
-                display: none;
+                display: inline-flex;
+                max-width: 240px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .meta-row .artist-short {
-                display: inline-flex;
+                display: none;
             }
 
             .cover-thumb {
@@ -457,7 +503,7 @@
             <div class="search-row">
                 <label class="search-bar" for="songSearch">
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                    <input id="songSearch" type="search" placeholder="Search by title, artist or genre" aria-label="Search songs">
+                    <input id="songSearch" type="search" placeholder="Search by title or artist" aria-label="Search songs">
                 </label>
                 <div class="search-actions" aria-label="Search helpers">
                     <button id="clearSearch" class="icon-button" type="button" title="Clear search">
@@ -555,8 +601,8 @@
         }
 
         function truncateArtist(name) {
-            if (name.length <= 7) return name;
-            return `${name.slice(0, 7)}…`;
+            if (name.length <= 10) return name;
+            return `${name.slice(0, 10).trimEnd()}…`;
         }
 
         function setLastPlayed(card, history) {
@@ -655,7 +701,7 @@
             const card = document.createElement('article');
             card.className = `song-card ${mode === 'grid' ? 'grid-card' : ''}`.trim();
             card.setAttribute('data-song-id', song.id);
-            card.setAttribute('data-name', song.dataName || `${song.number} ${song.title} | ${song.artist} | ${song.genre}`);
+            card.setAttribute('data-name', song.dataName || `${song.number} ${song.title} | ${song.artist}`);
             card.setAttribute('role', 'link');
             card.tabIndex = 0;
 
@@ -679,8 +725,8 @@
             songLink.className = 'link-nochange song-title pdf-link';
             songLink.href = song.pdf;
             songLink.setAttribute('data-song-id', song.id);
-            songLink.setAttribute('data-name', song.dataName || `${song.number} ${song.title} | ${song.artist} | ${song.genre}`);
-            songLink.textContent = `${song.number} ${song.title}`;
+            songLink.setAttribute('data-name', song.dataName || `${song.number} ${song.title} | ${song.artist}`);
+            songLink.innerHTML = `<strong>${song.number}</strong> ${song.title}`;
 
             const metaRow = document.createElement('div');
             metaRow.className = 'meta-row';
@@ -692,6 +738,7 @@
                 <span class="artist-short">${truncateArtist(song.artist)}</span>
             `;
             const genreSpan = document.createElement('span');
+            genreSpan.className = 'genre-label';
             genreSpan.innerHTML = `<i class="fa-solid fa-tag" aria-hidden="true"></i> ${song.genre}`;
             metaRow.append(artistSpan, genreSpan);
 
@@ -721,9 +768,9 @@
 
             const actionButtons = document.createElement('div');
             actionButtons.className = 'action-buttons';
-            actionButtons.append(favoriteButton, listenLink);
+            actionButtons.append(favoriteButton, listenLink, lastClickWrapper);
 
-            topActions.append(actionButtons, lastClickWrapper);
+            topActions.append(actionButtons);
 
             top.append(titleGroup, topActions);
 
@@ -764,7 +811,7 @@
             const matchedIndices = [];
 
             songs.forEach((song, index) => {
-                const searchFields = [song.number, song.title, song.artist, song.genre, song.dataName]
+                const searchFields = [song.number, song.title, song.artist, song.dataName]
                     .filter(Boolean)
                     .map(field => field.toLowerCase());
 
