@@ -722,9 +722,14 @@
                     .filter(Boolean)
                     .map(field => field.toLowerCase());
 
-                const matchesQuery = searchFields.some(field =>
-                    isNumberSearch ? field.startsWith(normalized) : field.includes(normalized)
-                );
+                const songNumber = String(song.number || '').toLowerCase();
+                const nonNumberFields = [song.title, song.artist, song.dataName]
+                    .filter(Boolean)
+                    .map(field => field.toLowerCase());
+
+                const matchesQuery = isNumberSearch
+                    ? songNumber.startsWith(normalized) || nonNumberFields.some(field => field.includes(normalized))
+                    : searchFields.some(field => field.includes(normalized));
                 const matchesFavorites = !favoritesFilterActive || favorites[song.id];
 
                 if (matchesQuery && matchesFavorites) {
