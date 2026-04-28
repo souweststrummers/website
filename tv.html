@@ -81,12 +81,34 @@ button, input { font: inherit; }
   font-size: clamp(24px, 3vw, 36px); 
   font-weight: 800; 
   color: #0b1320; 
-  margin: 30px 0 12px;
+  margin: 30px 0 20px;
 }
-.ready-hint { 
-  font-size: 14px; 
-  color: #999; 
-  font-weight: 400;
+.fs-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.fs-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5);
+}
+.fs-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+}
+.fs-icon {
+  width: 20px;
+  height: 20px;
 }
 
 /* ── TV stage ── */
@@ -160,10 +182,11 @@ body.remote { background: var(--bg); overflow: auto; }
   border: 1px solid var(--line);
   border-radius: 14px;
   background: #fff;
-  color: var(--muted);
+  color: #000;
   font-size: 15px;
   margin-bottom: 18px;
   line-height: 1.4;
+  font-weight: 600;
 }
 .rStatus.playing { 
   border-color: #10b981; 
@@ -172,7 +195,7 @@ body.remote { background: var(--bg); overflow: auto; }
   font-weight: 600;
 }
 /* Search */
-.searchWrap { position: relative; margin-bottom: 8px; }
+.searchWrap { position: relative; margin-bottom: 12px; }
 .searchWrap input[type=search] {
   width: 100%;
   border: 2px solid var(--line);
@@ -186,13 +209,6 @@ body.remote { background: var(--bg); overflow: auto; }
   appearance: none;
 }
 .searchWrap input:focus { box-shadow: 0 0 0 3px rgba(15,23,42,.1); }
-.search-hint { 
-  color: #000; 
-  font-size: 14px; 
-  margin: 0 0 16px; 
-  text-align: center;
-  font-weight: 500;
-}
 .clearBtn {
   position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
   background: none; border: none; color: var(--muted); font-size: 20px;
@@ -347,7 +363,12 @@ function bootTv() {
           </div>
           <div id="readyContent" class="hide">
             <div class="ready-msg">Ready to Go</div>
-            <div class="ready-hint">tap the screen to enter full screen</div>
+            <button class="fs-button" id="fsButton">
+              <svg class="fs-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+              </svg>
+              Full Screen
+            </button>
           </div>
         </div>
       </section>
@@ -417,18 +438,17 @@ function showStage() {
   const readyContent = $('readyContent');
   const pairHeading = $('pairHeading');
   const pairSub = $('pairSub');
-  const pairCard = $('pairCard');
+  const fsButton = $('fsButton');
   
   if (pairContent) pairContent.classList.add('hide');
   if (readyContent) readyContent.classList.remove('hide');
   if (pairHeading) pairHeading.classList.add('hide');
   if (pairSub) pairSub.classList.add('hide');
   
-  // Make the card clickable for fullscreen
-  if (pairCard && !pairCard._fsHandler) {
-    pairCard._fsHandler = true;
-    pairCard.style.cursor = 'pointer';
-    pairCard.addEventListener('click', tryFullscreen);
+  // Make the Full Screen button clickable
+  if (fsButton && !fsButton._fsHandler) {
+    fsButton._fsHandler = true;
+    fsButton.addEventListener('click', tryFullscreen);
   }
 }
 
@@ -473,6 +493,7 @@ async function loadSong(idx, keepHidden) {
   const pages = $('pages');
   if (!keepHidden) showSongStage();
   stopScroll(false);
+  sendTvState(); // Send state immediately to update remote with new song name
   state.renderToken++;
   const token = state.renderToken;
   if (pages) pages.innerHTML = `<div class="tv-empty"><h2>Loading…</h2><p>${esc(song.title)}</p></div>`;
@@ -573,6 +594,15 @@ function toggle() {
   }
 }
 
+function restart() {
+  const stage = $('stage');
+  if (stage) {
+    stage.scrollTop = 0;
+    state.scrollAccumulator = 0;
+  }
+  stopScroll();
+}
+
 function commandZoom(delta) {
   state.zoom = Math.max(0.8, Math.min(3.5, state.zoom + delta));
   save();
@@ -612,6 +642,7 @@ function handleTvCommand(d) {
     case 'hello':      sendSongs(); sendTvState(); break;
     case 'select':     loadSong(Number(d.value) || 0); break;
     case 'toggle':     toggle(); break;
+    case 'restart':    restart(); break;
     case 'next':       loadSong(state.current + 1); break;
     case 'prev':       loadSong(state.current - 1); break;
     case 'zoomIn':     commandZoom(+0.15); break;
@@ -630,14 +661,13 @@ function bootRemote() {
     <div class="remoteWrap">
       <div class="remotePanel">
         <h2>TV Remote</h2>
-        <div id="rStatus" class="rStatus">Connecting to TV…</div>
 
         <div class="searchWrap">
-          <input id="search" type="search" placeholder="Search songs, artist, genre…"
+          <input id="search" type="search" placeholder="search song number or name..."
                  autocomplete="off" autocorrect="off" spellcheck="false" inputmode="search">
           <button class="clearBtn" id="clearBtn" aria-label="Clear search">✕</button>
         </div>
-        <p class="search-hint">Search for a song then tap it to play</p>
+        <div id="rStatus" class="rStatus">Connecting to TV…</div>
 
         <div id="songList"></div>
 
