@@ -37,7 +37,7 @@ if(isRemote){renderRemote();startRemote();}else{renderTv();startTv();}
 
 function renderTv(){
   document.body.className='tv';
-  app.innerHTML='<section id="pair" class="pair"><div class="pairCard"><h1>Sou'West Strummers</h1><img id="qrImg" class="qr" alt="Remote QR code"><div id="status" class="status">Starting remote...</div></div></section><main id="stage" class="tvStage hide"><div id="title" class="songTitle">Loading...</div><div id="pages"><div class="empty"><h2>Loading songs...</h2></div></div></main>';
+  app.innerHTML='<section id="pair" class="pair"><div class="pairCard"><h1>Sou West Strummers</h1><img id="qrImg" class="qr" alt="Remote QR code"><div id="status" class="status">Starting remote...</div></div></section><main id="stage" class="tvStage hide"><div id="title" class="songTitle">Loading...</div><div id="pages"><div class="empty"><h2>Loading songs...</h2></div></div></main>';
 }
 function renderRemote(){
   document.body.className='remote';
