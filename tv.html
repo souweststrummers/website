@@ -73,7 +73,7 @@ button, input { font: inherit; }
   font-size: 13px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  text-align: left;
+  text-align: center;
   line-height: 1.5;
 }
 .status-box.err { color: var(--danger); border-color: #f3b9b4; background: #fff1ef; }
@@ -272,6 +272,7 @@ function bootTv() {
       ${NAV}
       <section class="pair">
         <div class="pairCard">
+          <h1>Welcome</h1>
           <p class="sub">TV Ready for Pairing</p>
           <img id="qrImg" class="qr" alt="Remote QR code">
           <div id="tvStatus" class="status-box">Starting…</div>
@@ -295,8 +296,7 @@ function bootTv() {
   setupPeer();
 
   loadSongs()
-    .then(() => { tvStatus('Songs loaded. Scan QR to connect remote.', false); return loadSong(0, true); })
-    .then(() => sendSongs())
+    .then(() => { tvStatus('Songs loaded. Scan QR to connect remote.', false); sendSongs(); })
     .catch(e => tvStatus(e.message, true));
 }
 
@@ -417,41 +417,60 @@ function playScroll() {
   if (state.playing) return;
   const stage = $('stage');
   if (!stage) return;
-  // Only check if there's content to scroll - be permissive
-  if (stage.scrollHeight <= stage.clientHeight + 5) return;
+  
+  // Start playing
   state.playing = true;
   state.last = performance.now();
-  state.raf  = requestAnimationFrame(tick);
   sendTvState();
+  
+  // Begin animation loop
+  function animate(now) {
+    if (!state.playing) return; // Stop requested
+    
+    const stage = $('stage');
+    if (!stage) {
+      state.playing = false;
+      sendTvState();
+      return;
+    }
+    
+    // Calculate time delta and scroll
+    const dt = (now - state.last) / 1000;
+    state.last = now;
+    
+    // Scroll down
+    stage.scrollTop = stage.scrollTop + (state.speed * dt);
+    
+    // Check if at bottom
+    const scrollRemaining = stage.scrollHeight - stage.scrollTop - stage.clientHeight;
+    if (scrollRemaining <= 4) {
+      state.playing = false;
+      sendTvState();
+      return;
+    }
+    
+    // Continue animation
+    state.raf = requestAnimationFrame(animate);
+  }
+  
+  state.raf = requestAnimationFrame(animate);
 }
 
 function stopScroll(notify = true) {
   state.playing = false;
-  cancelAnimationFrame(state.raf);
+  if (state.raf) {
+    cancelAnimationFrame(state.raf);
+    state.raf = 0;
+  }
   if (notify) sendTvState();
 }
 
-function toggle() { state.playing ? stopScroll() : playScroll(); }
-
-function tick(now) {
-  if (!state.playing) return;
-  const stage = $('stage');
-  if (!stage) { stopScroll(); return; }
-  const dt = (now - state.last) / 1000;
-  state.last = now;
-  stage.scrollTop += state.speed * dt;
-  // Stop when we reach the bottom
-  const atBottom = stage.scrollTop + stage.clientHeight >= stage.scrollHeight - 4;
-  if (atBottom) {
+function toggle() {
+  if (state.playing) {
     stopScroll();
-    return;
+  } else {
+    playScroll();
   }
-  state.raf = requestAnimationFrame(tick);
-}
-
-function topSong() {
-  const s = $('stage');
-  if (s) s.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function commandZoom(delta) {
@@ -493,7 +512,6 @@ function handleTvCommand(d) {
     case 'hello':      sendSongs(); sendTvState(); break;
     case 'select':     loadSong(Number(d.value) || 0); break;
     case 'toggle':     toggle(); break;
-    case 'top':        topSong(); break;
     case 'next':       loadSong(state.current + 1); break;
     case 'prev':       loadSong(state.current - 1); break;
     case 'zoomIn':     commandZoom(+0.15); break;
@@ -542,7 +560,6 @@ function bootRemote() {
   $('search').addEventListener('input', renderSongList);
   $('clearBtn').addEventListener('click', () => { $('search').value = ''; renderSongList(); $('search').focus(); });
   $('toggleBtn').addEventListener('click', () => sendCmd('toggle'));
-  $('topBtn').addEventListener('click',    () => sendCmd('top'));
   $('prevBtn').addEventListener('click',   () => sendCmd('prev'));
   $('nextBtn').addEventListener('click',   () => sendCmd('next'));
   $('zoomOutBtn').addEventListener('click',() => sendCmd('zoomOut'));
