@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sou'West Strummers TV Songs</title>
+<style>
+:root{--bg:#f7f4ec;--card:#fffaf0;--ink:#17201b;--muted:#607068;--accent:#00625f;--line:#ded7c7;--danger:#b42318;--shadow:0 18px 55px rgba(15,23,42,.16)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}button,input{font:inherit}.hide{display:none!important}
+body.tv{overflow:hidden}.pair{min-height:100vh;display:grid;place-items:center;padding:34px;text-align:center;background:radial-gradient(circle at top,#fff 0,#f7f4ec 48%,#ece2cf 100%)}.pairCard{width:min(780px,94vw);background:var(--card);border:1px solid var(--line);border-radius:34px;padding:36px;box-shadow:var(--shadow)}.logo{width:78px;height:78px;border-radius:24px;background:var(--accent);color:white;display:grid;place-items:center;font-size:38px;font-weight:950;margin:0 auto 16px}.pair h1{font-size:clamp(34px,5vw,66px);line-height:1;margin:0 0 12px;color:var(--accent)}.pair p{font-size:clamp(18px,2vw,26px);color:var(--muted);margin:0}.qr{width:min(54vw,440px);height:min(54vw,440px);display:block;margin:26px auto;border:16px solid #fff;border-radius:24px;background:#fff;box-shadow:0 12px 34px rgba(15,23,42,.18)}.status{margin-top:14px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:16px;color:var(--muted);font-size:15px;white-space:pre-wrap;overflow-wrap:anywhere}.err{color:var(--danger);border-color:#f3b9b4;background:#fff1ef}.tvStage{height:100vh;overflow:auto;padding:18px 0 60vh;background:#252525}.songTitle{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:20;max-width:92vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:rgba(255,250,240,.95);border:1px solid var(--line);border-radius:999px;padding:10px 18px;font-weight:850;box-shadow:var(--shadow)}#pages{display:grid;gap:18px;justify-items:center}.page{display:block;background:#fff;box-shadow:0 10px 38px rgba(0,0,0,.45)}.empty{max-width:900px;margin:95px auto 40px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:var(--shadow)}.empty h2{margin-top:0}
+body.remote{overflow:auto}.remoteWrap{min-height:100vh;padding:18px;background:var(--bg)}.remotePanel{max-width:620px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:20px;box-shadow:var(--shadow)}.remotePanel h1{margin:0;font-size:30px;color:var(--accent)}.sub{color:var(--muted);margin-top:4px}.remoteStatus{margin:16px 0;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--muted)}label{display:block;margin:14px 0 7px;font-weight:800;color:var(--muted)}input[type=search]{width:100%;border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff;color:var(--ink)}.songList{display:grid;gap:8px;max-height:42vh;overflow:auto;margin:12px 0 18px;padding-right:4px}.songBtn{text-align:left;border:1px solid var(--line);background:#fff;border-radius:15px;padding:13px;cursor:pointer;font-weight:760;color:var(--ink)}.songBtn.active{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,98,95,.13)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--ink);font-weight:850;padding:16px 12px;cursor:pointer}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn.wide{grid-column:1/-1;font-size:20px;padding:20px 12px}.btn:active{transform:translateY(1px)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+(function(){
+'use strict';
+
+const DATA_PATH='/assets/songs-data.js';
+const PDF_FOLDER='/pdfs/';
+const SETTINGS_KEY='sws-tv-remote-settings-v1';
+const isRemote=new URLSearchParams(location.search).has('remote');
+const app=document.getElementById('app');
+const state={songs:[],current:0,zoom:1.85,speed:18,pdf:null,playing:false,raf:0,last:0,peer:null,conn:null,renderToken:0,remoteSongs:[],remoteCurrent:0};
+
+try{Object.assign(state,JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}'));}catch(e){}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const abs=u=>new URL(u,location.origin).href;
+function save(){localStorage.setItem(SETTINGS_KEY,JSON.stringify({zoom:state.zoom,speed:state.speed}));}
+function setStatus(msg,err){const el=$('status');if(el){el.textContent=msg;el.className='status'+(err?' err':'');}}
+
+if(isRemote){renderRemote();startRemote();}else{renderTv();startTv();}
+
+function renderTv(){
+  document.body.className='tv';
+  app.innerHTML='<section id="pair" class="pair"><div class="pairCard"><div class="logo">S</div><h1>Scan to control songs</h1><p>Use your phone as the remote for this TV.</p><img id="qrImg" class="qr" alt="Remote QR code"><div id="status" class="status">Starting remote...</div></div></section><main id="stage" class="tvStage hide"><div id="title" class="songTitle">Loading...</div><div id="pages"><div class="empty"><h2>Loading songs...</h2></div></div></main>';
+}
+function renderRemote(){
+  document.body.className='remote';
+  app.innerHTML='<main class="remoteWrap"><section class="remotePanel"><h1>TV Remote</h1><div class="sub">Search, choose, zoom and scroll from here.</div><div id="remoteStatus" class="remoteStatus">Connecting to TV...</div><label for="search">Search songs</label><input id="search" type="search" placeholder="Type a song name..."><div id="songList" class="songList"></div><div class="grid"><button class="btn primary wide" data-cmd="toggle">Play / Pause</button><button class="btn" data-cmd="top">Restart song</button><button class="btn" data-cmd="fullscreen">Try fullscreen</button><button class="btn" data-cmd="prev">Previous</button><button class="btn" data-cmd="next">Next</button><button class="btn" data-cmd="zoomOut">Zoom -</button><button class="btn" data-cmd="zoomIn">Zoom +</button><button class="btn" data-cmd="slower">Slower</button><button class="btn" data-cmd="faster">Faster</button></div></section></main>';
+  document.querySelectorAll('[data-cmd]').forEach(b=>b.addEventListener('click',()=>sendRemote(b.dataset.cmd)));
+  $('search').addEventListener('input',renderRemoteSongs);
+}
+
+function decodeLoose(v){return String(v||'').replace(/\\\//g,'/').replace(/&amp;/g,'&').replace(/%20/g,' ').trim();}
+function normalisePdfPath(v){
+  let p=decodeLoose(v).replace(/^['"`]+|['"`]+$/g,'').trim();
+  if(!p || !/\.pdf(?:[?#].*)?$/i.test(p))return '';
+  if(/^https?:\/\//i.test(p))return p;
+  if(p.startsWith('//'))return location.protocol+p;
+  p=p.replace(/^\.\//,'');
+  if(p.startsWith('pdfs/'))p='/'+p;
+  if(!p.startsWith('/'))p=PDF_FOLDER+p.replace(/^\/+/,'');
+  return p;
+}
+function cleanTitle(title,path){
+  let t=decodeLoose(title||'');
+  if(!t || /\.pdf(?:[?#].*)?$/i.test(t))t=decodeURIComponent((path||'').split('/').pop()||'');
+  t=t.replace(/\.pdf(?:[?#].*)?$/i,'').replace(/^\d+[-_.\s]*/,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
+  return t.replace(/\b\w/g,c=>c.toUpperCase())||'Untitled song';
+}
+function numberFrom(s){const m=String(s||'').match(/(?:^|\/|\b)(\d{1,4})[-_.\s]/);return m?Number(m[1]):999999;}
+function findTitleNear(text,index,path){
+  const chunk=text.slice(Math.max(0,index-700),Math.min(text.length,index+700));
+  const patterns=[
+    /(?:title|name|songTitle|displayTitle|label|song)\s*[:=]\s*["'`]([^"'`]{1,160})["'`]/i,
+    /["'`]([^"'`]{1,160})["'`]\s*,\s*(?:file|filename|pdf|url|path|src)\s*[:=]/i
+  ];
+  for(const re of patterns){const m=chunk.match(re);if(m && !/\.pdf|^https?:/i.test(m[1]))return m[1];}
+  return cleanTitle('',path);
+}
+function addSongFactory(list,seen){
+  return function(pdf,title){
+    const path=normalisePdfPath(pdf); if(!path)return;
+    const url=/^https?:\/\//i.test(path)?path:abs(path);
+    if(seen.has(url))return; seen.add(url);
+    list.push({title:cleanTitle(title,path),path,url,order:numberFrom(path+' '+(title||''))});
+  };
+}
+function scanText(text){
+  const out=[],src=decodeLoose(text);
+  const regexes=[
+    /(?:https?:\/\/[^\s"'`<>)]+\/pdfs\/[^\s"'`<>)]+?\.pdf(?:[?#][^\s"'`<>)]+)?)/gi,
+    /(?:^|["'`(=:\s])((?:\/pdfs\/|pdfs\/)[^\s"'`<>)]+?\.pdf(?:[?#][^\s"'`<>)]+)?)/gi,
+    /(?:file|filename|pdf|url|path|src|href|link)\s*[:=]\s*["'`]([^"'`]+?\.pdf(?:[?#][^"'`]*)?)["'`]/gi
+  ];
+  for(const re of regexes){let m;while((m=re.exec(src))!==null){const raw=m[1]||m[0],path=normalisePdfPath(raw);if(path)out.push({path,title:findTitleNear(src,m.index,path)});}}
+  return out;
+}
+function inspect(value,add,depth,seen){
+  if(value==null || depth>7)return;
+  if(typeof value==='string'){add(value,'');return;}
+  if(typeof value!=='object')return;
+  if(seen.has(value))return; seen.add(value);
+  if(Array.isArray(value)){value.forEach(x=>inspect(x,add,depth+1,seen));return;}
+  const title=value.title||value.name||value.songTitle||value.displayTitle||value.label||value.song||value.text||'';
+  const pdf=value.pdf||value.file||value.filename||value.href||value.url||value.path||value.src||value.link||value.sheet||value.songSheet||value.pdfPath||'';
+  if(pdf)add(pdf,title);
+  Object.keys(value).forEach(k=>inspect(value[k],add,depth+1,seen));
+}
+async function loadScriptGlobals(add){
+  const before=new Set(Object.getOwnPropertyNames(window));
+  await new Promise((res,rej)=>{const s=document.createElement('script');s.src=DATA_PATH+'?v='+Date.now();s.onload=res;s.onerror=()=>rej(new Error('Could not load '+DATA_PATH));document.head.appendChild(s);});
+  const names=['songs','songData','songsData','SONGS','SONGS_DATA','songList','songsList','librarySongs','allSongs'];
+  const values=[];names.forEach(n=>{if(Object.prototype.hasOwnProperty.call(window,n))values.push(window[n]);});
+  Object.getOwnPropertyNames(window).forEach(n=>{if(!before.has(n))values.push(window[n]);});
+  const seen=new WeakSet();values.forEach(v=>inspect(v,add,0,seen));
+}
+async function loadSongs(){
+  const list=[],seen=new Set(),add=addSongFactory(list,seen),notes=[];
+  try{const r=await fetch(DATA_PATH+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const text=await r.text();const matches=scanText(text);matches.forEach(x=>add(x.path,x.title));notes.push('Text scan: '+matches.length);}catch(e){notes.push('Text scan failed: '+e.message);}
+  try{await loadScriptGlobals(add);notes.push('Script scan: ok');}catch(e){notes.push('Script scan failed: '+e.message);}
+  list.sort((a,b)=>a.order-b.order||a.title.localeCompare(b.title));
+  state.songs=list;
+  if(!list.length)throw new Error('No PDF songs found in '+DATA_PATH+'\n'+notes.join('\n'));
+  setStatus('Remote ready. '+list.length+' songs loaded.\n'+notes.join('\n'),false);
+}
+
+async function startTv(){
+  if(!window.pdfjsLib){setStatus('PDF.js did not load. Check internet access.',true);return;}
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  makeTempQr();
+  setupTvPeer();
+  try{await loadSongs();await loadSong(0,true);sendSongs();}catch(e){setStatus(e.message,true);}
+}
+function makeTempQr(){makeQr(location.origin+location.pathname+'?remote=manual');}
+function makeQr(url){const img=$('qrImg');if(!img)return;img.src='https://api.qrserver.com/v1/create-qr-code/?size=440x440&margin=12&data='+encodeURIComponent(url);img.onerror=()=>setStatus('QR failed. Open this on your phone:\n'+url,true);}
+function setupTvPeer(){
+  if(!window.Peer){setStatus('Remote library did not load. Check internet access.',true);return;}
+  const peer=new Peer('sws-tv-'+Math.random().toString(36).slice(2,9),{debug:0}); state.peer=peer;
+  peer.on('open',id=>{const url=location.origin+location.pathname+'?remote='+encodeURIComponent(id);makeQr(url);setStatus('Scan the QR code with your phone.\n'+url,false);});
+  peer.on('connection',c=>{
+    state.conn=c; setStatus('Remote connected.',false); showStage(); tryFullscreen(); 
+    c.on('open',()=>{sendSongs();sendState();});
+    c.on('data',handleCommand);
+    c.on('close',()=>setStatus('Remote disconnected. Refresh the TV page to show a new QR code.',true));
+  });
+  peer.on('error',e=>setStatus('Remote error: '+(e.message||e.type||e),true));
+}
+function showStage(){const pair=$('pair'),stage=$('stage');if(pair)pair.classList.add('hide');if(stage)stage.classList.remove('hide');}
+function tryFullscreen(){document.documentElement.requestFullscreen?.().catch(()=>{});}
+function sendSongs(){if(state.conn&&state.conn.open)state.conn.send({type:'songs',songs:state.songs.map((s,i)=>({index:i,title:s.title,path:s.path})),current:state.current});}
+function sendState(){if(state.conn&&state.conn.open)state.conn.send({type:'state',current:state.current,song:state.songs[state.current]?.title||'',playing:state.playing,zoom:Math.round(state.zoom*100),speed:state.speed});}
+
+async function loadSong(i,keepHidden){
+  if(!state.songs.length)return;
+  state.current=(i+state.songs.length)%state.songs.length;
+  const song=state.songs[state.current],pages=$('pages'),title=$('title');
+  if(title)title.textContent=song.title;
+  if(!keepHidden)showStage();
+  stop(false);
+  state.renderToken++; const token=state.renderToken;
+  pages.innerHTML='<div class="empty"><h2>Loading...</h2><p>'+esc(song.title)+'</p></div>';
+  try{
+    const pdf=await pdfjsLib.getDocument(song.url).promise; state.pdf=pdf;
+    if(token!==state.renderToken)return;
+    await renderAll(token);
+  }catch(e){
+    pages.innerHTML='<div class="empty"><h2>Could not load PDF</h2><p>'+esc(song.title)+'</p><p>'+esc(e.message||String(e))+'</p><p><a href="'+esc(song.url)+'" target="_blank">Open PDF directly</a></p></div>';
+  }
+  const viewer=$('stage'); if(viewer)viewer.scrollTop=0;
+  sendState();
+}
+async function renderAll(token){
+  const pages=$('pages'); if(!state.pdf||!pages)return;
+  pages.innerHTML='';
+  for(let p=1;p<=state.pdf.numPages;p++){
+    if(token!==state.renderToken)return;
+    const page=await state.pdf.getPage(p), vp=page.getViewport({scale:state.zoom});
+    const canvas=document.createElement('canvas');canvas.className='page';canvas.width=Math.floor(vp.width);canvas.height=Math.floor(vp.height);pages.appendChild(canvas);
+    await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+  }
+}
+function play(){if(state.playing)return;state.playing=true;state.last=performance.now();state.raf=requestAnimationFrame(tick);sendState();}
+function stop(notify=true){state.playing=false;cancelAnimationFrame(state.raf);if(notify)sendState();}
+function toggle(){state.playing?stop():play();}
+function tick(now){if(!state.playing)return;const viewer=$('stage');const dt=(now-state.last)/1000;state.last=now;viewer.scrollTop+=state.speed*dt;if(viewer.scrollTop+viewer.clientHeight>=viewer.scrollHeight-4){stop();return;}state.raf=requestAnimationFrame(tick);}
+function topSong(){const viewer=$('stage');if(viewer)viewer.scrollTo({top:0,behavior:'smooth'});sendState();}
+function commandZoom(delta){state.zoom=Math.max(.85,Math.min(3.2,state.zoom+delta));save();state.renderToken++;renderAll(state.renderToken);sendState();}
+function commandSpeed(delta){state.speed=Math.max(2,Math.min(90,state.speed+delta));save();sendState();}
+function handleCommand(d){
+  const cmd=d&&d.cmd,val=d&&d.value;
+  if(cmd==='hello'){sendSongs();sendState();return;}
+  if(cmd==='select'){loadSong(Number(val)||0);return;}
+  if(cmd==='toggle')toggle();
+  if(cmd==='top')topSong();
+  if(cmd==='next')loadSong(state.current+1);
+  if(cmd==='prev')loadSong(state.current-1);
+  if(cmd==='zoomIn')commandZoom(.1);
+  if(cmd==='zoomOut')commandZoom(-.1);
+  if(cmd==='faster')commandSpeed(4);
+  if(cmd==='slower')commandSpeed(-4);
+  if(cmd==='fullscreen'){showStage();tryFullscreen();}
+  if(cmd==='reload')location.reload();
+}
+
+function startRemote(){
+  const target=new URLSearchParams(location.search).get('remote');
+  const status=$('remoteStatus');
+  if(!target||target==='manual'){status.textContent='The TV remote is not ready yet. Reload the TV page and scan the QR again.';return;}
+  if(!window.Peer){status.textContent='Remote library did not load.';return;}
+  const peer=new Peer(null,{debug:0}); state.peer=peer;
+  peer.on('open',()=>{state.conn=peer.connect(target,{reliable:true});state.conn.on('open',()=>{status.textContent='Connected. Loading songs...';sendRemote('hello');});state.conn.on('data',handleRemoteData);state.conn.on('close',()=>status.textContent='Disconnected. Re-scan the QR code.');state.conn.on('error',e=>status.textContent='Connection error: '+(e.message||e));});
+  peer.on('error',e=>status.textContent='Remote error: '+(e.message||e.type||e));
+}
+function sendRemote(cmd,value){if(state.conn&&state.conn.open)state.conn.send({cmd,value});else $('remoteStatus').textContent='Not connected to TV.';}
+function handleRemoteData(d){
+  const status=$('remoteStatus'); if(!d||typeof d!=='object')return;
+  if(d.type==='songs'){state.remoteSongs=Array.isArray(d.songs)?d.songs:[];state.remoteCurrent=Number(d.current||0);status.textContent='Connected. '+state.remoteSongs.length+' songs loaded.';renderRemoteSongs();}
+  if(d.type==='state'){state.remoteCurrent=Number(d.current||0);status.textContent=(d.playing?'Playing: ':'Ready: ')+(d.song||'Song')+' · Zoom '+d.zoom+'% · Speed '+d.speed;renderRemoteSongs();}
+}
+function renderRemoteSongs(){
+  const list=$('songList'),search=$('search'); if(!list)return;
+  const q=(search.value||'').toLowerCase().trim();
+  const matches=state.remoteSongs.filter(s=>!q||s.title.toLowerCase().includes(q)).slice(0,100);
+  list.innerHTML='';
+  if(!matches.length){list.innerHTML='<div class="remoteStatus">No matching songs found.</div>';return;}
+  matches.forEach(s=>{const b=document.createElement('button');b.className='songBtn'+(s.index===state.remoteCurrent?' active':'');b.textContent=s.title;b.onclick=()=>sendRemote('select',s.index);list.appendChild(b);});
+}
+})();
+</script>
+</body>
+</html>
