@@ -138,7 +138,7 @@ body.remote { background: var(--bg); overflow: auto; }
   background: var(--card);
   border: 2px solid transparent;
   background-image: linear-gradient(white, white), 
-                    linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    linear-gradient(135deg, #10b981 0%, #059669 100%);
   background-origin: border-box;
   background-clip: padding-box, border-box;
   border-radius: 16px;
@@ -149,7 +149,7 @@ body.remote { background: var(--bg); overflow: auto; }
 .remotePanel h2 { 
   margin: 0 0 2px; 
   font-size: 20px; 
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -209,16 +209,42 @@ body.remote { background: var(--bg); overflow: auto; }
 .songBtn.active { 
   border: 2px solid transparent;
   background: linear-gradient(white, white),
-              linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              linear-gradient(135deg, #10b981 0%, #059669 100%);
   background-origin: border-box;
   background-clip: padding-box, border-box;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 .s-title { font-weight: 700; color: var(--ink); font-size: 14.5px; line-height: 1.2; }
 .s-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
 /* Control buttons */
+.controls-info {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.08) 100%);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.info-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #059669;
+}
+.info-value {
+  font-size: 13px;
+  font-weight: 800;
+  color: #065f46;
+}
 .divider { height: 1px; background: var(--line); margin: 14px 0; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.grid-3col { grid-template-columns: 1fr 1fr 1fr; }
 .btn {
   border: 1px solid var(--line);
   border-radius: 12px;
@@ -234,14 +260,14 @@ body.remote { background: var(--bg); overflow: auto; }
 }
 .btn:active { transform: translateY(1px) scale(.99); background: var(--bg); }
 .btn.primary { 
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   border: none;
   color: #fff;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 .btn.primary:active { 
-  background: linear-gradient(135deg, #5568d3 0%, #63408a 100%);
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
 }
 .btn.wide { grid-column: 1 / -1; font-size: 17px; padding: 17px 8px; }
 </style>
@@ -264,7 +290,7 @@ const state = {
   songs:        [],   // [{title,artist,genre,url}]
   current:      0,
   zoom:         1.85,
-  speed:        45,
+  speed:        20,
   pdf:          null,
   playing:      false,
   raf:          0,
@@ -304,9 +330,9 @@ function bootTv() {
     <div id="pairScreen">
       ${NAV}
       <section class="pair">
-        <div class="pairCard">
-          <h1>Welcome</h1>
-          <p class="sub">TV Ready for Pairing</p>
+        <div class="pairCard" id="pairCard">
+          <h1 id="pairHeading">Welcome</h1>
+          <p class="sub" id="pairSub">TV Ready for Pairing</p>
           <div id="pairContent">
             <img id="qrImg" class="qr" alt="Remote QR code">
             <div id="tvStatus" class="status-box">Starting…</div>
@@ -378,11 +404,24 @@ function setupPeer() {
 }
 
 function showStage() {
-  // When remote connects, show "Ready to Go" instead of switching to stage
+  // When remote connects, show "Ready to Go" and hide headings
   const pairContent = $('pairContent');
   const readyContent = $('readyContent');
+  const pairHeading = $('pairHeading');
+  const pairSub = $('pairSub');
+  const pairCard = $('pairCard');
+  
   if (pairContent) pairContent.classList.add('hide');
   if (readyContent) readyContent.classList.remove('hide');
+  if (pairHeading) pairHeading.classList.add('hide');
+  if (pairSub) pairSub.classList.add('hide');
+  
+  // Make the card clickable for fullscreen
+  if (pairCard && !pairCard._fsHandler) {
+    pairCard._fsHandler = true;
+    pairCard.style.cursor = 'pointer';
+    pairCard.addEventListener('click', tryFullscreen);
+  }
 }
 
 function showSongStage() {
@@ -589,10 +628,22 @@ function bootRemote() {
 
         <div id="songList"></div>
 
+        <div id="controlsInfo" class="controls-info hide">
+          <div class="info-item">
+            <span class="info-label">Zoom:</span>
+            <span id="zoomDisplay" class="info-value">185%</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Speed:</span>
+            <span id="speedDisplay" class="info-value">20</span>
+          </div>
+        </div>
+
         <div class="divider"></div>
 
-        <div class="grid">
+        <div class="grid grid-3col">
           <button class="btn primary wide" id="toggleBtn">Play / Pause</button>
+          <button class="btn" id="restartBtn">Restart</button>
           <button class="btn" id="prevBtn">Prev song</button>
           <button class="btn" id="nextBtn">Next song</button>
           <button class="btn" id="zoomOutBtn">Zoom out</button>
@@ -607,6 +658,7 @@ function bootRemote() {
   $('search').addEventListener('input', renderSongList);
   $('clearBtn').addEventListener('click', () => { $('search').value = ''; renderSongList(); $('search').focus(); });
   $('toggleBtn').addEventListener('click', () => sendCmd('toggle'));
+  $('restartBtn').addEventListener('click', () => sendCmd('restart'));
   $('prevBtn').addEventListener('click',   () => sendCmd('prev'));
   $('nextBtn').addEventListener('click',   () => sendCmd('next'));
   $('zoomOutBtn').addEventListener('click',() => sendCmd('zoomOut'));
@@ -665,7 +717,32 @@ function handleRemoteData(d) {
   if (d.type === 'state') {
     state.remoteCurrent = Number(d.current || 0);
     const playing = Boolean(d.playing);
-    setRStatus((playing ? 'Playing: ' : 'Paused: ') + (d.song || '—'), playing);
+    const song = d.song || '';
+    
+    // Update zoom and speed displays
+    const zoomDisplay = $('zoomDisplay');
+    const speedDisplay = $('speedDisplay');
+    const controlsInfo = $('controlsInfo');
+    
+    if (d.zoom !== undefined && zoomDisplay) {
+      zoomDisplay.textContent = d.zoom + '%';
+    }
+    if (d.speed !== undefined && speedDisplay) {
+      speedDisplay.textContent = d.speed;
+    }
+    
+    // Show controls info when we have state data
+    if (controlsInfo) {
+      controlsInfo.classList.remove('hide');
+    }
+    
+    // If no song is loaded, show "Ready to Go"
+    if (!song) {
+      setRStatus('Ready to Go', false);
+    } else {
+      setRStatus((playing ? 'Playing: ' : 'Paused: ') + song, playing);
+    }
+    
     const tb = $('toggleBtn');
     if (tb) tb.textContent = playing ? 'Pause' : 'Play';
     renderSongList(); // refresh active state
