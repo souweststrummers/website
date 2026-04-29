@@ -7,8 +7,8 @@ const songsData = [
     "genre": "Rock/Pop",
     "pdf": "pdfs/1-All-I-Have-to-Do-Is-Dream.pdf",
     "dataName": "1. All I Have to Do Is Dream | The Everly Brothers | Rock/Pop",
-    chords: ["C", "G", "Am", "F"],
-    speed: 25
+    "chords": ["C", "G", "Am", "F"],
+    "speed": 25
   },
   {
     "id": "song-2",
