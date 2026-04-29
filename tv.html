@@ -136,7 +136,7 @@ button, input { font: inherit; }
   display: grid;
   gap: 16px;
   justify-items: center;
-  padding: 65px 0 60vh;
+  padding: 65px 0 140px;
 }
 .page { display: block; background: #fff; box-shadow: 0 8px 32px rgba(0,0,0,.5); }
 .tv-empty {
@@ -152,6 +152,44 @@ button, input { font: inherit; }
 .tv-empty h2 { margin: 0 0 8px; color: #0b1320; }
 .tv-empty p { color: var(--muted); margin: 0 0 6px; }
 .tv-empty a { color: #000; font-weight: 600; }
+
+/* Chords panel */
+.chords-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 100%);
+  padding: 16px 24px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  backdrop-filter: blur(8px);
+  border-top: 2px solid rgba(16, 185, 129, 0.3);
+}
+.chords-label {
+  color: #10b981;
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.chords-list {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  overflow-x: auto;
+  flex: 1;
+}
+.chord-img {
+  height: 80px;
+  width: auto;
+  border-radius: 8px;
+  background: white;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
 
 /* ── Remote ── */
 body.remote { background: var(--bg); overflow: auto; }
@@ -381,6 +419,10 @@ function bootTv() {
     </div>
     <main id="stage" class="tvStage hide">
       <div id="pages"><div class="tv-empty"><h2>Waiting for song…</h2></div></div>
+      <div id="chordsPanel" class="chords-panel hide">
+        <div class="chords-label">Chords:</div>
+        <div id="chordsList" class="chords-list"></div>
+      </div>
       <div id="fsHint" class="fs-hint">Tap for Full Screen</div>
     </main>`;
 
@@ -499,6 +541,16 @@ async function loadSong(idx, keepHidden) {
   const pages = $('pages');
   if (!keepHidden) showSongStage();
   stopScroll(false);
+  
+  // Apply song-specific speed if provided
+  if (song.speed !== undefined && typeof song.speed === 'number') {
+    state.speed = Math.max(2, Math.min(100, song.speed));
+    save();
+  }
+  
+  // Display chords if provided
+  displayChords(song.chords);
+  
   sendTvState(); // Send state immediately to update remote with new song name
   state.renderToken++;
   const token = state.renderToken;
@@ -517,6 +569,26 @@ async function loadSong(idx, keepHidden) {
   }
   const stage = $('stage'); if (stage) stage.scrollTop = 0;
   sendTvState();
+}
+
+function displayChords(chords) {
+  const panel = $('chordsPanel');
+  const list = $('chordsList');
+  
+  if (!panel || !list) return;
+  
+  // If no chords, hide panel
+  if (!chords || !Array.isArray(chords) || chords.length === 0) {
+    panel.classList.add('hide');
+    return;
+  }
+  
+  // Show panel and populate with chord images
+  panel.classList.remove('hide');
+  list.innerHTML = chords.map(chord => {
+    const chordFile = chord.toLowerCase().replace(/\s+/g, '');
+    return `<img src="/assets/chords/${esc(chordFile)}.png" alt="${esc(chord)}" class="chord-img" onerror="this.style.display='none'">`;
+  }).join('');
 }
 
 async function renderPages(token) {
