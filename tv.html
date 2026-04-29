@@ -167,6 +167,8 @@ button, input { font: inherit; }
   justify-content: center;
   gap: 24px;
   backdrop-filter: blur(10px);
+  border-top: 3px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
 }
 .chords-label {
   color: #10b981;
@@ -370,6 +372,7 @@ const state = {
   peer:         null,
   conn:         null,
   songLoaded:   false, // Track if a song has been selected
+  savedScrollPos: null, // Saved scroll position for chorus jumps
   // Remote-side only
   remoteSongs:  [],
   remoteCurrent: 0,
@@ -424,8 +427,10 @@ function bootTv() {
     <main id="stage" class="tvStage hide">
       <div id="pages"><div class="tv-empty"><h2>Waiting for song…</h2></div></div>
       <div id="chordsPanel" class="chords-panel hide">
+        <div class="chords-label">Chords:</div>
         <div id="chordsList" class="chords-list"></div>
       </div>
+      <div id="fsHint" class="fs-hint">Tap for Full Screen</div>
     </main>`;
 
   // Tap the TV stage → fullscreen
@@ -533,6 +538,8 @@ async function loadSongs() {
     url:    abs(s.pdf.startsWith('/') ? s.pdf : '/' + s.pdf),
     chords: s.chords || null,
     speed:  s.speed  || null,
+    chorusPage: s.chorusPage || null,  // Page number (1-indexed)
+    chorusY: s.chorusY || null,        // Y position as percentage (0-1)
   }));
 }
 
@@ -685,6 +692,59 @@ function restart() {
   stopScroll();
 }
 
+function jumpToChorus() {
+  const song = state.songs[state.current];
+  if (!song || !song.chorusPage || song.chorusY === null) {
+    console.log('No chorus location defined for this song');
+    return;
+  }
+  
+  const stage = $('stage');
+  if (!stage) return;
+  
+  // Save current position
+  state.savedScrollPos = stage.scrollTop;
+  
+  // Calculate target scroll position
+  const pages = stage.querySelectorAll('.page');
+  if (!pages.length) return;
+  
+  // Calculate scroll position based on chorus page and Y offset
+  let targetScroll = 0;
+  
+  // Add heights of all pages before chorus page
+  for (let i = 0; i < Math.min(song.chorusPage - 1, pages.length); i++) {
+    targetScroll += pages[i].offsetHeight + 16; // 16px gap between pages
+  }
+  
+  // Add offset within the chorus page
+  if (song.chorusPage <= pages.length) {
+    const chorusPageElement = pages[song.chorusPage - 1];
+    targetScroll += chorusPageElement.offsetHeight * song.chorusY;
+  }
+  
+  // Pause scrolling and jump
+  stopScroll(false);
+  stage.scrollTop = targetScroll;
+  state.scrollAccumulator = targetScroll;
+  
+  sendTvState();
+}
+
+function returnFromChorus() {
+  if (state.savedScrollPos === null) return;
+  
+  const stage = $('stage');
+  if (!stage) return;
+  
+  // Return to saved position
+  stage.scrollTop = state.savedScrollPos;
+  state.scrollAccumulator = state.savedScrollPos;
+  state.savedScrollPos = null;
+  
+  sendTvState();
+}
+
 function commandZoom(delta) {
   state.zoom = Math.max(0.8, Math.min(3.5, state.zoom + delta));
   save();
@@ -725,6 +785,8 @@ function handleTvCommand(d) {
     case 'select':     loadSong(Number(d.value) || 0); break;
     case 'toggle':     toggle(); break;
     case 'restart':    restart(); break;
+    case 'chorus':     jumpToChorus(); break;
+    case 'back':       returnFromChorus(); break;
     case 'next':       loadSong(state.current + 1); break;
     case 'prev':       loadSong(state.current - 1); break;
     case 'zoomIn':     commandZoom(+0.15); break;
@@ -770,6 +832,8 @@ function bootRemote() {
         <div class="grid">
           <button class="btn primary wide" id="toggleBtn">Play / Pause</button>
           <button class="btn wide" id="restartBtn">Restart</button>
+          <button class="btn" id="chorusBtn">Chorus</button>
+          <button class="btn" id="backBtn">Back</button>
           <button class="btn" id="prevBtn">Prev song</button>
           <button class="btn" id="nextBtn">Next song</button>
           <button class="btn" id="zoomInBtn">Zoom in</button>
@@ -785,6 +849,8 @@ function bootRemote() {
   $('clearBtn').addEventListener('click', () => { $('search').value = ''; renderSongList(); $('search').focus(); });
   $('toggleBtn').addEventListener('click', () => sendCmd('toggle'));
   $('restartBtn').addEventListener('click', () => sendCmd('restart'));
+  $('chorusBtn').addEventListener('click', () => sendCmd('chorus'));
+  $('backBtn').addEventListener('click', () => sendCmd('back'));
   $('prevBtn').addEventListener('click',   () => sendCmd('prev'));
   $('nextBtn').addEventListener('click',   () => sendCmd('next'));
   $('zoomOutBtn').addEventListener('click',() => sendCmd('zoomOut'));
