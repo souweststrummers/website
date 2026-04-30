@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <title>Sou'West Strummers TV</title>
 <style>
@@ -121,18 +121,6 @@ button, input { font: inherit; }
   cursor: pointer;
   -webkit-overflow-scrolling: touch;
 }
-.fs-hint {
-  position: fixed;
-  bottom: 160px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 30;
-  color: #999;
-  font-size: 15px;
-  font-weight: 400;
-  pointer-events: none;
-  white-space: nowrap;
-}
 #pages {
   display: grid;
   gap: 16px;
@@ -170,13 +158,6 @@ button, input { font: inherit; }
   backdrop-filter: blur(10px);
   border-top: 3px solid rgba(16, 185, 129, 0.4);
   box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
-}
-.chords-label {
-  color: #10b981;
-  font-size: 18px;
-  font-weight: 800;
-  white-space: nowrap;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 .chords-list {
   display: flex;
@@ -539,6 +520,7 @@ async function loadSongs() {
     url:    abs(s.pdf.startsWith('/') ? s.pdf : '/' + s.pdf),
     chords: s.chords || null,
     speed:  s.speed  || null,
+    zoom:   s.zoom   || null,  // Song-specific zoom level
     chorusPage: s.chorusPage || null,  // Page number (1-indexed)
     chorusY: s.chorusY || null,        // Y position as percentage (0-1)
   }));
@@ -553,6 +535,12 @@ async function loadSong(idx, keepHidden) {
   const pages = $('pages');
   if (!keepHidden) showSongStage();
   stopScroll(false);
+  
+  // Apply song-specific zoom if provided
+  if (song.zoom !== undefined && typeof song.zoom === 'number') {
+    state.zoom = Math.max(0.8, Math.min(3.5, song.zoom));
+    save();
+  }
   
   // Apply song-specific speed if provided
   if (song.speed !== undefined && typeof song.speed === 'number') {
