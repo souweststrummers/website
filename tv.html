@@ -167,6 +167,8 @@ button, input { font: inherit; }
   justify-content: center;
   gap: 24px;
   backdrop-filter: blur(10px);
+  border-top: 3px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
 }
 .chords-label {
   color: #10b981;
@@ -289,13 +291,14 @@ body.remote { background: var(--bg); overflow: auto; }
 /* Control buttons */
 .controls-info {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   justify-content: center;
   padding: 13px 16px;
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.08) 100%);
   border-radius: 14px;
   margin-bottom: 16px;
   border: 1px solid rgba(16, 185, 129, 0.2);
+  flex-wrap: wrap;
 }
 .info-item {
   display: flex;
@@ -374,6 +377,7 @@ const state = {
   // Remote-side only
   remoteSongs:  [],
   remoteCurrent: 0,
+  remoteAtChorus: false, // Track if we jumped to chorus
 };
 
 try { const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
@@ -425,8 +429,10 @@ function bootTv() {
     <main id="stage" class="tvStage hide">
       <div id="pages"><div class="tv-empty"><h2>Waiting for song…</h2></div></div>
       <div id="chordsPanel" class="chords-panel hide">
+        <div class="chords-label">Chords:</div>
         <div id="chordsList" class="chords-list"></div>
       </div>
+      <div id="fsHint" class="fs-hint">Tap for Full Screen</div>
     </main>`;
 
   // Tap the TV stage → fullscreen
@@ -626,6 +632,8 @@ function playScroll() {
   state.scrollAccumulator = stage.scrollTop; // Track fractional pixels
   sendTvState();
   
+  let lastStateUpdate = performance.now();
+  
   // Begin animation loop
   function animate(now) {
     if (!state.playing) return; // Stop requested
@@ -646,6 +654,12 @@ function playScroll() {
     
     // Apply integer part to scrollTop
     stage.scrollTop = Math.floor(state.scrollAccumulator);
+    
+    // Update remote state every 500ms while playing
+    if (now - lastStateUpdate > 500) {
+      sendTvState();
+      lastStateUpdate = now;
+    }
     
     // Check if at bottom
     const scrollRemaining = stage.scrollHeight - stage.scrollTop - stage.clientHeight;
@@ -765,6 +779,16 @@ function sendSongs() {
 }
 function sendTvState() {
   if (!state.conn?.open) return;
+  
+  // Calculate current location as percentage
+  const stage = $('stage');
+  let locationPercent = 0;
+  if (stage && stage.scrollHeight > 0) {
+    locationPercent = Math.round((stage.scrollTop / (stage.scrollHeight - stage.clientHeight)) * 100);
+    // Clamp to 0-100
+    locationPercent = Math.max(0, Math.min(100, locationPercent));
+  }
+  
   state.conn.send({
     type:    'state',
     current: state.current,
@@ -772,6 +796,7 @@ function sendTvState() {
     playing: state.playing,
     zoom:    Math.round(state.zoom * 100),
     speed:   state.speed,
+    location: locationPercent,
   });
 }
 function handleTvCommand(d) {
@@ -821,17 +846,18 @@ function bootRemote() {
             <span class="info-label">Speed:</span>
             <span id="speedDisplay" class="info-value">20</span>
           </div>
+          <div class="info-item">
+            <span class="info-label">Location:</span>
+            <span id="locationDisplay" class="info-value">--</span>
+          </div>
         </div>
 
         <div class="divider"></div>
 
         <div class="grid">
           <button class="btn primary wide" id="toggleBtn">Play / Pause</button>
-          <button class="btn wide" id="restartBtn">Restart</button>
-          <button class="btn" id="chorusBtn">Chorus</button>
-          <button class="btn" id="backBtn">Back</button>
-          <button class="btn" id="prevBtn">Prev song</button>
-          <button class="btn" id="nextBtn">Next song</button>
+          <button class="btn wide" id="chorusBtn">Chorus</button>
+          <button class="btn wide" id="restartBtn">Back to top</button>
           <button class="btn" id="zoomInBtn">Zoom in</button>
           <button class="btn" id="zoomOutBtn">Zoom out</button>
           <button class="btn" id="slowerBtn">Slower</button>
@@ -844,11 +870,24 @@ function bootRemote() {
   $('search').addEventListener('input', renderSongList);
   $('clearBtn').addEventListener('click', () => { $('search').value = ''; renderSongList(); $('search').focus(); });
   $('toggleBtn').addEventListener('click', () => sendCmd('toggle'));
-  $('restartBtn').addEventListener('click', () => sendCmd('restart'));
-  $('chorusBtn').addEventListener('click', () => sendCmd('chorus'));
-  $('backBtn').addEventListener('click', () => sendCmd('back'));
-  $('prevBtn').addEventListener('click',   () => sendCmd('prev'));
-  $('nextBtn').addEventListener('click',   () => sendCmd('next'));
+  $('restartBtn').addEventListener('click', () => {
+    sendCmd('restart');
+    state.remoteAtChorus = false;
+    $('chorusBtn').textContent = 'Chorus';
+  });
+  $('chorusBtn').addEventListener('click', () => {
+    if (state.remoteAtChorus) {
+      // Currently at chorus, go back
+      sendCmd('back');
+      state.remoteAtChorus = false;
+      $('chorusBtn').textContent = 'Chorus';
+    } else {
+      // Not at chorus, jump to it
+      sendCmd('chorus');
+      state.remoteAtChorus = true;
+      $('chorusBtn').textContent = 'Back';
+    }
+  });
   $('zoomOutBtn').addEventListener('click',() => sendCmd('zoomOut'));
   $('zoomInBtn').addEventListener('click', () => sendCmd('zoomIn'));
   $('slowerBtn').addEventListener('click', () => sendCmd('slower'));
@@ -898,18 +937,31 @@ function handleRemoteData(d) {
   if (d.type === 'songs') {
     state.remoteSongs   = Array.isArray(d.songs) ? d.songs : [];
     state.remoteCurrent = Number(d.current || 0);
+    state.remoteAtChorus = false; // Reset chorus state
+    const chorusBtn = $('chorusBtn');
+    if (chorusBtn) chorusBtn.textContent = 'Chorus';
     setRStatus('Connected · ' + state.remoteSongs.length + ' songs', false);
     renderSongList();
   }
 
   if (d.type === 'state') {
+    const previousCurrent = state.remoteCurrent;
     state.remoteCurrent = Number(d.current || 0);
+    
+    // Reset chorus state if song changed
+    if (previousCurrent !== state.remoteCurrent) {
+      state.remoteAtChorus = false;
+      const chorusBtn = $('chorusBtn');
+      if (chorusBtn) chorusBtn.textContent = 'Chorus';
+    }
+    
     const playing = Boolean(d.playing);
     const song = d.song || '';
     
-    // Update zoom and speed displays
+    // Update zoom, speed, and location displays
     const zoomDisplay = $('zoomDisplay');
     const speedDisplay = $('speedDisplay');
+    const locationDisplay = $('locationDisplay');
     const controlsInfo = $('controlsInfo');
     
     if (d.zoom !== undefined && zoomDisplay) {
@@ -917,6 +969,9 @@ function handleRemoteData(d) {
     }
     if (d.speed !== undefined && speedDisplay) {
       speedDisplay.textContent = d.speed;
+    }
+    if (d.location !== undefined && locationDisplay) {
+      locationDisplay.textContent = d.location + '%';
     }
     
     // Show controls info when we have state data
