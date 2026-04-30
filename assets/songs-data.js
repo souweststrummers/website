@@ -1,3 +1,5 @@
+//Zoom (0.8-3.5)
+//chorusY 50%
 const songsData = [
   {
     "id": "song-1",
@@ -10,8 +12,8 @@ const songsData = [
     "chords": ["C", "G", "Am", "F"],
     "speed": 25,
     "chorusPage": 1,
-    "zoom": 2.5, // (0.8-3.5)
-    "chorusY": 0.50 // 50%
+    "zoom": 2.5, 
+    "chorusY": 0.50
   },
   {
     "id": "song-2",
