@@ -10,6 +10,7 @@ const songsData = [
     "chords": ["C", "G", "Am", "F"],
     "speed": 25,
     "chorusPage": 1,
+    "zoom": 1.85,
     "chorusY": 0.50 
   },
   {
