@@ -167,8 +167,8 @@ button, input { font: inherit; }
   max-width: 80%;
 }
 .chord-img {
-  height: 120px;
-  width: 120px;
+  height: 100px;
+  width: 100px;
   object-fit: contain;
   border-radius: 8px;
   background: white;
@@ -354,9 +354,9 @@ const state = {
   conn:         null,
   songLoaded:   false, // Track if a song has been selected
   savedScrollPos: null, // Saved scroll position for chorus jumps
-  routesFired:  new Set(), // Track which routes have already fired
-  activeRoute:  null,      // Currently executing route
-  routeTimer:   null,      // Timer for route duration
+  scenesFired:  new Set(), // Track which scenes have already fired
+  activeScene:  null,      // Currently executing scene
+  sceneTimer:   null,      // Timer for scene duration
   // Remote-side only
   remoteSongs:  [],
   remoteCurrent: 0,
@@ -376,7 +376,7 @@ const save = () => localStorage.setItem(SETTINGS_KEY, JSON.stringify({zoom: stat
 /* ── Site nav snippet ── */
 const NAV = `<div class="sws-banner"></div>`;
 
-/* ── Route ── */
+/* ── Scene ── */
 const isRemote = new URLSearchParams(location.search).has('remote');
 if (isRemote) { bootRemote(); } else { bootTv(); }
 
@@ -521,7 +521,7 @@ async function loadSongs() {
     chords: s.chords || null,
     speed:  s.speed  || null,
     zoom:   s.zoom   || null,  // Song-specific zoom level
-    routes: s.routes || null,  // Auto-navigation routes
+    scenes: s.scenes || null,  // Auto-navigation scenes
   }));
 }
 
@@ -531,12 +531,12 @@ async function loadSong(idx, keepHidden) {
   state.current = ((idx % state.songs.length) + state.songs.length) % state.songs.length;
   state.songLoaded = true; // Mark that a song has been selected
   
-  // Reset route tracking
-  state.routesFired.clear();
-  state.activeRoute = null;
-  if (state.routeTimer) {
-    clearTimeout(state.routeTimer);
-    state.routeTimer = null;
+  // Reset scene tracking
+  state.scenesFired.clear();
+  state.activeScene = null;
+  if (state.sceneTimer) {
+    clearTimeout(state.sceneTimer);
+    state.sceneTimer = null;
   }
   
   const song = state.songs[state.current];
@@ -654,9 +654,9 @@ function startScrollAnimation() {
     // Apply integer part to scrollTop
     stage.scrollTop = Math.floor(state.scrollAccumulator);
     
-    // Check for route triggers (only if not currently in a route)
-    if (!state.activeRoute) {
-      checkRoutes(stage);
+    // Check for scene triggers (only if not currently in a scene)
+    if (!state.activeScene) {
+      checkScenes(stage);
     }
     
     // Update remote state every 500ms while playing
@@ -680,35 +680,35 @@ function startScrollAnimation() {
   state.raf = requestAnimationFrame(animate);
 }
 
-function checkRoutes(stage) {
+function checkScenes(stage) {
   const song = state.songs[state.current];
-  if (!song || !song.routes || !Array.isArray(song.routes)) return;
+  if (!song || !song.scenes || !Array.isArray(song.scenes)) return;
   
   // Calculate current location as percentage
   const maxScroll = stage.scrollHeight - stage.clientHeight;
   if (maxScroll <= 0) return;
   const currentLocation = stage.scrollTop / maxScroll;
   
-  // Check each route
-  for (let i = 0; i < song.routes.length; i++) {
-    const route = song.routes[i];
-    const routeKey = `route_${i}`;
+  // Check each scene
+  for (let i = 0; i < song.scenes.length; i++) {
+    const scene = song.scenes[i];
+    const sceneKey = `route_${i}`;
     
     // Skip if already fired
-    if (state.routesFired.has(routeKey)) continue;
+    if (state.scenesFired.has(routeKey)) continue;
     
     // Check if we've reached the trigger point (within 1% tolerance)
-    if (currentLocation >= route.at - 0.01 && currentLocation <= route.at + 0.01) {
-      executeRoute(route, routeKey, stage);
-      break; // Only execute one route at a time
+    if (currentLocation >= scene.at - 0.01 && currentLocation <= scene.at + 0.01) {
+      executeScene(scene, sceneKey, stage);
+      break; // Only execute one scene at a time
     }
   }
 }
 
-function executeRoute(route, routeKey, stage) {
+function executeScene(scene, sceneKey, stage) {
   // Mark as fired
-  state.routesFired.add(routeKey);
-  state.activeRoute = route;
+  state.scenesFired.add(routeKey);
+  state.activeScene = scene;
   
   // Save current position and playing state
   const returnPosition = stage.scrollTop;
@@ -716,14 +716,14 @@ function executeRoute(route, routeKey, stage) {
   
   // Jump to target location
   const maxScroll = stage.scrollHeight - stage.clientHeight;
-  const targetScroll = maxScroll * route.goto;
+  const targetScroll = maxScroll * scene.goto;
   stage.scrollTop = targetScroll;
   state.scrollAccumulator = targetScroll;
   
   // Handle mode: pause or scroll (default is scroll)
-  const mode = route.mode || 'scroll';
+  const mode = scene.mode || 'scroll';
   if (mode === 'pause' && state.playing) {
-    // Pause playback during route
+    // Pause playback during scene
     state.playing = false;
     if (state.raf) {
       cancelAnimationFrame(state.raf);
@@ -733,35 +733,35 @@ function executeRoute(route, routeKey, stage) {
   
   sendTvState();
   
-  // Set timer for route completion
-  const duration = (route.for || 0) * 1000; // Convert seconds to milliseconds
+  // Set timer for scene completion
+  const duration = (scene.for || 0) * 1000; // Convert seconds to milliseconds
   
   if (duration > 0) {
-    state.routeTimer = setTimeout(() => {
+    state.sceneTimer = setTimeout(() => {
       if (!stage) {
-        state.activeRoute = null;
-        state.routeTimer = null;
+        state.activeScene = null;
+        state.sceneTimer = null;
         return;
       }
       
-      // Determine where to go after route completes
-      if (route.then === 'stop') {
+      // Determine where to go after scene completes
+      if (scene.then === 'stop') {
         // Stop playback completely
         state.playing = false;
         if (state.raf) {
           cancelAnimationFrame(state.raf);
           state.raf = 0;
         }
-        state.activeRoute = null;
-        state.routeTimer = null;
+        state.activeScene = null;
+        state.sceneTimer = null;
         sendTvState();
         return;
       }
       
       let finalPosition;
-      if (route.then !== undefined && route.then !== 'continue') {
+      if (scene.then !== undefined && scene.then !== 'continue') {
         // Jump to specific location
-        finalPosition = maxScroll * route.then;
+        finalPosition = maxScroll * scene.then;
       } else {
         // Return to original position (default behavior)
         finalPosition = returnPosition;
@@ -770,18 +770,18 @@ function executeRoute(route, routeKey, stage) {
       stage.scrollTop = finalPosition;
       state.scrollAccumulator = finalPosition;
       
-      // Resume playback if it was paused by this route
+      // Resume playback if it was paused by this scene
       if (mode === 'pause' && wasPlaying && !state.playing) {
         startScrollAnimation();
       }
       
-      state.activeRoute = null;
-      state.routeTimer = null;
+      state.activeScene = null;
+      state.sceneTimer = null;
       sendTvState();
     }, duration);
   } else {
     // Instant jump, no duration
-    state.activeRoute = null;
+    state.activeScene = null;
   }
 }
 
@@ -809,12 +809,12 @@ function restart() {
     state.scrollAccumulator = 0;
   }
   
-  // Reset route tracking
-  state.routesFired.clear();
-  state.activeRoute = null;
-  if (state.routeTimer) {
-    clearTimeout(state.routeTimer);
-    state.routeTimer = null;
+  // Reset scene tracking
+  state.scenesFired.clear();
+  state.activeScene = null;
+  if (state.sceneTimer) {
+    clearTimeout(state.sceneTimer);
+    state.sceneTimer = null;
   }
   
   stopScroll();
