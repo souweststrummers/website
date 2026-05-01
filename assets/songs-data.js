@@ -13,7 +13,7 @@ const songsData = [
 *      "then": 0.65     // 0.60, "continue", or "stop"
 *    }
 *   ]
- */
+*/
   
   {
     "id": "song-1",
