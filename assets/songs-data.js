@@ -2260,7 +2260,7 @@ const songsData = [
     "chords": ["Em", "B7", "E7", "F#", "D7"],
     "speed": 17,
     "zoom": 3.25,
-    "routes": [
+    "scenes": [
     {
       "at": 0.40,     
       "goto": 0.20,    
