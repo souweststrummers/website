@@ -2257,7 +2257,7 @@ const songsData = [
     "genre": "Test",
     "pdf": "pdfs/251-Those-Were-The-Days.pdf",
     "dataName": "251. Those Were the Days | Test | Test",
-    "chords": ["Em", "B7", "E7", "F#", "D7"],
+    "chords": ["Em", "B7", "E7", "Fs", "D7"],
     "speed": 17,
     "zoom": 3.25,
     "scenes": [
