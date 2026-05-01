@@ -2272,7 +2272,7 @@ const songsData = [
     {
     "at": 0.96,
     "goto": 0.20,
-    "for": 5,       
+    "for": 5      
     }
   ]
   },
