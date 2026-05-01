@@ -2278,7 +2278,8 @@ const songsData = [
     "chorusPage": 1,
     "chorusY": 0.50,
     "zoom": 2.5
-  },    {
+  },   
+   {
     "id": "song-253",
     "number": "253.",
     "title": "Damn the Dam",
