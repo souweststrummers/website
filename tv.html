@@ -521,8 +521,7 @@ async function loadSongs() {
     chords: s.chords || null,
     speed:  s.speed  || null,
     zoom:   s.zoom   || null,  // Song-specific zoom level
-    chorusPage: s.chorusPage || null,  // Page number (1-indexed)
-    chorusY: s.chorusY || null,        // Y position as percentage (0-1)
+    chorusY: s.chorusY || null,  // Chorus position as percentage of document (0-1, matches Location %)
   }));
 }
 
@@ -691,7 +690,7 @@ function restart() {
 
 function jumpToChorus() {
   const song = state.songs[state.current];
-  if (!song || !song.chorusPage || song.chorusY === null) {
+  if (!song || song.chorusY === null) {
     console.log('No chorus location defined for this song');
     return;
   }
@@ -702,23 +701,9 @@ function jumpToChorus() {
   // Save current position
   state.savedScrollPos = stage.scrollTop;
   
-  // Calculate target scroll position
-  const pages = stage.querySelectorAll('.page');
-  if (!pages.length) return;
-  
-  // Calculate scroll position based on chorus page and Y offset
-  let targetScroll = 0;
-  
-  // Add heights of all pages before chorus page
-  for (let i = 0; i < Math.min(song.chorusPage - 1, pages.length); i++) {
-    targetScroll += pages[i].offsetHeight + 16; // 16px gap between pages
-  }
-  
-  // Add offset within the chorus page
-  if (song.chorusPage <= pages.length) {
-    const chorusPageElement = pages[song.chorusPage - 1];
-    targetScroll += chorusPageElement.offsetHeight * song.chorusY;
-  }
+  // Calculate target scroll position as percentage of scrollable area
+  const maxScroll = stage.scrollHeight - stage.clientHeight;
+  const targetScroll = maxScroll * song.chorusY;
   
   // Pause scrolling and jump
   stopScroll(false);
