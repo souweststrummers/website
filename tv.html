@@ -167,8 +167,8 @@ button, input { font: inherit; }
   max-width: 80%;
 }
 .chord-img {
-  height: 100px;
-  width: 100px;
+  height: 120px;
+  width: 120px;
   object-fit: contain;
   border-radius: 8px;
   background: white;
@@ -759,12 +759,15 @@ function executeScene(scene, sceneKey, stage) {
       }
       
       let finalPosition;
-      if (scene.then !== undefined && scene.then !== 'continue') {
-        // Jump to specific location
+      if (scene.then === 'back') {
+        // Return to original trigger position
+        finalPosition = returnPosition;
+      } else if (scene.then !== undefined && scene.then !== 'continue') {
+        // Jump to specific location (numeric value)
         finalPosition = maxScroll * scene.then;
       } else {
-        // Return to original position (default behavior)
-        finalPosition = returnPosition;
+        // Default: "continue" - stay at current position
+        finalPosition = stage.scrollTop;
       }
       
       stage.scrollTop = finalPosition;
