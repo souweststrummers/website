@@ -156,6 +156,8 @@ button, input { font: inherit; }
   justify-content: center;
   gap: 24px;
   backdrop-filter: blur(10px);
+  border-top: 3px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
 }
 .chords-list {
   display: flex;
@@ -167,8 +169,8 @@ button, input { font: inherit; }
   max-width: 80%;
 }
 .chord-img {
-  height: 120px;
-  width: 120px;
+  height: 100px;
+  width: 100px;
   object-fit: contain;
   border-radius: 8px;
   background: white;
@@ -759,15 +761,15 @@ function executeScene(scene, sceneKey, stage) {
       }
       
       let finalPosition;
-      if (scene.then === 'back') {
-        // Return to original trigger position
-        finalPosition = returnPosition;
-      } else if (scene.then !== undefined && scene.then !== 'continue') {
+      if (scene.then === 'continue') {
+        // Stay at current position
+        finalPosition = stage.scrollTop;
+      } else if (scene.then !== undefined && scene.then !== 'back') {
         // Jump to specific location (numeric value)
         finalPosition = maxScroll * scene.then;
       } else {
-        // Default: "continue" - stay at current position
-        finalPosition = stage.scrollTop;
+        // Default: "back" - return to original trigger position
+        finalPosition = returnPosition;
       }
       
       stage.scrollTop = finalPosition;
