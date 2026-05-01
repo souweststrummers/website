@@ -156,8 +156,6 @@ button, input { font: inherit; }
   justify-content: center;
   gap: 24px;
   backdrop-filter: blur(10px);
-  border-top: 3px solid rgba(16, 185, 129, 0.4);
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
 }
 .chords-list {
   display: flex;
@@ -356,10 +354,12 @@ const state = {
   conn:         null,
   songLoaded:   false, // Track if a song has been selected
   savedScrollPos: null, // Saved scroll position for chorus jumps
+  routesFired:  new Set(), // Track which routes have already fired
+  activeRoute:  null,      // Currently executing route
+  routeTimer:   null,      // Timer for route duration
   // Remote-side only
   remoteSongs:  [],
   remoteCurrent: 0,
-  remoteAtChorus: false, // Track if we jumped to chorus
 };
 
 try { const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
@@ -521,7 +521,7 @@ async function loadSongs() {
     chords: s.chords || null,
     speed:  s.speed  || null,
     zoom:   s.zoom   || null,  // Song-specific zoom level
-    chorusY: s.chorusY || null,  // Chorus position as percentage of document (0-1, matches Location %)
+    routes: s.routes || null,  // Auto-navigation routes
   }));
 }
 
@@ -530,6 +530,15 @@ async function loadSong(idx, keepHidden) {
   if (!state.songs.length) return;
   state.current = ((idx % state.songs.length) + state.songs.length) % state.songs.length;
   state.songLoaded = true; // Mark that a song has been selected
+  
+  // Reset route tracking
+  state.routesFired.clear();
+  state.activeRoute = null;
+  if (state.routeTimer) {
+    clearTimeout(state.routeTimer);
+    state.routeTimer = null;
+  }
+  
   const song = state.songs[state.current];
   const pages = $('pages');
   if (!keepHidden) showSongStage();
@@ -641,6 +650,11 @@ function playScroll() {
     // Apply integer part to scrollTop
     stage.scrollTop = Math.floor(state.scrollAccumulator);
     
+    // Check for route triggers (only if not currently in a route)
+    if (!state.activeRoute) {
+      checkRoutes(stage);
+    }
+    
     // Update remote state every 500ms while playing
     if (now - lastStateUpdate > 500) {
       sendTvState();
@@ -660,6 +674,67 @@ function playScroll() {
   }
   
   state.raf = requestAnimationFrame(animate);
+}
+
+function checkRoutes(stage) {
+  const song = state.songs[state.current];
+  if (!song || !song.routes || !Array.isArray(song.routes)) return;
+  
+  // Calculate current location as percentage
+  const maxScroll = stage.scrollHeight - stage.clientHeight;
+  if (maxScroll <= 0) return;
+  const currentLocation = stage.scrollTop / maxScroll;
+  
+  // Check each route
+  for (let i = 0; i < song.routes.length; i++) {
+    const route = song.routes[i];
+    const routeKey = `route_${i}`;
+    
+    // Skip if already fired
+    if (state.routesFired.has(routeKey)) continue;
+    
+    // Check if we've reached the trigger point (within 1% tolerance)
+    if (currentLocation >= route.at - 0.01 && currentLocation <= route.at + 0.01) {
+      executeRoute(route, routeKey, stage);
+      break; // Only execute one route at a time
+    }
+  }
+}
+
+function executeRoute(route, routeKey, stage) {
+  // Mark as fired
+  state.routesFired.add(routeKey);
+  state.activeRoute = route;
+  
+  // Save current position
+  const returnPosition = stage.scrollTop;
+  
+  // Jump to target location
+  const maxScroll = stage.scrollHeight - stage.clientHeight;
+  const targetScroll = maxScroll * route.goto;
+  stage.scrollTop = targetScroll;
+  state.scrollAccumulator = targetScroll;
+  
+  sendTvState();
+  
+  // Set timer to return
+  const duration = (route.for || 0) * 1000; // Convert seconds to milliseconds
+  
+  if (duration > 0) {
+    state.routeTimer = setTimeout(() => {
+      // Return to saved position
+      if (stage && state.playing) {
+        stage.scrollTop = returnPosition;
+        state.scrollAccumulator = returnPosition;
+      }
+      state.activeRoute = null;
+      state.routeTimer = null;
+      sendTvState();
+    }, duration);
+  } else {
+    // Instant jump, no return
+    state.activeRoute = null;
+  }
 }
 
 function stopScroll(notify = true) {
@@ -685,46 +760,16 @@ function restart() {
     stage.scrollTop = 0;
     state.scrollAccumulator = 0;
   }
-  stopScroll();
-}
-
-function jumpToChorus() {
-  const song = state.songs[state.current];
-  if (!song || song.chorusY === null) {
-    console.log('No chorus location defined for this song');
-    return;
+  
+  // Reset route tracking
+  state.routesFired.clear();
+  state.activeRoute = null;
+  if (state.routeTimer) {
+    clearTimeout(state.routeTimer);
+    state.routeTimer = null;
   }
   
-  const stage = $('stage');
-  if (!stage) return;
-  
-  // Save current position
-  state.savedScrollPos = stage.scrollTop;
-  
-  // Calculate target scroll position as percentage of scrollable area
-  const maxScroll = stage.scrollHeight - stage.clientHeight;
-  const targetScroll = maxScroll * song.chorusY;
-  
-  // Pause scrolling and jump
-  stopScroll(false);
-  stage.scrollTop = targetScroll;
-  state.scrollAccumulator = targetScroll;
-  
-  sendTvState();
-}
-
-function returnFromChorus() {
-  if (state.savedScrollPos === null) return;
-  
-  const stage = $('stage');
-  if (!stage) return;
-  
-  // Return to saved position
-  stage.scrollTop = state.savedScrollPos;
-  state.scrollAccumulator = state.savedScrollPos;
-  state.savedScrollPos = null;
-  
-  sendTvState();
+  stopScroll();
 }
 
 function commandZoom(delta) {
@@ -778,8 +823,6 @@ function handleTvCommand(d) {
     case 'select':     loadSong(Number(d.value) || 0); break;
     case 'toggle':     toggle(); break;
     case 'restart':    restart(); break;
-    case 'chorus':     jumpToChorus(); break;
-    case 'back':       returnFromChorus(); break;
     case 'next':       loadSong(state.current + 1); break;
     case 'prev':       loadSong(state.current - 1); break;
     case 'zoomIn':     commandZoom(+0.15); break;
@@ -828,7 +871,6 @@ function bootRemote() {
 
         <div class="grid">
           <button class="btn primary wide" id="toggleBtn">Play / Pause</button>
-          <button class="btn wide" id="chorusBtn">Chorus</button>
           <button class="btn wide" id="restartBtn">Back to top</button>
           <button class="btn" id="zoomInBtn">Zoom in</button>
           <button class="btn" id="zoomOutBtn">Zoom out</button>
@@ -844,21 +886,6 @@ function bootRemote() {
   $('toggleBtn').addEventListener('click', () => sendCmd('toggle'));
   $('restartBtn').addEventListener('click', () => {
     sendCmd('restart');
-    state.remoteAtChorus = false;
-    $('chorusBtn').textContent = 'Chorus';
-  });
-  $('chorusBtn').addEventListener('click', () => {
-    if (state.remoteAtChorus) {
-      // Currently at chorus, go back
-      sendCmd('back');
-      state.remoteAtChorus = false;
-      $('chorusBtn').textContent = 'Chorus';
-    } else {
-      // Not at chorus, jump to it
-      sendCmd('chorus');
-      state.remoteAtChorus = true;
-      $('chorusBtn').textContent = 'Back';
-    }
   });
   $('zoomOutBtn').addEventListener('click',() => sendCmd('zoomOut'));
   $('zoomInBtn').addEventListener('click', () => sendCmd('zoomIn'));
@@ -909,9 +936,6 @@ function handleRemoteData(d) {
   if (d.type === 'songs') {
     state.remoteSongs   = Array.isArray(d.songs) ? d.songs : [];
     state.remoteCurrent = Number(d.current || 0);
-    state.remoteAtChorus = false; // Reset chorus state
-    const chorusBtn = $('chorusBtn');
-    if (chorusBtn) chorusBtn.textContent = 'Chorus';
     setRStatus('Connected · ' + state.remoteSongs.length + ' songs', false);
     renderSongList();
   }
@@ -919,13 +943,6 @@ function handleRemoteData(d) {
   if (d.type === 'state') {
     const previousCurrent = state.remoteCurrent;
     state.remoteCurrent = Number(d.current || 0);
-    
-    // Reset chorus state if song changed
-    if (previousCurrent !== state.remoteCurrent) {
-      state.remoteAtChorus = false;
-      const chorusBtn = $('chorusBtn');
-      if (chorusBtn) chorusBtn.textContent = 'Chorus';
-    }
     
     const playing = Boolean(d.playing);
     const song = d.song || '';
