@@ -2259,11 +2259,11 @@ const songsData = [
     "genre": "Test",
     "pdf": "pdfs/251-Those-Were-The-Days.pdf",
     "dataName": "251. Those Were the Days | Test | Test",
-    "chords": ["C", "G", "Am", "F"],
+    "chords": ["Em", "B7", "E7", "F#", "D7"],
     "speed": 25,
-    "chorusPage": 1,
-    "zoom": 2.5, 
-    "chorusY": 0.50
+    "chorusPage": 2,
+    "chorusY": 0.50,
+    "zoom": 2.5
   },
     {
     "id": "song-252",
@@ -2273,11 +2273,11 @@ const songsData = [
     "genre": "Test",
     "pdf": "pdfs/252-Mrs-Brown-Youve-Got-A-Lovely-Daughter.pdf",
     "dataName": "252. Mrs Brown Youve Got A Lovely Daughter | Test | Test",
-    "chords": ["C", "G", "Am", "F"],
+    "chords": ["Eb", "Gm", "Bb", "G#"],
     "speed": 25,
     "chorusPage": 1,
-    "zoom": 2.5, 
-    "chorusY": 0.50
+    "chorusY": 0.50,
+    "zoom": 2.5
   },    {
     "id": "song-253",
     "number": "253.",
@@ -2286,10 +2286,10 @@ const songsData = [
     "genre": "Test",
     "pdf": "pdfs/253-Damn-The-Damn.pdf",
     "dataName": "253. Damn the Damn | Test | Test",
-    "chords": ["C", "G", "Am", "F"],
+    "chords": ["Em", "Bm", "B7", "E"],
     "speed": 25,
     "chorusPage": 1,
-    "zoom": 2.5, 
-    "chorusY": 0.50
+    "chorusY": 0.90,
+    "zoom": 2.5
   }
 ] ;
