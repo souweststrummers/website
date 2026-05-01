@@ -8,7 +8,7 @@ const songsData = [
     "artist": "The Everly Brothers",
     "genre": "Rock/Pop",
     "pdf": "pdfs/1-All-I-Have-to-Do-Is-Dream.pdf",
-    "dataName": "1. All I Have to Do Is Dream | The Everly Brothers | Rock/Pop",
+    "dataName": "1. All I Have to Do Is Dream | The Everly Brothers | Rock/Pop"
   },
   {
     "id": "song-2",
