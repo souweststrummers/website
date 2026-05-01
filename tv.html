@@ -156,6 +156,8 @@ button, input { font: inherit; }
   justify-content: center;
   gap: 24px;
   backdrop-filter: blur(10px);
+  border-top: 3px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
 }
 .chords-list {
   display: flex;
@@ -706,7 +708,7 @@ function executeRoute(route, routeKey, stage) {
   state.routesFired.add(routeKey);
   state.activeRoute = route;
   
-  // Save current position
+  // Save current position (for "continue" mode)
   const returnPosition = stage.scrollTop;
   
   // Jump to target location
@@ -717,16 +719,31 @@ function executeRoute(route, routeKey, stage) {
   
   sendTvState();
   
-  // Set timer to return
+  // Set timer to return or jump to 'then' location
   const duration = (route.for || 0) * 1000; // Convert seconds to milliseconds
   
   if (duration > 0) {
     state.routeTimer = setTimeout(() => {
-      // Return to saved position
-      if (stage && state.playing) {
-        stage.scrollTop = returnPosition;
-        state.scrollAccumulator = returnPosition;
+      if (!stage || !state.playing) {
+        state.activeRoute = null;
+        state.routeTimer = null;
+        return;
       }
+      
+      // Determine where to go after route completes
+      let finalPosition;
+      
+      if (route.then !== undefined && route.then !== 'continue') {
+        // Jump to specific location
+        finalPosition = maxScroll * route.then;
+      } else {
+        // Return to original position (default behavior)
+        finalPosition = returnPosition;
+      }
+      
+      stage.scrollTop = finalPosition;
+      state.scrollAccumulator = finalPosition;
+      
       state.activeRoute = null;
       state.routeTimer = null;
       sendTvState();
