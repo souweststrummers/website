@@ -3,7 +3,7 @@
 * "chords": ["Em", "B7", "E7", "F#", "D7"], //These will be non standard chords
 *    "speed": 17,
 *    "zoom": 3.25,  //325%
-*    "routes": [
+*    "routes":
 *    {
 *      "at": 0.40,      // Trigger location 
 *      "goto": 0.20,    // Jump destination
@@ -11,7 +11,7 @@
 *      "mode": "pause", // "scroll" or "pause"
 *      "then": 0.65     // 0.60, "continue", or "stop"
 *    }
-*  ]  
+*   
  */
 
 const songsData = [
