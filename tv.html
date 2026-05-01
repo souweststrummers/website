@@ -620,6 +620,10 @@ async function renderPages(token) {
 /* ── Scroll playback ── */
 function playScroll() {
   if (state.playing) return;
+  startScrollAnimation();
+}
+
+function startScrollAnimation() {
   const stage = $('stage');
   if (!stage) return;
   
@@ -708,8 +712,9 @@ function executeRoute(route, routeKey, stage) {
   state.routesFired.add(routeKey);
   state.activeRoute = route;
   
-  // Save current position (for "continue" mode)
+  // Save current position and playing state
   const returnPosition = stage.scrollTop;
+  const wasPlaying = state.playing;
   
   // Jump to target location
   const maxScroll = stage.scrollHeight - stage.clientHeight;
@@ -717,22 +722,45 @@ function executeRoute(route, routeKey, stage) {
   stage.scrollTop = targetScroll;
   state.scrollAccumulator = targetScroll;
   
+  // Handle mode: pause or scroll (default is scroll)
+  const mode = route.mode || 'scroll';
+  if (mode === 'pause' && state.playing) {
+    // Pause playback during route
+    state.playing = false;
+    if (state.raf) {
+      cancelAnimationFrame(state.raf);
+      state.raf = 0;
+    }
+  }
+  
   sendTvState();
   
-  // Set timer to return or jump to 'then' location
+  // Set timer for route completion
   const duration = (route.for || 0) * 1000; // Convert seconds to milliseconds
   
   if (duration > 0) {
     state.routeTimer = setTimeout(() => {
-      if (!stage || !state.playing) {
+      if (!stage) {
         state.activeRoute = null;
         state.routeTimer = null;
         return;
       }
       
       // Determine where to go after route completes
-      let finalPosition;
+      if (route.then === 'stop') {
+        // Stop playback completely
+        state.playing = false;
+        if (state.raf) {
+          cancelAnimationFrame(state.raf);
+          state.raf = 0;
+        }
+        state.activeRoute = null;
+        state.routeTimer = null;
+        sendTvState();
+        return;
+      }
       
+      let finalPosition;
       if (route.then !== undefined && route.then !== 'continue') {
         // Jump to specific location
         finalPosition = maxScroll * route.then;
@@ -744,12 +772,17 @@ function executeRoute(route, routeKey, stage) {
       stage.scrollTop = finalPosition;
       state.scrollAccumulator = finalPosition;
       
+      // Resume playback if it was paused by this route
+      if (mode === 'pause' && wasPlaying && !state.playing) {
+        startScrollAnimation();
+      }
+      
       state.activeRoute = null;
       state.routeTimer = null;
       sendTvState();
     }, duration);
   } else {
-    // Instant jump, no return
+    // Instant jump, no duration
     state.activeRoute = null;
   }
 }
