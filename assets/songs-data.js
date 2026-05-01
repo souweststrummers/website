@@ -1,5 +1,21 @@
-//Zoom (0.8-3.5)
-//chorusY 50%
+/*
+Watch for Comma's, the last item should not have one
+
+"chords": ["Em", "B7", "E7", "F#", "D7"], //These will be non standard chords
+
+    "speed": 17,
+    "zoom": 3.25,  //325%
+    "routes": [
+    {
+      "at": 0.40,      // Trigger location 
+      "goto": 0.20,    // Jump destination
+      "for": 10,       // Duration (seconds)
+      "mode": "pause", // "scroll" or "pause"
+      "then": 0.65     // 0.60, "continue", or "stop"
+    }
+  ]
+ */
+
 const songsData = [
   {
     "id": "song-1",
@@ -2266,13 +2282,16 @@ const songsData = [
     {
       "at": 0.40,     
       "goto": 0.20,    
-      "for": 5,
+      "for": 10,
+      "mode": "pause",
       "then": 0.65
     },
     {
     "at": 0.96,
     "goto": 0.20,
-    "for": 5      
+    "for": 10,
+    "mode":"pause",
+    "then": "stop"
     }
   ]
   },
