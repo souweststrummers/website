@@ -9,11 +9,6 @@ const songsData = [
     "genre": "Rock/Pop",
     "pdf": "pdfs/1-All-I-Have-to-Do-Is-Dream.pdf",
     "dataName": "1. All I Have to Do Is Dream | The Everly Brothers | Rock/Pop",
-    "chords": ["C", "G", "Am", "F"],
-    "speed": 25,
-    "chorusPage": 1,
-    "zoom": 2.5, 
-    "chorusY": 0.50
   },
   {
     "id": "song-2",
@@ -2255,5 +2250,46 @@ const songsData = [
     "genre": "Rock",
     "pdf": "pdfs/250-Listen-To-The-Music.pdf",
     "dataName": "250. Listen To The Music learn | The Doobie Brothers | Rock"
+  },
+    {
+    "id": "song-251",
+    "number": "251.",
+    "title": "Those Were the Days",
+    "artist": "Test",
+    "genre": "Test",
+    "pdf": "pdfs/251-Those-Were-The-Days.pdf",
+    "dataName": "251. Those Were the Days | Test | Test",
+    "chords": ["C", "G", "Am", "F"],
+    "speed": 25,
+    "chorusPage": 1,
+    "zoom": 2.5, 
+    "chorusY": 0.50
+  },
+    {
+    "id": "song-252",
+    "number": "252.",
+    "title": "Mrs-Brown Youve Got A Lovely Daughter",
+    "artist": "Test",
+    "genre": "Test",
+    "pdf": "pdfs/252-Mrs-Brown-Youve-Got-A-Lovely-Daughter.pdf",
+    "dataName": "252. Mrs Brown Youve Got A Lovely Daughter | Test | Test",
+    "chords": ["C", "G", "Am", "F"],
+    "speed": 25,
+    "chorusPage": 1,
+    "zoom": 2.5, 
+    "chorusY": 0.50
+  },    {
+    "id": "song-253",
+    "number": "253.",
+    "title": "Damn the Dam",
+    "artist": "Test",
+    "genre": "Test",
+    "pdf": "pdfs/253-Damn-The-Damn.pdf",
+    "dataName": "253. Damn the Damn | Test | Test",
+    "chords": ["C", "G", "Am", "F"],
+    "speed": 25,
+    "chorusPage": 1,
+    "zoom": 2.5, 
+    "chorusY": 0.50
   }
 ] ;
