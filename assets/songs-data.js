@@ -2261,8 +2261,6 @@ const songsData = [
     "dataName": "251. Those Were the Days | Test | Test",
     "chords": ["Em", "B7", "E7", "F#", "D7"],
     "speed": 17,
-    "chorusPage": 1,
-    "chorusY": 0.20,
     "zoom": 3.25
   },
   {
