@@ -134,49 +134,49 @@ Controls whether playback scrolls or pauses during the `for` duration.
 
 ### `then` - After Scene Completes
 **Required:** ❌ NO (optional)  
-**Type:** String (`"continue"`, `"back"`, `"stop"`) or Number (0.0-1.0)  
-**Default:** `"continue"` (if omitted)
+**Type:** String (`"back"`, `"continue"`, `"stop"`) or Number (0.0-1.0)  
+**Default:** `"back"` (if omitted)
 
 **What it does:**  
 Determines where to go after the scene finishes playing for `for` seconds.
 
-#### Option 1: `"continue"` (default) ✨
+#### Option 1: `"back"` (default) ✨
 ```javascript
 {
-  "at": 0.30,
-  "goto": 0.15,
+  "at": 0.50,
+  "goto": 0.20,
   "for": 25
-  // No 'then' = "continue"
+  // No 'then' = "back"
 }
 ```
 
 **Behavior:**
-1. Triggers at 30%
-2. Jumps to 15%
-3. Plays for 25 seconds (ends at ~20% if scrolling, or 15% if paused)
-4. **Stays at current position** (~20%)
-5. **Continues playing** from ~20% to 100%
+1. Triggers at 50%
+2. Jumps to 20%
+3. Plays for 25 seconds (ends at ~25% if scrolling, or 20% if paused)
+4. **Returns to 50%** (trigger point)
+5. **Continues playing** from 50% to 100%
 
-**Use when:** Song repeats from a section and continues to the end (most common).
+**Use when:** Song repeats a section and returns to finish properly (most common).
 
-#### Option 2: `"back"`
+#### Option 2: `"continue"`
 ```javascript
 {
-  "at": 0.30,
-  "goto": 0.15,
+  "at": 0.50,
+  "goto": 0.20,
   "for": 25,
-  "then": "back"
+  "then": "continue"
 }
 ```
 
 **Behavior:**
-1. Triggers at 30%
-2. Jumps to 15%
-3. Plays for 25 seconds
-4. **Returns to 30%** (trigger point)
-5. Continues playing from 30% to 100%
+1. Triggers at 50%
+2. Jumps to 20%
+3. Plays for 25 seconds (ends at ~25%)
+4. **Stays at current position** (~25%)
+5. Continues playing from ~25% to 100%
 
-**Use when:** You need to return to where you left off (rare).
+**Use when:** You want to skip the middle section (25%-50%) after the repeat.
 
 #### Option 3: `"stop"`
 ```javascript
@@ -231,8 +231,9 @@ Determines where to go after the scene finishes playing for `for` seconds.
 **What happens:**
 - Triggers at 50% → jumps to 20%
 - Scrolls for 25 seconds (reaches ~25%)
-- Continues from 25% to end
-- Uses defaults: `mode: "scroll"`, `then: "continue"`
+- Returns to 50% (trigger point)
+- Continues from 50% to end
+- Uses defaults: `mode: "scroll"`, `then: "back"`
 
 ---
 
@@ -248,7 +249,8 @@ Determines where to go after the scene finishes playing for `for` seconds.
 **What happens:**
 - Triggers at 50% → jumps to 20%
 - **Pauses** at 20% for 25 seconds
-- Continues from 20% to end (resumes scrolling)
+- Returns to 50% (trigger point)
+- Continues from 50% to end (resumes scrolling)
 
 ---
 
@@ -330,8 +332,8 @@ Determines where to go after the scene finishes playing for `for` seconds.
 - Want PDF to pause/hold during repeat? → `"pause"`
 
 **What then?**
-- Continue from where you are? → `"continue"` or omit (DEFAULT)
-- Return to trigger point? → `"back"`
+- Return to trigger and finish song? → `"back"` or omit (DEFAULT)
+- Stay at current position (skip ahead)? → `"continue"`
 - End the song? → `"stop"`
 - Skip to specific location? → `0.60` (number)
 
@@ -359,23 +361,34 @@ Determines where to go after the scene finishes playing for `for` seconds.
 
 ---
 
-### ❌ Wrong: Using "back" as default
+### ❌ Wrong: Using "continue" when you want to finish the song
 ```javascript
 {
   "at": 0.80,
   "goto": 0.20,
   "for": 30,
-  "then": "back"  // Jumps back to 80% - song ends immediately!
+  "then": "continue"  // Stays at ~0.25, skips 0.25-0.80!
 }
 ```
 
-### ✅ Correct: Use "continue" or "stop"
+### ✅ Correct: Use default "back" or "stop"
+```javascript
+{
+  "at": 0.80,
+  "goto": 0.20,
+  "for": 30
+  // Default "back" - returns to 0.80, finishes song!
+}
+```
+
+Or:
+
 ```javascript
 {
   "at": 0.80,
   "goto": 0.20,
   "for": 30,
-  "then": "stop"  // Ends at chorus - perfect!
+  "then": "stop"  // Ends at chorus - also perfect!
 }
 ```
 
@@ -430,7 +443,7 @@ Determines where to go after the scene finishes playing for `for` seconds.
 | `goto` | ✅ YES | Number (0-1) | None | Where to jump |
 | `for` | ✅ YES | Number (seconds) | None | How long to play |
 | `mode` | ❌ NO | String | `"scroll"` | Scroll or pause |
-| `then` | ❌ NO | String/Number | `"continue"` | What happens after |
+| `then` | ❌ NO | String/Number | `"back"` | What happens after |
 
 ---
 
