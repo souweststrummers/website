@@ -156,6 +156,18 @@ button, input { font: inherit; }
   justify-content: center;
   gap: 24px;
   backdrop-filter: blur(10px);
+  border-top: 3px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+}
+.chords-location {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-family: 'Courier New', monospace;
+  font-weight: 400;
+  pointer-events: none;
 }
 .chords-list {
   display: flex;
@@ -167,8 +179,8 @@ button, input { font: inherit; }
   max-width: 80%;
 }
 .chord-img {
-  height: 150px;
-  width: 120px;
+  height: 100px;
+  width: 100px;
   object-fit: contain;
   border-radius: 8px;
   background: white;
@@ -397,7 +409,7 @@ function bootTv() {
             <div id="tvStatus" class="status-box">Starting…</div>
           </div>
           <div id="readyContent" class="hide">
-            <div class="ready-msg">TV Paired!</div>
+            <div class="ready-msg">Ready to Go</div>
             <button class="fs-button" id="fsButton">
               <svg class="fs-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
@@ -412,6 +424,7 @@ function bootTv() {
       <div id="pages"><div class="tv-empty"><h2>Waiting for song…</h2></div></div>
       <div id="chordsPanel" class="chords-panel hide">
         <div id="chordsList" class="chords-list"></div>
+        <div id="chordsLocation" class="chords-location">0%</div>
       </div>
     </main>`;
 
@@ -788,6 +801,25 @@ function executeScene(scene, sceneKey, stage) {
   }
 }
 
+function triggerNextScene() {
+  const song = state.songs[state.current];
+  const stage = $('stage');
+  
+  if (!song || !song.scenes || !Array.isArray(song.scenes) || !stage) return;
+  
+  // Find the first scene that hasn't been fired yet
+  for (let i = 0; i < song.scenes.length; i++) {
+    const sceneKey = `route_${i}`;
+    
+    if (!state.scenesFired.has(sceneKey)) {
+      // Found an unfired scene - execute it
+      const scene = song.scenes[i];
+      executeScene(scene, sceneKey, stage);
+      break; // Only trigger one scene
+    }
+  }
+}
+
 function stopScroll(notify = true) {
   state.playing = false;
   if (state.raf) {
@@ -857,6 +889,12 @@ function sendTvState() {
     locationPercent = Math.max(0, Math.min(100, locationPercent));
   }
   
+  // Update chord panel location display
+  const locationEl = $('chordsLocation');
+  if (locationEl) {
+    locationEl.textContent = `${locationPercent}%`;
+  }
+  
   state.conn.send({
     type:    'state',
     current: state.current,
@@ -880,6 +918,7 @@ function handleTvCommand(d) {
     case 'zoomOut':    commandZoom(-0.15); break;
     case 'faster':     commandSpeed(+5); break;
     case 'slower':     commandSpeed(-5); break;
+    case 'nextScene':  triggerNextScene(); break;
   }
 }
 
@@ -923,6 +962,7 @@ function bootRemote() {
         <div class="grid">
           <button class="btn primary wide" id="toggleBtn">Play / Pause</button>
           <button class="btn wide" id="restartBtn">Back to top</button>
+          <button class="btn wide" id="nextSceneBtn">Next Scene</button>
           <button class="btn" id="zoomInBtn">Zoom in</button>
           <button class="btn" id="zoomOutBtn">Zoom out</button>
           <button class="btn" id="slowerBtn">Slower</button>
@@ -938,6 +978,7 @@ function bootRemote() {
   $('restartBtn').addEventListener('click', () => {
     sendCmd('restart');
   });
+  $('nextSceneBtn').addEventListener('click', () => sendCmd('nextScene'));
   $('zoomOutBtn').addEventListener('click',() => sendCmd('zoomOut'));
   $('zoomInBtn').addEventListener('click', () => sendCmd('zoomIn'));
   $('slowerBtn').addEventListener('click', () => sendCmd('slower'));
@@ -1021,7 +1062,7 @@ function handleRemoteData(d) {
     
     // If no song is loaded, show "Ready to Go"
     if (!song) {
-      setRStatus('TV Paired!', false);
+      setRStatus('Ready to Go', false);
     } else {
       setRStatus((playing ? 'Playing: ' : 'Paused: ') + song, playing);
     }
