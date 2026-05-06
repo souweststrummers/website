@@ -697,7 +697,7 @@ function checkScenes(stage) {
     const sceneKey = `route_${i}`;
     
     // Skip if already fired
-    if (state.scenesFired.has(routeKey)) continue;
+    if (state.scenesFired.has(sceneKey)) continue;
     
     // Check if we've reached the trigger point (within 1% tolerance)
     if (currentLocation >= scene.at - 0.01 && currentLocation <= scene.at + 0.01) {
@@ -709,7 +709,7 @@ function checkScenes(stage) {
 
 function executeScene(scene, sceneKey, stage) {
   // Mark as fired
-  state.scenesFired.add(routeKey);
+  state.scenesFired.add(sceneKey);
   state.activeScene = scene;
   
   // Save current position and playing state
