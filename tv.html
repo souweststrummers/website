@@ -397,7 +397,7 @@ function bootTv() {
             <div id="tvStatus" class="status-box">Starting…</div>
           </div>
           <div id="readyContent" class="hide">
-            <div class="ready-msg">Ready to Go</div>
+            <div class="ready-msg">TV Paired!</div>
             <button class="fs-button" id="fsButton">
               <svg class="fs-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
@@ -1021,7 +1021,7 @@ function handleRemoteData(d) {
     
     // If no song is loaded, show "Ready to Go"
     if (!song) {
-      setRStatus('Ready to Go', false);
+      setRStatus('TV Paired!', false);
     } else {
       setRStatus((playing ? 'Playing: ' : 'Paused: ') + song, playing);
     }
