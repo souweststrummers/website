@@ -2259,19 +2259,19 @@ const songsData = [
     "dataName": "251. Those Were the Days | Test | Test",
     "chords": ["Em", "B7", "E7", "Fs", "D7"],
     "speed": 17,
-    "zoom": 3.25,
+    "zoom": 2.20,
     "scenes": [
     {
       "at": 0.40,     
       "goto": 0.20,    
-      "for": 10,
+      "for": 15,
       "mode": "pause",
       "then": 0.65
     },
     {
     "at": 0.96,
     "goto": 0.20,
-    "for": 10,
+    "for": 0,
     "mode": "pause",
     "then": "stop"
     }
@@ -2287,8 +2287,6 @@ const songsData = [
     "dataName": "252. Mrs Brown Youve Got A Lovely Daughter | Test | Test",
     "chords": ["Eb", "Gm", "Bb", "G#"],
     "speed": 25,
-    "chorusPage": 1,
-    "chorusY": 0.50,
     "zoom": 2.5
   },   
   {
@@ -2301,8 +2299,6 @@ const songsData = [
     "dataName": "253. Damn the Damn | Test | Test",
     "chords": ["Em", "Bm", "B7", "E"],
     "speed": 25,
-    "chorusPage": 1,
-    "chorusY": 0.90,
     "zoom": 2.5
   }
 ] ;
