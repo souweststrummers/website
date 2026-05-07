@@ -112,6 +112,25 @@ button, input { font: inherit; }
   height: 20px;
 }
 
+
+/* Hide fullscreen button and cursor while fullscreen */
+html:fullscreen,
+html:fullscreen * {
+  cursor: none !important;
+}
+html:fullscreen .fs-button {
+  display: none !important;
+}
+
+/* Browser compatibility */
+html:-webkit-full-screen,
+html:-webkit-full-screen * {
+  cursor: none !important;
+}
+html:-webkit-full-screen .fs-button {
+  display: none !important;
+}
+
 /* ── TV stage ── */
 .tvStage {
   height: 100vh;
