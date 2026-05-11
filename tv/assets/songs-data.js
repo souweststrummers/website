@@ -12,8 +12,8 @@ const songsData = [
     "zoom": 2.20,
     "scenes": [
     {
-      "at": 0.80,     
-      "goto": 0.1,    
+      "at": 0.64,     
+      "goto": 0.01,    
       "for": 0,
       "then": "continue"
     }
