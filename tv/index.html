@@ -530,7 +530,7 @@ async function loadSongs() {
     title:  s.title  || '',
     artist: s.artist || '',
     genre:  s.genre  || '',
-    url:    abs(s.pdf.startsWith('/') ? s.pdf : './' + s.pdf),
+    url:    abs('./' + s.pdf.replace(/^\/+/, '')),  // Strip leading slashes, make relative
     chords: s.chords || null,
     speed:  s.speed  || null,
     zoom:   s.zoom   || null,  // Song-specific zoom level
