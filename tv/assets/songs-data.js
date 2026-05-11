@@ -6,7 +6,7 @@ const songsData = [
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/1-Advertising-Jingles.pdf",
-    "dataName": "1. Advertising Jingles"
+    "dataName": "1. Advertising Jingles",
     "chords": ["D7"],
     "speed": 17,
     "zoom": 2.20,
