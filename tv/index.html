@@ -913,6 +913,7 @@ function handleTvCommand(d) {
     case 'toggle':     toggle(); break;
     case 'restart':    restart(); break;
     case 'next':       loadSong(state.current + 1); break;
+    case 'nextSong':   loadSong(state.current + 1).then(() => playScroll()); break;
     case 'prev':       loadSong(state.current - 1); break;
     case 'zoomIn':     commandZoom(+0.15); break;
     case 'zoomOut':    commandZoom(-0.15); break;
@@ -961,8 +962,9 @@ function bootRemote() {
 
         <div class="grid">
           <button class="btn primary wide" id="toggleBtn">Play / Pause</button>
-          <button class="btn wide" id="restartBtn">Back to top</button>
-          <button class="btn wide" id="nextSceneBtn">Next Scene</button>
+          <button class="btn" id="restartBtn">Back to top</button>
+          <button class="btn" id="nextSceneBtn">Next Scene</button>
+          <button class="btn primary wide" id="nextSongBtn">Next song</button>
           <button class="btn" id="zoomInBtn">Zoom in</button>
           <button class="btn" id="zoomOutBtn">Zoom out</button>
           <button class="btn" id="slowerBtn">Slower</button>
@@ -979,6 +981,7 @@ function bootRemote() {
     sendCmd('restart');
   });
   $('nextSceneBtn').addEventListener('click', () => sendCmd('nextScene'));
+  $('nextSongBtn').addEventListener('click', () => sendCmd('nextSong'));
   $('zoomOutBtn').addEventListener('click',() => sendCmd('zoomOut'));
   $('zoomInBtn').addEventListener('click', () => sendCmd('zoomIn'));
   $('slowerBtn').addEventListener('click', () => sendCmd('slower'));
