@@ -7,6 +7,17 @@ const songsData = [
     "genre": "NA",
     "pdf": "pdfs/1-Advertising-Jingles.pdf",
     "dataName": "1. Advertising Jingles"
+    "chords": ["D7"],
+    "speed": 17,
+    "zoom": 2.20,
+    "scenes": [
+    {
+      "at": 0.80,     
+      "goto": 0.1,    
+      "for": 0,
+      "then": "continue"
+    }
+  ]
   },
   {
     "id": "song-2",
