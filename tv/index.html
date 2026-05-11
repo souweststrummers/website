@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+<link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -23,67 +23,46 @@
 }
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); font-family: 'Noto Sans', system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
-body.tv { overflow: hidden; }
 button, input { font: inherit; }
 .hide { display: none !important; }
 
 /* ── Site banner ── */
 .sws-banner {
   width: 100%;
-  height: clamp(130px, 19vh, 260px);
-  background-image: url('cugbanner.png');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 100% auto;
-  background-color: var(--bg);
+  height: 190px;
+  background: url('./assets/banner.png') no-repeat center center;
+  background-size: cover;
   cursor: default;
-  flex-shrink: 0;
 }
 
 /* ── Pair / landing screen ── */
-#pairScreen {
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  max-height: 100dvh;
-  overflow: hidden;
-}
 .pair {
-  flex: 1;
-  min-height: 0;
+  min-height: 60vh;
   display: grid;
   place-items: center;
-  padding: clamp(10px, 1.5vh, 20px);
+  padding: 32px 20px;
   background: var(--bg);
 }
 .pairCard {
-  width: min(620px, 94vw);
-  max-height: 100%;
+  width: min(680px, 96vw);
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: clamp(14px, 2.2vh, 28px) clamp(20px, 3vw, 34px);
+  border-radius: 16px;
+  padding: 36px 32px 32px;
   box-shadow: var(--shadow);
   text-align: center;
-  overflow: hidden;
 }
-.pairCard h1 { margin: 0 0 5px; font-size: clamp(24px, 4.4vh, 48px); color: #0b1320; line-height: 1; }
-.pairCard .sub { color: var(--muted); font-size: clamp(14px,1.6vw,18px); margin: 0 0 4px; }
+.pairCard h1 { margin: 0 0 6px; font-size: clamp(28px,4.5vw,50px); color: #0b1320; line-height: 1; }
+.pairCard .sub { color: var(--muted); font-size: clamp(14px,1.8vw,18px); margin: 0 0 4px; }
 .qr {
-  width: min(32vw, 34vh, 280px);
-  height: min(32vw, 34vh, 280px);
+  width: min(55vw, 360px);
+  height: min(55vw, 360px);
   display: block;
-  margin: clamp(8px, 1.4vh, 16px) auto;
-  border: clamp(5px, .9vh, 9px) solid #fff;
+  margin: 22px auto;
+  border: 12px solid #fff;
   border-radius: 18px;
   background: #fff;
   box-shadow: 0 10px 30px rgba(15,23,42,.2);
-}
-
-@media (min-width: 1600px) and (min-height: 850px) {
-  .sws-banner { height: min(24vh, 300px); }
-  .pairCard { width: min(700px, 90vw); }
-  .qr { width: min(30vw, 32vh, 300px); height: min(30vw, 32vh, 300px); }
 }
 .status-box {
   margin-top: 14px;
@@ -133,25 +112,6 @@ button, input { font: inherit; }
   height: 20px;
 }
 
-
-/* Hide fullscreen button and cursor while fullscreen */
-html:fullscreen,
-html:fullscreen * {
-  cursor: none !important;
-}
-html:fullscreen .fs-button {
-  display: none !important;
-}
-
-/* Browser compatibility */
-html:-webkit-full-screen,
-html:-webkit-full-screen * {
-  cursor: none !important;
-}
-html:-webkit-full-screen .fs-button {
-  display: none !important;
-}
-
 /* ── TV stage ── */
 .tvStage {
   height: 100vh;
@@ -196,6 +156,8 @@ html:-webkit-full-screen .fs-button {
   justify-content: center;
   gap: 24px;
   backdrop-filter: blur(10px);
+  border-top: 3px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
 }
 .chords-location {
   position: absolute;
@@ -217,8 +179,8 @@ html:-webkit-full-screen .fs-button {
   max-width: 80%;
 }
 .chord-img {
-  height: 180px;
-  width: 150px;
+  height: 100px;
+  width: 100px;
   object-fit: contain;
   border-radius: 8px;
   background: white;
@@ -385,7 +347,7 @@ body.remote { background: var(--bg); overflow: auto; }
 'use strict';
 
 /* ── Config ── */
-const DATA_PATH  = 'assets/songs-data.js';
+const DATA_PATH  = './assets/songs-data.js';
 const SETTINGS_KEY = 'sws-tv-v3';
 
 /* ── Shared state ── */
@@ -447,7 +409,7 @@ function bootTv() {
             <div id="tvStatus" class="status-box">Starting…</div>
           </div>
           <div id="readyContent" class="hide">
-            <div class="ready-msg">TV Paired!</div>
+            <div class="ready-msg">Ready to Go</div>
             <button class="fs-button" id="fsButton">
               <svg class="fs-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
@@ -490,7 +452,7 @@ function tvStatus(msg, err) {
 
 function setQr(url) {
   const img = $('qrImg'); if (!img) return;
-  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=8&data=' +
+  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=12&data=' +
             encodeURIComponent(url);
   img.onerror = () => tvStatus('QR failed. Open on your phone:\n' + url, true);
 }
@@ -568,7 +530,7 @@ async function loadSongs() {
     title:  s.title  || '',
     artist: s.artist || '',
     genre:  s.genre  || '',
-    url:    abs(s.pdf.startsWith('/') ? s.pdf : '/' + s.pdf),
+    url:    abs(s.pdf.startsWith('/') ? s.pdf : './' + s.pdf),
     chords: s.chords || null,
     speed:  s.speed  || null,
     zoom:   s.zoom   || null,  // Song-specific zoom level
@@ -646,7 +608,7 @@ function displayChords(chords) {
   panel.classList.remove('hide');
   list.innerHTML = chords.map(chord => {
     const chordFile = chord.toLowerCase().replace(/\s+/g, '');
-    return `<img src="/assets/chords/${esc(chordFile)}.png" alt="${esc(chord)}" class="chord-img" onerror="this.style.display='none'">`;
+    return `<img src="./assets/chords/${esc(chordFile)}.png" alt="${esc(chord)}" class="chord-img" onerror="this.style.display='none'">`;
   }).join('');
 }
 
@@ -1100,7 +1062,7 @@ function handleRemoteData(d) {
     
     // If no song is loaded, show "Ready to Go"
     if (!song) {
-      setRStatus('TV Paired', false);
+      setRStatus('Ready to Go', false);
     } else {
       setRStatus((playing ? 'Playing: ' : 'Paused: ') + song, playing);
     }
