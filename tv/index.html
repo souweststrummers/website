@@ -382,7 +382,7 @@ try { const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
 const $    = id => document.getElementById(id);
 const esc  = s  => String(s ?? '').replace(/[&<>"']/g, c =>
              ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const abs  = p  => new URL(p, location.origin).href;
+const abs  = p  => new URL(p, location.href).href;
 const save = () => localStorage.setItem(SETTINGS_KEY, JSON.stringify({zoom: state.zoom, speed: state.speed}));
 
 /* ── Site nav snippet ── */
