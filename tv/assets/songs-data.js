@@ -26,7 +26,10 @@ const songsData = [
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/2-Aunty-Alice.pdf",
-    "dataName": "2. Aunty Alice"
+    "dataName": "2. Aunty Alice",
+    "chords": ["D7"],
+    "speed": 17,
+    "zoom": 2.20
   },
   {
     "id": "song-3",
@@ -35,7 +38,10 @@ const songsData = [
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/3-April-Sun-In-Cuba.pdf",
-    "dataName": "3. April Sun In Cuba"
+    "dataName": "3. April Sun In Cuba",
+    "chords": ["asus4","bm","gm7"],
+    "speed": 17,
+    "zoom": 2.20
   },
   {
     "id": "song-4",
@@ -44,7 +50,10 @@ const songsData = [
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/4-Cheryl-Moana-Marie.pdf",
-    "dataName": "4. Cheryl Moana Marie"
+    "dataName": "4. Cheryl Moana Marie",
+    "chords": ["D7"],
+    "speed": 17,
+    "zoom": 2.20
   },
   {
     "id": "song-5",
@@ -53,7 +62,10 @@ const songsData = [
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/5-Damn-The-Dam.pdf",
-    "dataName": "5. Damn The Dam"
+    "dataName": "5. Damn The Dam",
+    "chords": ["em","bm","e","b7"],
+    "speed": 17,
+    "zoom": 2.20
   },
   {
     "id": "song-6",
@@ -98,7 +110,10 @@ const songsData = [
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/10-Forever-Tuesday-Morning.pdf",
-    "dataName": "10. Forever Tuesday Morning"
+    "dataName": "10. Forever Tuesday Morning",
+    "chords": ["cm","em"],
+    "speed": 17,
+    "zoom": 2.20
   },
   {
     "id": "song-11",
@@ -107,7 +122,10 @@ const songsData = [
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/11-Hands-Of-My-Heart.pdf",
-    "dataName": "11. Hands Of My Heart"
+    "dataName": "11. Hands Of My Heart",
+    "chords": ["D7"],
+    "speed": 17,
+    "zoom": 2.20
   },
   {
     "id": "song-12",
@@ -166,11 +184,14 @@ const songsData = [
   {
     "id": "song-18",
     "number": "18.",
-    "title": "Pretty Girl ",
+    "title": "Pretty Girl",
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/18-Pretty-Girl-.pdf",
-    "dataName": "18. Pretty Girl "
+    "dataName": "18. Pretty Girl",
+     "chords": ["e7"],
+    "speed": 17,
+    "zoom": 2.20
   },
   {
     "id": "song-19",
@@ -179,7 +200,10 @@ const songsData = [
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/19-Shes-a-Mod.pdf",
-    "dataName": "19. Shes a Mod"
+    "dataName": "19. Shes a Mod",
+    "chords": ["dm"],
+    "speed": 17,
+    "zoom": 2.20
   },
   {
     "id": "song-20",
@@ -197,7 +221,10 @@ const songsData = [
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/21-Slice-of-Heaven.pdf",
-    "dataName": "21. Slice of Heaven"
+    "dataName": "21. Slice of Heaven",
+    "chords": ["em"],
+    "speed": 17,
+    "zoom": 2.20
   },
   {
     "id": "song-22",
@@ -206,7 +233,10 @@ const songsData = [
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/22-Tea-at-Te-Kuiti.pdf",
-    "dataName": "22. Tea at Te Kuiti"
+    "dataName": "22. Tea at Te Kuiti",
+    "chords": ["D7"],
+    "speed": 17,
+    "zoom": 2.20,
   },
   {
     "id": "song-23",
@@ -215,7 +245,10 @@ const songsData = [
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/23-The-Gumboot-Song.pdf",
-    "dataName": "23. The Gumboot Song"
+    "dataName": "23. The Gumboot Song",
+    "chords": ["Dm"],
+    "speed": 17,
+    "zoom": 2.20
   },
   {
     "id": "song-24",
@@ -233,7 +266,17 @@ const songsData = [
     "artist": "NA",
     "genre": "NA",
     "pdf": "pdfs/25-Tutira-Mai-Nga-Iwi.pdf",
-    "dataName": "25. Tutira Mai Nga Iwi"
+    "dataName": "25. Tutira Mai Nga Iwi",
+    "speed": 17,
+    "zoom": 2.20,
+    "scenes": [
+    {
+      "at": 0.8,     
+      "goto": 0.01,    
+      "for": 0,
+      "then": "continue"
+    }
+  ]
   },
   {
     "id": "song-26",
