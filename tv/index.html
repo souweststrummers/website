@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,6 +25,16 @@
 html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); font-family: 'Noto Sans', system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
 button, input { font: inherit; }
 .hide { display: none !important; }
+
+/* Hide cursor and fullscreen button once TV is fullscreen */
+body.is-fullscreen,
+body.is-fullscreen * {
+  cursor: none !important;
+}
+
+body.is-fullscreen .fs-button {
+  display: none !important;
+}
 
 /* ── Site banner ── */
 .sws-banner {
@@ -188,8 +198,38 @@ button, input { font: inherit; }
 }
 
 /* ── Remote ── */
-body.remote { background: var(--bg); overflow: auto; }
-.remoteWrap { padding: 20px 18px 50px; max-width: 620px; margin: 0 auto; }
+body.remote {
+  background: var(--bg);
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+body.remote #app {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.remoteWrap {
+  padding: 20px 18px 50px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+body.remote .remoteWrap {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  margin: 0;
+  padding: 12px;
+  overflow: hidden;
+  display: flex;
+}
+
 .remotePanel {
   background: var(--card);
   border: 2px solid transparent;
@@ -202,6 +242,16 @@ body.remote { background: var(--bg); overflow: auto; }
   box-shadow: var(--shadow);
   margin-bottom: 18px;
 }
+
+body.remote .remotePanel {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 .remotePanel h2 { 
   margin: 0 0 6px; 
   font-size: 24px; 
@@ -222,6 +272,7 @@ body.remote { background: var(--bg); overflow: auto; }
   margin-top: 10px;
   line-height: 1.4;
   font-weight: 600;
+  flex-shrink: 0;
 }
 .rStatus.playing { 
   border-color: #10b981; 
@@ -230,7 +281,7 @@ body.remote { background: var(--bg); overflow: auto; }
   font-weight: 600;
 }
 /* Search */
-.searchWrap { position: relative; margin-bottom: 12px; }
+.searchWrap { position: relative; margin-bottom: 12px; flex-shrink: 0; }
 .searchWrap input[type=search] {
   width: 100%;
   border: 2px solid var(--line);
@@ -255,7 +306,27 @@ body.remote { background: var(--bg); overflow: auto; }
   cursor: pointer; padding: 6px; line-height: 1; display: none;
 }
 /* Search results */
-.songList { display: grid; gap: 8px; max-height: 44vh; overflow-y: auto; overflow-x: hidden; margin-bottom: 0; margin-top: 12px; }
+.songList,
+#songList {
+  display: grid;
+  gap: 8px;
+  max-height: 44vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 0;
+  margin-top: 12px;
+}
+
+body.remote .songList,
+body.remote #songList {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: none;
+  -webkit-overflow-scrolling: touch;
+}
+
 .searchHint { text-align: center; color: var(--muted); padding: 20px 14px; font-size: 15px; }
 .songBtn {
   text-align: left;
@@ -289,6 +360,7 @@ body.remote { background: var(--bg); overflow: auto; }
   margin-bottom: 16px;
   border: 1px solid rgba(16, 185, 129, 0.2);
   flex-wrap: wrap;
+  flex-shrink: 0;
 }
 .info-item {
   display: flex;
@@ -305,8 +377,13 @@ body.remote { background: var(--bg); overflow: auto; }
   font-weight: 800;
   color: #065f46;
 }
-.divider { height: 1px; background: var(--line); margin: 18px 0; }
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.divider { height: 1px; background: var(--line); margin: 18px 0; flex-shrink: 0; }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  flex-shrink: 0;
+}
 .grid-3col { grid-template-columns: 1fr 1fr 1fr; }
 .btn {
   border: 1px solid var(--line);
@@ -333,6 +410,19 @@ body.remote { background: var(--bg); overflow: auto; }
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
 }
 .btn.wide { grid-column: 1 / -1; font-size: 18px; padding: 20px 12px; }
+
+@media (max-height: 720px) {
+  body.remote .remoteWrap { padding: 8px; }
+  body.remote .remotePanel { padding: 14px; border-radius: 14px; }
+  .remotePanel h2 { font-size: 20px; }
+  .searchWrap input[type=search] { padding-top: 12px; padding-bottom: 12px; font-size: 16px; }
+  .rStatus { padding: 10px 12px; margin-bottom: 10px; font-size: 14px; }
+  .controls-info { padding: 9px 10px; margin-bottom: 10px; gap: 10px; }
+  .divider { margin: 10px 0; }
+  .grid { gap: 8px; }
+  .btn { padding: 11px 8px; font-size: 14px; border-radius: 12px; }
+  .btn.wide { padding: 14px 10px; font-size: 16px; }
+}
 </style>
 </head>
 <body>
@@ -420,6 +510,10 @@ const NAV = `<div class="sws-banner"></div>`;
 /* ── Scene ── */
 const isRemote = new URLSearchParams(location.search).has('remote');
 if (isRemote) { bootRemote(); } else { bootTv(); }
+
+document.addEventListener('fullscreenchange', () => {
+  document.body.classList.toggle('is-fullscreen', !!document.fullscreenElement);
+});
 
 /* ════════════════════════════════════════
    TV SIDE
@@ -554,12 +648,12 @@ function showStage() {
   const pairHeading = $('pairHeading');
   const pairSub = $('pairSub');
   const fsButton = $('fsButton');
-  
+
   if (pairContent) pairContent.classList.add('hide');
   if (readyContent) readyContent.classList.remove('hide');
   if (pairHeading) pairHeading.classList.add('hide');
   if (pairSub) pairSub.classList.add('hide');
-  
+
   // Make the Full Screen button clickable
   if (fsButton && !fsButton._fsHandler) {
     fsButton._fsHandler = true;
@@ -575,8 +669,13 @@ function showSongStage() {
 }
 
 function tryFullscreen() {
-  if (!document.fullscreenElement)
-    document.documentElement.requestFullscreen?.().catch(() => {});
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen?.()
+      .then(() => {
+        document.body.classList.add('is-fullscreen');
+      })
+      .catch(() => {});
+  }
 }
 
 /* ── Song loading ── */
@@ -608,7 +707,7 @@ async function loadSong(idx, keepHidden) {
   if (!state.songs.length) return;
   state.current = ((idx % state.songs.length) + state.songs.length) % state.songs.length;
   state.songLoaded = true; // Mark that a song has been selected
-  
+
   // Reset scene tracking
   state.scenesFired.clear();
   state.activeScene = null;
@@ -616,27 +715,27 @@ async function loadSong(idx, keepHidden) {
     clearTimeout(state.sceneTimer);
     state.sceneTimer = null;
   }
-  
+
   const song = state.songs[state.current];
   const pages = $('pages');
   if (!keepHidden) showSongStage();
   stopScroll(false);
-  
+
   // Apply song-specific zoom if provided
   if (song.zoom !== undefined && typeof song.zoom === 'number') {
     state.zoom = Math.max(0.8, Math.min(3.5, song.zoom));
     save();
   }
-  
+
   // Apply song-specific speed if provided
   if (song.speed !== undefined && typeof song.speed === 'number') {
     state.speed = Math.max(2, Math.min(100, song.speed));
     save();
   }
-  
+
   // Display chords if provided
   displayChords(song.chords);
-  
+
   sendTvState(); // Send state immediately to update remote with new song name
   state.renderToken++;
   const token = state.renderToken;
@@ -660,15 +759,15 @@ async function loadSong(idx, keepHidden) {
 function displayChords(chords) {
   const panel = $('chordsPanel');
   const list = $('chordsList');
-  
+
   if (!panel || !list) return;
-  
+
   // If no chords, hide panel
   if (!chords || !Array.isArray(chords) || chords.length === 0) {
     panel.classList.add('hide');
     return;
   }
-  
+
   // Show panel and populate with chord images
   panel.classList.remove('hide');
   list.innerHTML = chords.map(chord => {
@@ -702,47 +801,47 @@ function playScroll() {
 function startScrollAnimation() {
   const stage = $('stage');
   if (!stage) return;
-  
+
   // Start playing
   state.playing = true;
   state.last = performance.now();
   state.scrollAccumulator = stage.scrollTop; // Track fractional pixels
   sendTvState();
-  
+
   let lastStateUpdate = performance.now();
-  
+
   // Begin animation loop
   function animate(now) {
     if (!state.playing) return; // Stop requested
-    
+
     const stage = $('stage');
     if (!stage) {
       state.playing = false;
       sendTvState();
       return;
     }
-    
+
     // Calculate time delta and scroll
     const dt = (now - state.last) / 1000;
     state.last = now;
-    
+
     // Accumulate fractional scroll amount
     state.scrollAccumulator += (state.speed * dt);
-    
+
     // Apply integer part to scrollTop
     stage.scrollTop = Math.floor(state.scrollAccumulator);
-    
+
     // Check for scene triggers (only if not currently in a scene)
     if (!state.activeScene) {
       checkScenes(stage);
     }
-    
+
     // Update remote state every 500ms while playing
     if (now - lastStateUpdate > 500) {
       sendTvState();
       lastStateUpdate = now;
     }
-    
+
     // Check if at bottom
     const scrollRemaining = stage.scrollHeight - stage.scrollTop - stage.clientHeight;
     if (scrollRemaining <= 4) {
@@ -750,31 +849,31 @@ function startScrollAnimation() {
       sendTvState();
       return;
     }
-    
+
     // Continue animation
     state.raf = requestAnimationFrame(animate);
   }
-  
+
   state.raf = requestAnimationFrame(animate);
 }
 
 function checkScenes(stage) {
   const song = state.songs[state.current];
   if (!song || !song.scenes || !Array.isArray(song.scenes)) return;
-  
+
   // Calculate current location as percentage
   const maxScroll = stage.scrollHeight - stage.clientHeight;
   if (maxScroll <= 0) return;
   const currentLocation = stage.scrollTop / maxScroll;
-  
+
   // Check each scene
   for (let i = 0; i < song.scenes.length; i++) {
     const scene = song.scenes[i];
     const sceneKey = `route_${i}`;
-    
+
     // Skip if already fired
     if (state.scenesFired.has(sceneKey)) continue;
-    
+
     // Check if we've reached the trigger point (within 1% tolerance)
     if (currentLocation >= scene.at - 0.01 && currentLocation <= scene.at + 0.01) {
       executeScene(scene, sceneKey, stage);
@@ -787,17 +886,17 @@ function executeScene(scene, sceneKey, stage) {
   // Mark as fired
   state.scenesFired.add(sceneKey);
   state.activeScene = scene;
-  
+
   // Save current position and playing state
   const returnPosition = stage.scrollTop;
   const wasPlaying = state.playing;
-  
+
   // Jump to target location
   const maxScroll = stage.scrollHeight - stage.clientHeight;
   const targetScroll = maxScroll * scene.goto;
   stage.scrollTop = targetScroll;
   state.scrollAccumulator = targetScroll;
-  
+
   // Handle mode: pause or scroll (default is scroll)
   const mode = scene.mode || 'scroll';
   if (mode === 'pause' && state.playing) {
@@ -808,12 +907,12 @@ function executeScene(scene, sceneKey, stage) {
       state.raf = 0;
     }
   }
-  
+
   sendTvState();
-  
+
   // Set timer for scene completion
   const duration = (scene.for || 0) * 1000; // Convert seconds to milliseconds
-  
+
   if (duration > 0) {
     state.sceneTimer = setTimeout(() => {
       if (!stage) {
@@ -821,7 +920,7 @@ function executeScene(scene, sceneKey, stage) {
         state.sceneTimer = null;
         return;
       }
-      
+
       // Determine where to go after scene completes
       if (scene.then === 'stop') {
         // Stop playback completely
@@ -835,7 +934,7 @@ function executeScene(scene, sceneKey, stage) {
         sendTvState();
         return;
       }
-      
+
       let finalPosition;
       if (scene.then === 'continue') {
         // Stay at current position
@@ -847,15 +946,15 @@ function executeScene(scene, sceneKey, stage) {
         // Default: "back" - return to original trigger position
         finalPosition = returnPosition;
       }
-      
+
       stage.scrollTop = finalPosition;
       state.scrollAccumulator = finalPosition;
-      
+
       // Resume playback if it was paused by this scene
       if (mode === 'pause' && wasPlaying && !state.playing) {
         startScrollAnimation();
       }
-      
+
       state.activeScene = null;
       state.sceneTimer = null;
       sendTvState();
@@ -869,13 +968,13 @@ function executeScene(scene, sceneKey, stage) {
 function triggerNextScene() {
   const song = state.songs[state.current];
   const stage = $('stage');
-  
+
   if (!song || !song.scenes || !Array.isArray(song.scenes) || !stage) return;
-  
+
   // Find the first scene that hasn't been fired yet
   for (let i = 0; i < song.scenes.length; i++) {
     const sceneKey = `route_${i}`;
-    
+
     if (!state.scenesFired.has(sceneKey)) {
       // Found an unfired scene - execute it
       const scene = song.scenes[i];
@@ -908,7 +1007,7 @@ function restart() {
     stage.scrollTop = 0;
     state.scrollAccumulator = 0;
   }
-  
+
   // Reset scene tracking
   state.scenesFired.clear();
   state.activeScene = null;
@@ -916,7 +1015,7 @@ function restart() {
     clearTimeout(state.sceneTimer);
     state.sceneTimer = null;
   }
-  
+
   stopScroll();
 }
 
@@ -1005,7 +1104,7 @@ function bootRemote() {
         </div>
 
         <div id="songList"></div>
-        
+
         <div id="rStatus" class="rStatus">Connecting to TV…</div>
 
         <div id="controlsInfo" class="controls-info hide">
@@ -1037,6 +1136,16 @@ function bootRemote() {
         </div>
       </div>
     </div>`;
+
+  // Prevent double-tap zoom on remote
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function (event) {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
 
   // Wire up controls
   $('search').addEventListener('input', renderSongList);
@@ -1124,16 +1233,16 @@ function handleRemoteData(d) {
   if (d.type === 'state') {
     const previousCurrent = state.remoteCurrent;
     state.remoteCurrent = Number(d.current || 0);
-    
+
     const playing = Boolean(d.playing);
     const song = d.song || '';
-    
+
     // Update zoom, speed, and location displays
     const zoomDisplay = $('zoomDisplay');
     const speedDisplay = $('speedDisplay');
     const locationDisplay = $('locationDisplay');
     const controlsInfo = $('controlsInfo');
-    
+
     if (d.zoom !== undefined && zoomDisplay) {
       zoomDisplay.textContent = d.zoom + '%';
     }
@@ -1143,19 +1252,19 @@ function handleRemoteData(d) {
     if (d.location !== undefined && locationDisplay) {
       locationDisplay.textContent = d.location + '%';
     }
-    
+
     // Show controls info when we have state data
     if (controlsInfo) {
       controlsInfo.classList.remove('hide');
     }
-    
+
     // If no song is loaded, show "Ready to Go"
     if (!song) {
       setRStatus('Ready to Go', false);
     } else {
       setRStatus((playing ? 'Playing: ' : 'Paused: ') + song, playing);
     }
-    
+
     const tb = $('toggleBtn');
     if (tb) tb.textContent = playing ? 'Pause' : 'Play';
     renderSongList(); // refresh active state
