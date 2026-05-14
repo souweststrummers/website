@@ -236,7 +236,7 @@ const songsData = [
     "dataName": "22. Tea at Te Kuiti",
     "chords": ["D7"],
     "speed": 17,
-    "zoom": 2.20,
+    "zoom": 2.20
   },
   {
     "id": "song-23",
