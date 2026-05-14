@@ -348,8 +348,11 @@ body.remote { background: var(--bg); overflow: auto; }
 const DATA_PATH  = './assets/songs-data.js';
 const SETTINGS_KEY = 'sws-tv-v3';
 
-// Ably token endpoint. Keep your ABLY_KEY in your hosting environment, not in this file.
+// Ably setup.
+// Best option: leave ABLY_KEY_DIRECT empty and use the /api/ably-token endpoint.
+// Temporary option: paste a restricted Ably API key below until you can access Cloudflare.
 const ABLY_AUTH_URL = '/api/ably-token';
+const ABLY_KEY_DIRECT = ''; // Example: 'appkey:secret' - temporary only, do not use your root/master key long-term.
 const ABLY_CHANNEL_PREFIX = 'sws-tv-room-';
 
 /* ── Shared state ── */
@@ -392,10 +395,20 @@ function makeRoomCode() {
 }
 
 function makeAblyClient(role) {
+  const clientId = role + '-' + Math.random().toString(36).slice(2, 9);
+
+  if (ABLY_KEY_DIRECT && ABLY_KEY_DIRECT.trim()) {
+    return new Ably.Realtime({
+      key: ABLY_KEY_DIRECT.trim(),
+      clientId,
+      closeOnUnload: true,
+    });
+  }
+
   return new Ably.Realtime({
     authUrl: ABLY_AUTH_URL,
     authMethod: 'POST',
-    clientId: role + '-' + Math.random().toString(36).slice(2, 9),
+    clientId,
     closeOnUnload: true,
   });
 }
