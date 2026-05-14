@@ -500,7 +500,7 @@ function setupPeer() {
   state.conn = channel;
 
   ably.connection.on('connected', () => {
-    tvStatus('TV connected. Scan QR to connect remote.\nCode: ' + roomId, false);
+    tvStatus('TV connected. Scan QR to connect remote.', false);
     sendSongs();
     sendTvState();
   });
