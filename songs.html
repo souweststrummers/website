@@ -280,6 +280,8 @@
         .stats-dialog,
         .history-dialog {
             width: min(92vw, 520px);
+            max-height: min(82vh, 720px);
+            margin: auto;
             border: 0;
             border-radius: 16px;
             padding: 0;
@@ -645,7 +647,7 @@
                 ? `<span class="rank-badge"><i class="fa-solid fa-ranking-star" aria-hidden="true"></i> Rank #${ranking.rank} of ${songs.length}</span>`
                 : `<span class="rank-badge"><i class="fa-solid fa-ranking-star" aria-hidden="true"></i> Not ranked yet</span>`;
 
-            document.getElementById('historyDialogTitle').textContent = `${song.number}. ${song.title}`;
+            document.getElementById('historyDialogTitle').textContent = `${song.number} ${song.title}`;
             body.innerHTML = `
                 <p class="history-summary">${rankText}</p>
                 <p class="history-summary">Played ${plays.length} ${plays.length === 1 ? 'time' : 'times'}.</p>
