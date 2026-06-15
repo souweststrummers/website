@@ -505,6 +505,40 @@
             return songs.find(item => item.id === songId);
         }
 
+        function getAndroidMajorVersion() {
+            const match = navigator.userAgent.match(/Android\s+(\d+)/i);
+            return match ? Number(match[1]) : 0;
+        }
+
+        function getChromeMajorVersion() {
+            const match = navigator.userAgent.match(/(?:Chrome|CriOS)\/(\d+)/i);
+            return match ? Number(match[1]) : 0;
+        }
+
+        function shouldUseAndroidPdfViewer() {
+            const userAgent = navigator.userAgent;
+            const isAndroid = /Android/i.test(userAgent);
+            const isTablet = isAndroid && !/Mobile/i.test(userAgent);
+            if (!isTablet) return false;
+
+            const androidVersion = getAndroidMajorVersion();
+            const chromeVersion = getChromeMajorVersion();
+
+            return (androidVersion > 0 && androidVersion < 10) || (chromeVersion > 0 && chromeVersion < 100);
+        }
+
+        function getPdfDisplayUrl(pdfPath) {
+            if (!shouldUseAndroidPdfViewer()) return pdfPath;
+
+            const absolutePdfUrl = new URL(pdfPath, window.location.href).href;
+            return `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(absolutePdfUrl)}`;
+        }
+
+        function openSongPdf(song) {
+            if (!song?.pdf) return;
+            window.location.href = getPdfDisplayUrl(song.pdf);
+        }
+
         function normalisePlayHistory(rawHistory) {
             return Object.entries(rawHistory).reduce((normalised, [songId, value]) => {
                 if (Array.isArray(value)) {
@@ -685,6 +719,8 @@
                     event.stopPropagation();
                     const songId = link.getAttribute('data-song-id');
                     handleSongPlay(songId, history);
+                    event.preventDefault();
+                    openSongPdf(getSong(songId));
                 });
             });
 
@@ -699,8 +735,9 @@
             document.querySelectorAll('.song-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const songId = card.getAttribute('data-song-id');
+                    const song = getSong(songId);
                     handleSongPlay(songId, history);
-                    window.location.href = getSong(songId)?.pdf || '#';
+                    openSongPdf(song);
                 });
 
                 card.addEventListener('keydown', (event) => {
@@ -757,7 +794,7 @@
 
             const songLink = document.createElement('a');
             songLink.className = 'link-nochange song-title pdf-link';
-            songLink.href = song.pdf;
+            songLink.href = getPdfDisplayUrl(song.pdf);
             songLink.setAttribute('data-song-id', song.id);
             songLink.setAttribute('data-name', song.dataName || `${song.number} ${song.title} | ${song.artist}`);
             songLink.innerHTML = `<span class="song-number">${song.number}</span> ${song.title}`;
