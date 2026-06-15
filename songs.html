@@ -41,36 +41,6 @@
             gap: 12px;
             width: 100%;
         }
-        .view-toggle {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #fff;
-            border: 1px solid #d7dde2;
-            border-radius: 12px;
-            padding: 6px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-        }
-        .view-toggle button {
-            border: none;
-            background: transparent;
-            padding: 8px 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 600;
-            opacity: 0.5;
-            transition: background 0.15s ease, color 0.15s ease;
-        }
-        .view-toggle button:hover {
-            background: #e2e8f0;
-        }
-        .view-toggle button.active {
-            background: #e2e8f0;
-            opacity: 0.5;
-        }
         .search-bar {
             display: flex;
             align-items: center;
@@ -143,11 +113,6 @@
             gap: 12px;
             margin-top: 16px;
         }
-        .songs-grid.grid-view {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-        }
         .song-card {
             display: grid;
             grid-template-columns: 80px 1fr;
@@ -169,12 +134,6 @@
             outline: 2px solid #f97316;
             box-shadow: 0 8px 18px rgba(249, 115, 22, 0.25);
         }
-        .song-card.grid-card {
-            grid-template-columns: 1fr;
-            text-align: center;
-            align-items: center;
-            gap: 12px;
-        }
         .cover-thumb {
             width: 64px;
             height: 64px;
@@ -183,12 +142,6 @@
             flex-shrink: 0;
             border: 1px solid #e5e7eb;
             background: #f3f4f6;
-        }
-        .song-card.grid-card .cover-thumb {
-            margin: 0 auto;
-            width: 100%;
-            max-width: 180px;
-            height: 180px;
         }
         .cover-thumb img {
             width: 100%;
@@ -205,20 +158,12 @@
             align-items: flex-start;
             width: 100%;
         }
-        .song-card.grid-card .card-content {
-            align-items: center;
-            text-align: center;
-        }
         .card-top {
             display: grid;
             grid-template-columns: 1fr auto;
             align-items: start;
             gap: 12px;
             width: 100%;
-        }
-        .song-card.grid-card .card-top {
-            grid-template-columns: 1fr;
-            justify-items: center;
         }
         .title-group {
             display: flex;
@@ -237,9 +182,6 @@
         .song-number {
             font-weight: 800;
         }
-        .song-card.grid-card .song-title {
-            text-align: center;
-        }
         .song-title:hover {
             text-decoration: underline;
         }
@@ -255,9 +197,6 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-        }
-        .song-card.grid-card .meta-row {
-            display: none;
         }
         .meta-row .artist-full {
             display: inline-flex;
@@ -308,26 +247,12 @@
             flex-direction: column;
             text-align: right;
         }
-        .song-card.grid-card .top-actions {
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            width: 100%;
-        }
         .action-buttons {
             display: inline-flex;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
             justify-content: flex-end;
-        }
-        .song-card.grid-card .action-buttons {
-            justify-content: center;
-            width: 100%;
-        }
-        .song-card.grid-card .last-clicked {
-            display: none;
         }
         .last-clicked {
             display: inline-flex;
@@ -339,6 +264,76 @@
         }
         .last-clicked i {
             color: #0a7c2f;
+        }
+        .last-played-button {
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 999px;
+        }
+        .last-played-button:hover,
+        .last-played-button:focus {
+            background: #ecfdf5;
+            outline: 2px solid transparent;
+        }
+        .stats-dialog,
+        .history-dialog {
+            width: min(92vw, 520px);
+            max-height: min(82vh, 720px);
+            margin: auto;
+            border: 0;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+            text-align: left;
+        }
+        .stats-dialog::backdrop,
+        .history-dialog::backdrop {
+            background: rgba(15, 23, 42, 0.38);
+        }
+        .dialog-content {
+            padding: 22px;
+        }
+        .dialog-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+        .dialog-header h2 {
+            margin: 0;
+            padding: 0;
+            font-size: 1.35rem;
+        }
+        .dialog-close {
+            width: 36px;
+            height: 36px;
+            flex: 0 0 auto;
+        }
+        .history-summary,
+        .stats-summary {
+            color: #4b5563;
+            margin-bottom: 12px;
+        }
+        .history-dates,
+        .stats-list {
+            margin-left: 1.25rem;
+            display: grid;
+            gap: 8px;
+        }
+        .history-empty,
+        .stats-empty {
+            color: #6b7280;
+            font-style: italic;
+        }
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #1d4ed8;
+            font-weight: 700;
         }
 
         @media (max-width: 768px) {
@@ -357,11 +352,6 @@
                 justify-content: center;
             }
 
-            .view-toggle {
-                width: 100%;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
 
             .card-top {
                 display: flex;
@@ -446,19 +436,13 @@
                         <i class="fa-solid fa-heart" aria-hidden="true"></i>
                         <span class="sr-only">Show favourites only</span>
                     </button>
-                    <button id="randomSong" class="icon-button" type="button" title="Random song">
+                    <button id="randomSong" class="icon-button" type="button" title="Random unplayed song">
                         <i class="fa-solid fa-dice" aria-hidden="true"></i>
-                        <span class="sr-only">Play a random song</span>
+                        <span class="sr-only">Pick a random unplayed song</span>
                     </button>
-                </div>
-               <div class="view-toggle" role="group" aria-label="Change song layout">
-                    <button id="listView" type="button" class="active" title="Show list view">
-                        <i class="fa-solid fa-list" aria-hidden="true"></i>
-                        <span>List</span>
-                    </button>
-                    <button id="gridView" type="button" title="Show grid view">
-                        <i class="fa-solid fa-border-all" aria-hidden="true"></i>
-                        <span>Grid</span>
+                    <button id="statsButton" class="icon-button" type="button" title="Song stats">
+                        <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
+                        <span class="sr-only">Show song stats</span>
                     </button>
                 </div>
             </div>
@@ -467,18 +451,41 @@
         <div id="songsList" class="songs-grid" aria-live="polite"></div>
     </main>
 
+    <dialog id="historyDialog" class="history-dialog" aria-labelledby="historyDialogTitle">
+        <div class="dialog-content">
+            <div class="dialog-header">
+                <h2 id="historyDialogTitle">Song history</h2>
+                <button class="icon-button dialog-close" type="button" data-close-dialog aria-label="Close song history">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div id="historyDialogBody"></div>
+        </div>
+    </dialog>
+
+    <dialog id="statsDialog" class="stats-dialog" aria-labelledby="statsDialogTitle">
+        <div class="dialog-content">
+            <div class="dialog-header">
+                <h2 id="statsDialogTitle">Top 10 songs</h2>
+                <button class="icon-button dialog-close" type="button" data-close-dialog aria-label="Close song stats">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div id="statsDialogBody"></div>
+        </div>
+    </dialog>
+
     <button id="backToTop"><i class="fa-solid fa-angle-up"></i> Back to Top</button>
 
     <script src="assets/songs-data.js"></script>
     <script>
         const STORAGE_KEY = 'songLastClicked';
         const FAVORITES_KEY = 'songFavorites';
-        const VIEW_MODE_KEY = 'songsViewMode';
+        const DEFAULT_SEARCH_PLACEHOLDER = 'Search by title or artist';
 
         const songs = songsData;
 
         let favoritesFilterActive = false;
-        let viewMode = 'list';
 
         function loadStoredObject(key) {
             try {
@@ -490,18 +497,33 @@
             }
         }
 
-        function loadStoredString(key, fallback) {
-            try {
-                const stored = localStorage.getItem(key);
-                return stored || fallback;
-            } catch (error) {
-                console.error('Unable to read localStorage entry', error);
-                return fallback;
-            }
-        }
-
         function saveStoredObject(key, value) {
             localStorage.setItem(key, JSON.stringify(value));
+        }
+
+        function getSong(songId) {
+            return songs.find(item => item.id === songId);
+        }
+
+        function normalisePlayHistory(rawHistory) {
+            return Object.entries(rawHistory).reduce((normalised, [songId, value]) => {
+                if (Array.isArray(value)) {
+                    const validDates = value
+                        .map(Number)
+                        .filter(timestamp => Number.isFinite(timestamp))
+                        .sort((a, b) => b - a);
+                    if (validDates.length) {
+                        normalised[songId] = validDates;
+                    }
+                    return normalised;
+                }
+
+                const timestamp = Number(value);
+                if (Number.isFinite(timestamp)) {
+                    normalised[songId] = [timestamp];
+                }
+                return normalised;
+            }, {});
         }
 
         function formatWeekDescription(timestamp) {
@@ -526,26 +548,68 @@
             });
         }
 
+        function formatDateTime(timestamp) {
+            return new Date(timestamp).toLocaleString(undefined, {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+        }
+
         function truncateArtist(name) {
             if (name.length <= 18) return name;
             return `${name.slice(0, 18)}…`;
         }
 
+        function getSongPlays(history, songId) {
+            return Array.isArray(history[songId]) ? history[songId] : [];
+        }
+
+        function getLastPlayedTimestamp(history, songId) {
+            return getSongPlays(history, songId)[0];
+        }
+
+        function getRankings(history) {
+            return songs
+                .map(song => {
+                    const plays = getSongPlays(history, song.id);
+                    return {
+                        song,
+                        count: plays.length,
+                        lastPlayed: plays[0] || 0
+                    };
+                })
+                .sort((a, b) => b.count - a.count || b.lastPlayed - a.lastPlayed || a.song.number - b.song.number)
+                .map((entry, index) => ({ ...entry, rank: index + 1 }));
+        }
+
+        function getSongRanking(history, songId) {
+            return getRankings(history).find(entry => entry.song.id === songId);
+        }
+
+        function getMostRecentPlayedEntry(history) {
+            return getRankings(history)
+                .filter(entry => entry.lastPlayed > 0)
+                .sort((a, b) => b.lastPlayed - a.lastPlayed)[0];
+        }
+
+        function setSearchPlaceholder(text) {
+            document.getElementById('songSearch').placeholder = text || DEFAULT_SEARCH_PLACEHOLDER;
+        }
+
         function setLastPlayed(card, history) {
             const songId = card.getAttribute('data-song-id');
             const lastClickText = card.querySelector('.last-click-text');
-            if (history[songId]) {
-                const dateRecorded = history[songId];
+            const plays = getSongPlays(history, songId);
+            const dateRecorded = plays[0];
+
+            if (dateRecorded) {
                 const monthAgoMs = 30 * 24 * 60 * 60 * 1000;
                 const isOlderThanMonth = Date.now() - dateRecorded >= monthAgoMs;
-
-                if (isOlderThanMonth) {
-                    const dateLabel = formatDateOnly(dateRecorded);
-                    lastClickText.textContent = dateLabel;
-                } else {
-                    const weekDescription = formatWeekDescription(dateRecorded);
-                    lastClickText.textContent = weekDescription;
-                }
+                const dateLabel = isOlderThanMonth ? formatDateOnly(dateRecorded) : formatWeekDescription(dateRecorded);
+                lastClickText.textContent = plays.length > 1 ? `${dateLabel} (${plays.length} plays)` : dateLabel;
             } else {
                 lastClickText.textContent = 'Not yet';
             }
@@ -556,7 +620,7 @@
         }
 
         function handleSongPlay(songId, history) {
-            history[songId] = Date.now();
+            history[songId] = [Date.now(), ...getSongPlays(history, songId)];
             saveStoredObject(STORAGE_KEY, history);
             updateDisplay(history);
         }
@@ -573,6 +637,48 @@
             });
         }
 
+        function showHistoryDialog(songId, history) {
+            const song = getSong(songId);
+            const dialog = document.getElementById('historyDialog');
+            const body = document.getElementById('historyDialogBody');
+            const plays = getSongPlays(history, songId);
+            const ranking = getSongRanking(history, songId);
+            const rankText = ranking?.count
+                ? `<span class="rank-badge"><i class="fa-solid fa-ranking-star" aria-hidden="true"></i> Rank #${ranking.rank} of ${songs.length}</span>`
+                : `<span class="rank-badge"><i class="fa-solid fa-ranking-star" aria-hidden="true"></i> Not ranked yet</span>`;
+
+            document.getElementById('historyDialogTitle').textContent = `${song.number} ${song.title}`;
+            body.innerHTML = `
+                <p class="history-summary">${rankText}</p>
+                <p class="history-summary">Played ${plays.length} ${plays.length === 1 ? 'time' : 'times'}.</p>
+                ${plays.length
+                    ? `<ol class="history-dates">${plays.map(timestamp => `<li>${formatDateTime(timestamp)}</li>`).join('')}</ol>`
+                    : '<p class="history-empty">This song has not been played yet.</p>'}
+            `;
+            dialog.showModal();
+        }
+
+        function showStatsDialog(history) {
+            const dialog = document.getElementById('statsDialog');
+            const body = document.getElementById('statsDialogBody');
+            const topSongs = getRankings(history).filter(entry => entry.count > 0).slice(0, 10);
+
+            body.innerHTML = topSongs.length
+                ? `
+                    <p class="stats-summary">Ranked by how many times each song has been played.</p>
+                    <ol class="stats-list">
+                        ${topSongs.map(entry => `
+                            <li>
+                                <strong>#${entry.rank} ${entry.song.title}</strong><br>
+                                ${entry.count} ${entry.count === 1 ? 'play' : 'plays'} · Last played ${formatDateOnly(entry.lastPlayed)}
+                            </li>
+                        `).join('')}
+                    </ol>
+                `
+                : '<p class="stats-empty">No songs have been played yet.</p>';
+            dialog.showModal();
+        }
+
         function registerClickHandlers(history) {
             document.querySelectorAll('.pdf-link').forEach(link => {
                 link.addEventListener('click', (event) => {
@@ -582,11 +688,19 @@
                 });
             });
 
+            document.querySelectorAll('.last-played-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    showHistoryDialog(button.getAttribute('data-song-id'), history);
+                });
+            });
+
             document.querySelectorAll('.song-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const songId = card.getAttribute('data-song-id');
                     handleSongPlay(songId, history);
-                    window.location.href = songs.find(item => item.id === songId)?.pdf || '#';
+                    window.location.href = getSong(songId)?.pdf || '#';
                 });
 
                 card.addEventListener('keydown', (event) => {
@@ -594,7 +708,7 @@
                         event.preventDefault();
                         const songId = card.getAttribute('data-song-id');
                         handleSongPlay(songId, history);
-                        window.location.href = songs.find(item => item.id === songId)?.pdf || '#';
+                        window.location.href = getSong(songId)?.pdf || '#';
                     }
                 });
             });
@@ -617,9 +731,9 @@
             });
         }
 
-        function createSongCard(song, mode) {
+        function createSongCard(song) {
             const card = document.createElement('article');
-            card.className = `song-card ${mode === 'grid' ? 'grid-card' : ''}`.trim();
+            card.className = 'song-card';
             card.setAttribute('data-song-id', song.id);
             card.setAttribute('data-name', song.dataName || `${song.number} ${song.title} | ${song.artist}`);
             card.setAttribute('role', 'link');
@@ -669,8 +783,11 @@
 
             const topActions = document.createElement('div');
             topActions.className = 'top-actions';
-            const lastClickWrapper = document.createElement('div');
-            lastClickWrapper.className = 'last-clicked';
+            const lastClickWrapper = document.createElement('button');
+            lastClickWrapper.className = 'last-clicked last-played-button';
+            lastClickWrapper.type = 'button';
+            lastClickWrapper.setAttribute('data-song-id', song.id);
+            lastClickWrapper.setAttribute('aria-label', `Show play history for ${song.title}`);
             lastClickWrapper.innerHTML = '<i class="fa-regular fa-clock"></i> <span class="last-click-text">Not yet</span>';
 
             const actionButtons = document.createElement('div');
@@ -690,11 +807,10 @@
         function renderSongs(list, history, favorites) {
             const container = document.getElementById('songsList');
             container.innerHTML = '';
-            container.classList.toggle('grid-view', viewMode === 'grid');
-            container.classList.toggle('list-view', viewMode !== 'grid');
+            container.classList.add('list-view');
 
             list.forEach(song => {
-                const card = createSongCard(song, viewMode);
+                const card = createSongCard(song);
                 container.appendChild(card);
             });
 
@@ -704,78 +820,53 @@
             registerFavoriteHandlers(favorites, history);
         }
 
-        function getFilteredSongs(query, favorites) {
+        function getFilteredSongs(query, favorites, history, unplayedOnly = false) {
             const normalized = query.trim().toLowerCase();
             const isNumberSearch = /^[0-9]/.test(normalized);
 
-            if (!normalized) {
-                return songs.filter(song => {
-                    const matchesFavorites = !favoritesFilterActive || favorites[song.id];
-                    return matchesFavorites;
-                });
-            }
-
-            const matchedIndices = [];
-
-            songs.forEach((song, index) => {
+            return songs.filter(song => {
                 const searchFields = [song.number, song.title, song.artist, song.dataName]
                     .filter(Boolean)
-                    .map(field => field.toLowerCase());
-
+                    .map(field => String(field).toLowerCase());
                 const songNumber = String(song.number || '').toLowerCase();
                 const nonNumberFields = [song.title, song.artist, song.dataName]
                     .filter(Boolean)
-                    .map(field => field.toLowerCase());
-
-                const matchesQuery = isNumberSearch
-                    ? songNumber.startsWith(normalized) || nonNumberFields.some(field => field.includes(normalized))
-                    : searchFields.some(field => field.includes(normalized));
+                    .map(field => String(field).toLowerCase());
+                const matchesQuery = !normalized
+                    || (isNumberSearch
+                        ? songNumber.startsWith(normalized) || nonNumberFields.some(field => field.includes(normalized))
+                        : searchFields.some(field => field.includes(normalized)));
                 const matchesFavorites = !favoritesFilterActive || favorites[song.id];
+                const matchesUnplayed = !unplayedOnly || !getLastPlayedTimestamp(history, song.id);
 
-                if (matchesQuery && matchesFavorites) {
-                    matchedIndices.push(index);
-                }
+                return matchesQuery && matchesFavorites && matchesUnplayed;
             });
-
-            return matchedIndices.map(index => songs[index]);
         }
 
-        function applySearchFilter(history, favorites) {
+        function applySearchFilter(history, favorites, options = {}) {
             const query = document.getElementById('songSearch').value;
-            const filteredSongs = getFilteredSongs(query, favorites);
+            const filteredSongs = getFilteredSongs(query, favorites, history, Boolean(options.unplayedOnly));
             renderSongs(filteredSongs, history, favorites);
-        }
-
-        function updateViewToggleButtons() {
-            const listButton = document.getElementById('listView');
-            const gridButton = document.getElementById('gridView');
-
-            if (!listButton || !gridButton) return;
-
-            listButton.classList.toggle('active', viewMode === 'list');
-            gridButton.classList.toggle('active', viewMode === 'grid');
-        }
-
-        function setViewMode(mode, history, favorites) {
-            viewMode = mode;
-            localStorage.setItem(VIEW_MODE_KEY, mode);
-            updateViewToggleButtons();
-            applySearchFilter(history, favorites);
+            return filteredSongs;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const history = loadStoredObject(STORAGE_KEY);
+            const history = normalisePlayHistory(loadStoredObject(STORAGE_KEY));
             const favorites = loadStoredObject(FAVORITES_KEY);
 
-            viewMode = loadStoredString(VIEW_MODE_KEY, 'list');
-            updateViewToggleButtons();
+            saveStoredObject(STORAGE_KEY, history);
             renderSongs(songs, history, favorites);
 
-            document.getElementById('songSearch').addEventListener('input', () => applySearchFilter(history, favorites));
+            document.getElementById('songSearch').addEventListener('input', () => {
+                setSearchPlaceholder();
+                applySearchFilter(history, favorites);
+            });
 
             document.getElementById('clearSearch').addEventListener('click', () => {
                 const searchInput = document.getElementById('songSearch');
+                const lastPlayedEntry = getMostRecentPlayedEntry(history);
                 searchInput.value = '';
+                setSearchPlaceholder(lastPlayedEntry ? `Last song: ${lastPlayedEntry.song.title}` : DEFAULT_SEARCH_PLACEHOLDER);
                 searchInput.focus();
                 favoritesFilterActive = false;
                 document.getElementById('favoritesFilter').classList.remove('active');
@@ -788,22 +879,48 @@
                 applySearchFilter(history, favorites);
             });
 
-            document.getElementById('listView').addEventListener('click', () => setViewMode('list', history, favorites));
-            document.getElementById('gridView').addEventListener('click', () => setViewMode('grid', history, favorites));
+            document.getElementById('statsButton').addEventListener('click', () => showStatsDialog(history));
+
+            document.querySelectorAll('[data-close-dialog]').forEach(button => {
+                button.addEventListener('click', () => button.closest('dialog').close());
+            });
+
+            document.querySelectorAll('dialog').forEach(dialog => {
+                dialog.addEventListener('click', event => {
+                    if (event.target === dialog) {
+                        dialog.close();
+                    }
+                });
+            });
 
             document.getElementById('randomSong').addEventListener('click', () => {
+                const searchInput = document.getElementById('songSearch');
+                const lastPlayedEntry = getMostRecentPlayedEntry(history);
+                searchInput.value = '';
+                setSearchPlaceholder(lastPlayedEntry ? `Last song: ${lastPlayedEntry.song.title}` : DEFAULT_SEARCH_PLACEHOLDER);
+                favoritesFilterActive = false;
+                document.getElementById('favoritesFilter').classList.remove('active');
+                const unplayedSongs = applySearchFilter(history, favorites, { unplayedOnly: true });
+
                 const visibleCards = Array.from(document.querySelectorAll('.song-card'))
                     .filter(card => card.offsetParent !== null);
 
                 if (!visibleCards.length) {
+                    renderSongs(songs, history, favorites);
+                    setSearchPlaceholder('All songs have been played');
                     return;
                 }
 
                 visibleCards.forEach(card => card.classList.remove('random-highlight'));
                 const randomCard = visibleCards[Math.floor(Math.random() * visibleCards.length)];
+                const randomSong = unplayedSongs.find(song => song.id === randomCard.getAttribute('data-song-id'));
 
                 randomCard.classList.add('random-highlight');
                 randomCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                if (randomSong) {
+                    setSearchPlaceholder(`Last random: ${randomSong.title}`);
+                }
 
                 const link = randomCard.querySelector('.pdf-link');
                 if (link) {
