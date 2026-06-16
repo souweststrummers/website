@@ -654,9 +654,11 @@
         }
 
         function handleSongPlay(songId, history) {
+            const song = getSong(songId);
             history[songId] = [Date.now(), ...getSongPlays(history, songId)];
             saveStoredObject(STORAGE_KEY, history);
             updateDisplay(history);
+            setSearchPlaceholder(`Last played: ${song.number}. ${song.title}`);
         }
 
         function updateFavoriteDisplay(favorites) {
@@ -703,7 +705,7 @@
                     <ol class="stats-list">
                         ${topSongs.map(entry => `
                             <li>
-                                <strong>#${entry.rank} ${entry.song.title}</strong><br>
+                                <strong>#${entry.song.number} ${entry.song.title}</strong><br>
                                 ${entry.count} ${entry.count === 1 ? 'play' : 'plays'} · Last played ${formatDateOnly(entry.lastPlayed)}
                             </li>
                         `).join('')}
@@ -903,7 +905,7 @@
                 const searchInput = document.getElementById('songSearch');
                 const lastPlayedEntry = getMostRecentPlayedEntry(history);
                 searchInput.value = '';
-                setSearchPlaceholder(lastPlayedEntry ? `Last song: ${lastPlayedEntry.song.title}` : DEFAULT_SEARCH_PLACEHOLDER);
+                setSearchPlaceholder(lastPlayedEntry ? `Last played: ${lastPlayedEntry.song.number}. ${lastPlayedEntry.song.title}` : DEFAULT_SEARCH_PLACEHOLDER);
                 searchInput.focus();
                 favoritesFilterActive = false;
                 document.getElementById('favoritesFilter').classList.remove('active');
@@ -934,7 +936,7 @@
                 const searchInput = document.getElementById('songSearch');
                 const lastPlayedEntry = getMostRecentPlayedEntry(history);
                 searchInput.value = '';
-                setSearchPlaceholder(lastPlayedEntry ? `Last song: ${lastPlayedEntry.song.title}` : DEFAULT_SEARCH_PLACEHOLDER);
+                setSearchPlaceholder(lastPlayedEntry ? `Last played: ${lastPlayedEntry.song.number}. ${lastPlayedEntry.song.title}` : DEFAULT_SEARCH_PLACEHOLDER);
                 favoritesFilterActive = false;
                 document.getElementById('favoritesFilter').classList.remove('active');
                 const unplayedSongs = applySearchFilter(history, favorites, { unplayedOnly: true });
