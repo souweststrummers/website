@@ -466,7 +466,7 @@
     <dialog id="statsDialog" class="stats-dialog" aria-labelledby="statsDialogTitle">
         <div class="dialog-content">
             <div class="dialog-header">
-                <h2 id="statsDialogTitle">Top 10 songs</h2>
+                <h2 id="statsDialogTitle">My top 10 songs</h2>
                 <button class="icon-button dialog-close" type="button" data-close-dialog aria-label="Close song stats">
                     <i class="fa-solid fa-xmark" aria-hidden="true"></i>
                 </button>
@@ -518,8 +518,7 @@
         function shouldUseAndroidPdfViewer() {
             const userAgent = navigator.userAgent;
             const isAndroid = /Android/i.test(userAgent);
-            const isTablet = isAndroid && !/Mobile/i.test(userAgent);
-            if (!isTablet) return false;
+            if (!isAndroid) return false;
 
             const androidVersion = getAndroidMajorVersion();
             const chromeVersion = getChromeMajorVersion();
@@ -530,8 +529,7 @@
         function getPdfDisplayUrl(pdfPath) {
             if (!shouldUseAndroidPdfViewer()) return pdfPath;
 
-            const absolutePdfUrl = new URL(pdfPath, window.location.href).href;
-            return `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(absolutePdfUrl)}`;
+            return `pdf-viewer.html?file=${encodeURIComponent(pdfPath)}`;
         }
 
         function openSongPdf(song) {
@@ -539,22 +537,22 @@
             window.location.href = getPdfDisplayUrl(song.pdf);
         }
 
+        function getLocalDateTimestamp(value = Date.now()) {
+            const date = new Date(value);
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+        }
+
         function normalisePlayHistory(rawHistory) {
             return Object.entries(rawHistory).reduce((normalised, [songId, value]) => {
-                if (Array.isArray(value)) {
-                    const validDates = value
-                        .map(Number)
-                        .filter(timestamp => Number.isFinite(timestamp))
-                        .sort((a, b) => b - a);
-                    if (validDates.length) {
-                        normalised[songId] = validDates;
-                    }
-                    return normalised;
-                }
+                const values = Array.isArray(value) ? value : [value];
+                const uniqueDates = [...new Set(values
+                    .map(Number)
+                    .filter(timestamp => Number.isFinite(timestamp))
+                    .map(getLocalDateTimestamp))]
+                    .sort((a, b) => b - a);
 
-                const timestamp = Number(value);
-                if (Number.isFinite(timestamp)) {
-                    normalised[songId] = [timestamp];
+                if (uniqueDates.length) {
+                    normalised[songId] = uniqueDates;
                 }
                 return normalised;
             }, {});
@@ -582,15 +580,6 @@
             });
         }
 
-        function formatDateTime(timestamp) {
-            return new Date(timestamp).toLocaleString(undefined, {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit'
-            });
-        }
 
         function truncateArtist(name) {
             if (name.length <= 18) return name;
@@ -623,10 +612,8 @@
             return getRankings(history).find(entry => entry.song.id === songId);
         }
 
-        function getMostRecentPlayedEntry(history) {
-            return getRankings(history)
-                .filter(entry => entry.lastPlayed > 0)
-                .sort((a, b) => b.lastPlayed - a.lastPlayed)[0];
+        function formatSongPlaceholder(song) {
+            return song ? `Last played: ${song.number} ${song.title}` : DEFAULT_SEARCH_PLACEHOLDER;
         }
 
         function setSearchPlaceholder(text) {
@@ -655,10 +642,12 @@
 
         function handleSongPlay(songId, history) {
             const song = getSong(songId);
-            history[songId] = [Date.now(), ...getSongPlays(history, songId)];
+            const today = getLocalDateTimestamp();
+            const previousPlays = getSongPlays(history, songId).filter(timestamp => timestamp !== today);
+            history[songId] = [today, ...previousPlays];
             saveStoredObject(STORAGE_KEY, history);
             updateDisplay(history);
-            setSearchPlaceholder(`Last played: ${song.number}. ${song.title}`);
+            setSearchPlaceholder(formatSongPlaceholder(song));
         }
 
         function updateFavoriteDisplay(favorites) {
@@ -688,7 +677,7 @@
                 <p class="history-summary">${rankText}</p>
                 <p class="history-summary">Played ${plays.length} ${plays.length === 1 ? 'time' : 'times'}.</p>
                 ${plays.length
-                    ? `<ol class="history-dates">${plays.map(timestamp => `<li>${formatDateTime(timestamp)}</li>`).join('')}</ol>`
+                    ? `<ol class="history-dates">${plays.map(timestamp => `<li>${formatDateOnly(timestamp)}</li>`).join('')}</ol>`
                     : '<p class="history-empty">This song has not been played yet.</p>'}
             `;
             dialog.showModal();
@@ -747,7 +736,7 @@
                         event.preventDefault();
                         const songId = card.getAttribute('data-song-id');
                         handleSongPlay(songId, history);
-                        window.location.href = getSong(songId)?.pdf || '#';
+                        openSongPdf(getSong(songId));
                     }
                 });
             });
@@ -903,9 +892,8 @@
 
             document.getElementById('clearSearch').addEventListener('click', () => {
                 const searchInput = document.getElementById('songSearch');
-                const lastPlayedEntry = getMostRecentPlayedEntry(history);
                 searchInput.value = '';
-                setSearchPlaceholder(lastPlayedEntry ? `Last played: ${lastPlayedEntry.song.number}. ${lastPlayedEntry.song.title}` : DEFAULT_SEARCH_PLACEHOLDER);
+                setSearchPlaceholder();
                 searchInput.focus();
                 favoritesFilterActive = false;
                 document.getElementById('favoritesFilter').classList.remove('active');
@@ -934,32 +922,23 @@
 
             document.getElementById('randomSong').addEventListener('click', () => {
                 const searchInput = document.getElementById('songSearch');
-                const lastPlayedEntry = getMostRecentPlayedEntry(history);
                 searchInput.value = '';
-                setSearchPlaceholder(lastPlayedEntry ? `Last played: ${lastPlayedEntry.song.number}. ${lastPlayedEntry.song.title}` : DEFAULT_SEARCH_PLACEHOLDER);
                 favoritesFilterActive = false;
                 document.getElementById('favoritesFilter').classList.remove('active');
-                const unplayedSongs = applySearchFilter(history, favorites, { unplayedOnly: true });
+                applySearchFilter(history, favorites, { unplayedOnly: true });
 
                 const visibleCards = Array.from(document.querySelectorAll('.song-card'))
                     .filter(card => card.offsetParent !== null);
 
                 if (!visibleCards.length) {
                     renderSongs(songs, history, favorites);
-                    setSearchPlaceholder('All songs have been played');
                     return;
                 }
 
                 visibleCards.forEach(card => card.classList.remove('random-highlight'));
                 const randomCard = visibleCards[Math.floor(Math.random() * visibleCards.length)];
-                const randomSong = unplayedSongs.find(song => song.id === randomCard.getAttribute('data-song-id'));
-
                 randomCard.classList.add('random-highlight');
                 randomCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                if (randomSong) {
-                    setSearchPlaceholder(`Last random: ${randomSong.title}`);
-                }
 
                 const link = randomCard.querySelector('.pdf-link');
                 if (link) {

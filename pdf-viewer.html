@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        body {
+            margin: 0;
+            background: #f5f2ec;
+            color: #2b2118;
+            font-family: Arial, sans-serif;
+        }
+
+        .viewer-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            background: #fffaf2;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+        }
+
+        .viewer-header a {
+            color: inherit;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        #pdfPages {
+            display: grid;
+            gap: 1rem;
+            justify-items: center;
+            padding: 1rem 0.5rem 2rem;
+        }
+
+        canvas {
+            width: min(100%, 960px);
+            height: auto;
+            background: white;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+        }
+
+        .viewer-message {
+            max-width: 32rem;
+            margin: 2rem auto;
+            padding: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header class="viewer-header">
+        <a href="songs.html" aria-label="Back to songs">← Songs</a>
+        <span id="viewerTitle">Loading PDF…</span>
+    </header>
+    <main id="pdfPages" aria-live="polite"></main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        const pages = document.getElementById('pdfPages');
+        const title = document.getElementById('viewerTitle');
+        const params = new URLSearchParams(window.location.search);
+        const file = params.get('file');
+
+        function showMessage(message) {
+            pages.innerHTML = `<p class="viewer-message">${message}</p>`;
+            title.textContent = 'PDF unavailable';
+        }
+
+        async function renderPdf() {
+            if (!file) {
+                showMessage('No PDF was selected.');
+                return;
+            }
+
+            const pdfUrl = new URL(file, window.location.href);
+            if (pdfUrl.origin !== window.location.origin) {
+                showMessage('This viewer can only open PDFs from this website.');
+                return;
+            }
+
+            title.textContent = decodeURIComponent(file.split('/').pop() || 'Song PDF');
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+            try {
+                const pdf = await pdfjsLib.getDocument(pdfUrl.href).promise;
+                pages.innerHTML = '';
+
+                for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+                    const page = await pdf.getPage(pageNumber);
+                    const unscaledViewport = page.getViewport({ scale: 1 });
+                    const targetWidth = Math.min(window.innerWidth - 16, 960);
+                    const viewport = page.getViewport({ scale: targetWidth / unscaledViewport.width });
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+
+                    canvas.width = Math.floor(viewport.width);
+                    canvas.height = Math.floor(viewport.height);
+                    canvas.setAttribute('aria-label', `Page ${pageNumber}`);
+                    pages.appendChild(canvas);
+
+                    await page.render({ canvasContext: context, viewport }).promise;
+                }
+            } catch (error) {
+                console.error('Unable to render PDF', error);
+                showMessage('Sorry, this PDF could not be displayed. Please try again later.');
+            }
+        }
+
+        renderPdf();
+    </script>
+</body>
+</html>
