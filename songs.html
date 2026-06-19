@@ -612,10 +612,8 @@
             return getRankings(history).find(entry => entry.song.id === songId);
         }
 
-        function getMostRecentPlayedEntry(history) {
-            return getRankings(history)
-                .filter(entry => entry.lastPlayed > 0)
-                .sort((a, b) => b.lastPlayed - a.lastPlayed)[0];
+        function formatSongPlaceholder(song) {
+            return song ? `${song.number} ${song.title}` : DEFAULT_SEARCH_PLACEHOLDER;
         }
 
         function setSearchPlaceholder(text) {
@@ -649,7 +647,7 @@
             history[songId] = [today, ...previousPlays];
             saveStoredObject(STORAGE_KEY, history);
             updateDisplay(history);
-            setSearchPlaceholder(`Last played: ${song.number}. ${song.title}`);
+            setSearchPlaceholder(formatSongPlaceholder(song));
         }
 
         function updateFavoriteDisplay(favorites) {
@@ -894,9 +892,8 @@
 
             document.getElementById('clearSearch').addEventListener('click', () => {
                 const searchInput = document.getElementById('songSearch');
-                const lastPlayedEntry = getMostRecentPlayedEntry(history);
                 searchInput.value = '';
-                setSearchPlaceholder(lastPlayedEntry ? `Last played: ${lastPlayedEntry.song.number}. ${lastPlayedEntry.song.title}` : DEFAULT_SEARCH_PLACEHOLDER);
+                setSearchPlaceholder();
                 searchInput.focus();
                 favoritesFilterActive = false;
                 document.getElementById('favoritesFilter').classList.remove('active');
@@ -925,32 +922,23 @@
 
             document.getElementById('randomSong').addEventListener('click', () => {
                 const searchInput = document.getElementById('songSearch');
-                const lastPlayedEntry = getMostRecentPlayedEntry(history);
                 searchInput.value = '';
-                setSearchPlaceholder(lastPlayedEntry ? `Last played: ${lastPlayedEntry.song.number}. ${lastPlayedEntry.song.title}` : DEFAULT_SEARCH_PLACEHOLDER);
                 favoritesFilterActive = false;
                 document.getElementById('favoritesFilter').classList.remove('active');
-                const unplayedSongs = applySearchFilter(history, favorites, { unplayedOnly: true });
+                applySearchFilter(history, favorites, { unplayedOnly: true });
 
                 const visibleCards = Array.from(document.querySelectorAll('.song-card'))
                     .filter(card => card.offsetParent !== null);
 
                 if (!visibleCards.length) {
                     renderSongs(songs, history, favorites);
-                    setSearchPlaceholder('All songs have been played');
                     return;
                 }
 
                 visibleCards.forEach(card => card.classList.remove('random-highlight'));
                 const randomCard = visibleCards[Math.floor(Math.random() * visibleCards.length)];
-                const randomSong = unplayedSongs.find(song => song.id === randomCard.getAttribute('data-song-id'));
-
                 randomCard.classList.add('random-highlight');
                 randomCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                if (randomSong) {
-                    setSearchPlaceholder(`Last random: ${randomSong.title}`);
-                }
 
                 const link = randomCard.querySelector('.pdf-link');
                 if (link) {
