@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Songs - Sou'West Strummers</title>
-    <meta http-equiv="refresh" content="0; url=songs2.html">
+    <title>Songs2 - Sou'West Strummers</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <link rel="stylesheet" href="assets/style.css">
     <script src="assets/site.js"></script>
@@ -405,9 +404,6 @@
             }
         }
     </style>
-    <script>
-        window.location.replace('songs2.html' + window.location.search + window.location.hash);
-    </script>
 </head>
 <body>
     <div class="navbar">
@@ -531,8 +527,6 @@
         }
 
         function getPdfDisplayUrl(pdfPath) {
-            if (!shouldUseAndroidPdfViewer()) return pdfPath;
-
             return `pdf-viewer.html?file=${encodeURIComponent(pdfPath)}`;
         }
 
