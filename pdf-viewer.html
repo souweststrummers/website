@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Viewer</title>
+    <title>Sou West Strummers</title>
     <link rel="stylesheet" href="assets/style.css">
     <style>
         body {
@@ -11,24 +11,6 @@
             background: #f5f2ec;
             color: #2b2118;
             font-family: Arial, sans-serif;
-        }
-
-        .viewer-header {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.75rem 1rem;
-            background: #fffaf2;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
-        }
-
-        .viewer-header a {
-            color: inherit;
-            font-weight: 700;
-            text-decoration: none;
         }
 
         #pdfPages {
@@ -54,29 +36,16 @@
     </style>
 </head>
 <body>
-    <header class="viewer-header">
-        <a id="backToSongs" href="songs.html" aria-label="Back to songs">← Songs</a>
-        <span id="viewerTitle">Loading PDF…</span>
-    </header>
     <main id="pdfPages" aria-live="polite"></main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
         const pages = document.getElementById('pdfPages');
-        const title = document.getElementById('viewerTitle');
         const params = new URLSearchParams(window.location.search);
         const file = params.get('file');
-        const backToSongs = document.getElementById('backToSongs');
-        const returnTo = params.get('returnTo');
-        const allowedSongPages = new Set(['songs.html', 'songs2.html']);
-
-        if (allowedSongPages.has(returnTo)) {
-            backToSongs.href = returnTo;
-        }
 
         function showMessage(message) {
             pages.innerHTML = `<p class="viewer-message">${message}</p>`;
-            title.textContent = 'PDF unavailable';
         }
 
         async function renderPdf() {
@@ -91,7 +60,6 @@
                 return;
             }
 
-            title.textContent = decodeURIComponent(file.split('/').pop() || 'Song PDF');
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
             try {
