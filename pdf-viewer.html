@@ -55,7 +55,7 @@
 </head>
 <body>
     <header class="viewer-header">
-        <a href="songs.html" aria-label="Back to songs">← Songs</a>
+        <a id="backToSongs" href="songs.html" aria-label="Back to songs">← Songs</a>
         <span id="viewerTitle">Loading PDF…</span>
     </header>
     <main id="pdfPages" aria-live="polite"></main>
@@ -66,6 +66,13 @@
         const title = document.getElementById('viewerTitle');
         const params = new URLSearchParams(window.location.search);
         const file = params.get('file');
+        const backToSongs = document.getElementById('backToSongs');
+        const returnTo = params.get('returnTo');
+        const allowedSongPages = new Set(['songs.html', 'songs2.html']);
+
+        if (allowedSongPages.has(returnTo)) {
+            backToSongs.href = returnTo;
+        }
 
         function showMessage(message) {
             pages.innerHTML = `<p class="viewer-message">${message}</p>`;
