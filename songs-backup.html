@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Songs2 - Sou'West Strummers</title>
+    <title>Songs Backup - Sou'West Strummers</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <link rel="stylesheet" href="assets/style.css">
     <script src="assets/site.js"></script>
@@ -421,7 +421,7 @@
 
     <main>
         <div class="page-header">
-            <h1><i class="fa-solid fa-music"></i> Songs</h1>
+            <h1><i class="fa-solid fa-music"></i> Songs Backup</h1>
             <div class="search-row">
                 <label class="search-bar" for="songSearch">
                     <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
@@ -527,7 +527,9 @@
         }
 
         function getPdfDisplayUrl(pdfPath) {
-            return `pdf-viewer.html?file=${encodeURIComponent(pdfPath)}&returnTo=songs2.html`;
+            if (!shouldUseAndroidPdfViewer()) return pdfPath;
+
+            return `pdf-viewer.html?file=${encodeURIComponent(pdfPath)}`;
         }
 
         function openSongPdf(song) {
@@ -608,15 +610,6 @@
 
         function getSongRanking(history, songId) {
             return getRankings(history).find(entry => entry.song.id === songId);
-        }
-
-        function getMostRecentlyPlayedSong(history) {
-            const latest = Object.entries(history)
-                .map(([songId, plays]) => ({ songId, lastPlayed: Array.isArray(plays) ? plays[0] : 0 }))
-                .filter(entry => entry.lastPlayed)
-                .sort((a, b) => b.lastPlayed - a.lastPlayed)[0];
-
-            return latest ? getSong(latest.songId) : null;
         }
 
         function formatSongPlaceholder(song) {
@@ -891,7 +884,6 @@
 
             saveStoredObject(STORAGE_KEY, history);
             renderSongs(songs, history, favorites);
-            setSearchPlaceholder(formatSongPlaceholder(getMostRecentlyPlayedSong(history)));
 
             document.getElementById('songSearch').addEventListener('input', () => {
                 setSearchPlaceholder();
