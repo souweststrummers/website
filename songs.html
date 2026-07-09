@@ -480,6 +480,7 @@
     <script src="assets/songs-data.js"></script>
     <script>
         const STORAGE_KEY = 'songLastClicked';
+        const LAST_PLAYED_KEY = 'songLastPlayed';
         const FAVORITES_KEY = 'songFavorites';
         const DEFAULT_SEARCH_PLACEHOLDER = 'Search by title or artist';
 
@@ -542,15 +543,14 @@
 
         function normalisePlayHistory(rawHistory) {
             return Object.entries(rawHistory).reduce((normalised, [songId, value]) => {
-                const values = Array.isArray(value) ? value : [value];
-                const uniqueDates = [...new Set(values
+                const playDates = [...new Set((Array.isArray(value) ? value : [value])
                     .map(Number)
-                    .filter(timestamp => Number.isFinite(timestamp))
+                    .filter(timestamp => Number.isFinite(timestamp) && timestamp > 0)
                     .map(getLocalDateTimestamp))]
                     .sort((a, b) => b - a);
 
-                if (uniqueDates.length) {
-                    normalised[songId] = uniqueDates;
+                if (playDates.length) {
+                    normalised[songId] = playDates;
                 }
                 return normalised;
             }, {});
@@ -610,7 +610,10 @@
             return getRankings(history).find(entry => entry.song.id === songId);
         }
 
-        function getMostRecentlyPlayedSong(history) {
+        function getMostRecentlyPlayedSong(history, lastPlayed) {
+            const lastPlayedSong = lastPlayed?.songId ? getSong(lastPlayed.songId) : null;
+            if (lastPlayedSong) return lastPlayedSong;
+
             const latest = Object.entries(history)
                 .map(([songId, plays]) => ({ songId, lastPlayed: Array.isArray(plays) ? plays[0] : 0 }))
                 .filter(entry => entry.lastPlayed)
@@ -653,6 +656,7 @@
             const previousPlays = getSongPlays(history, songId).filter(timestamp => timestamp !== today);
             history[songId] = [today, ...previousPlays];
             saveStoredObject(STORAGE_KEY, history);
+            saveStoredObject(LAST_PLAYED_KEY, { songId, timestamp: Date.now() });
             updateDisplay(history);
             setSearchPlaceholder(formatSongPlaceholder(song));
         }
@@ -887,11 +891,12 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const history = normalisePlayHistory(loadStoredObject(STORAGE_KEY));
+            const lastPlayed = loadStoredObject(LAST_PLAYED_KEY);
             const favorites = loadStoredObject(FAVORITES_KEY);
 
             saveStoredObject(STORAGE_KEY, history);
             renderSongs(songs, history, favorites);
-            setSearchPlaceholder(formatSongPlaceholder(getMostRecentlyPlayedSong(history)));
+            setSearchPlaceholder(formatSongPlaceholder(getMostRecentlyPlayedSong(history, lastPlayed)));
 
             document.getElementById('songSearch').addEventListener('input', () => {
                 setSearchPlaceholder();
