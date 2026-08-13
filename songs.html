@@ -689,7 +689,7 @@
                 <p class="history-summary">Played ${plays.length} ${plays.length === 1 ? 'time' : 'times'}.</p>
                 ${plays.length
                     ? `<ol class="history-dates">${plays.map(timestamp => `<li>${formatDateOnly(timestamp)}</li>`).join('')}</ol>`
-                    : '<p class="history-empty">This song has not been played yet.</p>'}
+                    : '<p class="history-empty">You\'ve not played this song yet.</p>'}
             `;
             dialog.showModal();
         }
