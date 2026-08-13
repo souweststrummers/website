@@ -441,6 +441,13 @@ img {padding-top:10px;}
     opacity: 1;
 }
 
+.site-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #e2e8f0;
+    color: #475569;
+    font-size: 0.875rem;
+}
+
 @media (max-width: 900px) {
     .hero {
         flex-direction: column-reverse;
