@@ -53,9 +53,18 @@
       <!-- add as many slides as you like -->
     </div>
   </div>
+
+  <footer class="site-footer">
+    Sou West Strummers - <time id="current-month-year"></time>
+  </footer>
   
   <script>
     $(function(){
+      const now = new Date();
+      $('#current-month-year')
+        .attr('datetime', `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`)
+        .text(new Intl.DateTimeFormat('en-NZ', { month: 'short', year: 'numeric' }).format(now));
+
       // slideshow
       let slides = $('.hero-slideshow .slide'),
           idx = 0,
