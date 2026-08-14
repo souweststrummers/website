@@ -717,7 +717,7 @@ a.link-nochange:hover {
 }
 
 .updates-dialog-close {
-    display: block;
+    display: flex;
     margin: 22px 0 0 auto;
     font: inherit;
     cursor: pointer;
