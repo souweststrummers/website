@@ -90,15 +90,6 @@ const songsData = [
     "dataName": "10. Big Yellow Taxi | Joni Mitchell | Folk Rock"
   },
   {
-    "id": "song-11",
-    "number": "11.",
-    "title": "Black Velvet Band",
-    "artist": "Luke Kelly and The Dubliners",
-    "genre": "Irish Folk",
-    "pdf": "pdfs/11-Black-Velvet-Band.pdf",
-    "dataName": "11. Black Velvet Band | Luke Kelly and The Dubliners | Irish Folk"
-  },
-  {
     "id": "song-12",
     "number": "12.",
     "title": "Blanket On The Ground",
@@ -387,15 +378,6 @@ const songsData = [
     "dataName": "43. Four Strong Winds | Ian & Sylvia | Folk"
   },
   {
-    "id": "song-44",
-    "number": "44.",
-    "title": "The Whistling Gypsy Rover",
-    "artist": "Traditional",
-    "genre": "Irish Folk",
-    "pdf": "pdfs/44-The-Whistling-Gypsy-Rover.pdf",
-    "dataName": "44. The Whistling Gypsy Rover | Traditional | Irish Folk"
-  },
-  {
     "id": "song-45",
     "number": "45.",
     "title": "Hard Times Come Again No More",
@@ -412,15 +394,6 @@ const songsData = [
     "genre": "Rock",
     "pdf": "pdfs/46-Have-You-Ever-Seen-The-Rain.pdf",
     "dataName": "46. Have You Ever Seen The Rain learn | Creedence Clearwater Revival | Rock"
-  },
-  {
-    "id": "song-47",
-    "number": "47.",
-    "title": "Hello Mary Lou",
-    "artist": "Ricky Nelson",
-    "genre": "Rock \u2019n\u2019 Roll",
-    "pdf": "pdfs/47-Hello-Mary-Lou.pdf",
-    "dataName": "47. Hello Mary Lou | Ricky Nelson | Rock \u2019n\u2019 Roll"
   },
   {
     "id": "song-48",
@@ -511,15 +484,6 @@ const songsData = [
     "genre": "Gospel",
     "pdf": "pdfs/57-I'll-Fly-Away.pdf",
     "dataName": "57. I'll Fly Away | Alison Krauss and Gillian Welch | Gospel"
-  },
-  {
-    "id": "song-58",
-    "number": "58.",
-    "title": "I'm Still Standing",
-    "artist": "Elton John",
-    "genre": "Pop/Rock",
-    "pdf": "pdfs/58-I'm-Still-Standing.pdf",
-    "dataName": "58. I'm Still Standing | Elton John | Pop/Rock"
   },
   {
     "id": "song-59",
@@ -630,15 +594,6 @@ const songsData = [
     "dataName": "70. Mack The Knife | Bobby Darin | Pop/Jazz Standard"
   },
   {
-    "id": "song-71",
-    "number": "71.",
-    "title": "Mairi's Wedding",
-    "artist": "The High Kings",
-    "genre": "Folk",
-    "pdf": "pdfs/71-Mairi's-Wedding.pdf",
-    "dataName": "71. Mairi's Wedding learn | The High Kings | Folk"
-  },
-  {
     "id": "song-72",
     "number": "72.",
     "title": "Maureen",
@@ -711,13 +666,22 @@ const songsData = [
     "dataName": "79. One Way Or Another | Blondie | Rock"
   },
   {
-    "id": "song-80",
+    "id": "song-80-e",
     "number": "80.",
-    "title": "Peaceful Easy Feeling",
+    "title": "Peaceful Easy Feeling (E)",
     "artist": "Eagles",
     "genre": "Country Rock",
-    "pdf": "pdfs/80-Peaceful-Easy-Feeling.pdf",
-    "dataName": "80. Peaceful Easy Feeling | Eagles | Country Rock"
+    "pdf": "pdfs/80-Peaceful-Easy-Feeling-[E].pdf",
+    "dataName": "80. Peaceful Easy Feeling (E) | Eagles | Country Rock"
+  },
+  {
+    "id": "song-80-g",
+    "number": "80.",
+    "title": "Peaceful Easy Feeling (G)",
+    "artist": "Eagles",
+    "genre": "Country Rock",
+    "pdf": "pdfs/80-Peaceful-Easy-Feeling-[G].pdf",
+    "dataName": "80. Peaceful Easy Feeling (G) | Eagles | Country Rock"
   },
   {
     "id": "song-81",
@@ -854,34 +818,7 @@ const songsData = [
     "pdf": "pdfs/95-Sugar-Town.pdf",
     "dataName": "95. Sugar Town learn | Nancy Sinatra | Pop"
   },
-  {
-    "id": "song-96",
-    "number": "96.",
-    "title": "Sweet About Me",
-    "artist": "Gabriella Cilmi",
-    "genre": "Pop",
-    "pdf": "pdfs/96-Sweet-About-Me.pdf",
-    "dataName": "96. Sweet About Me learn | Gabriella Cilmi | Pop"
-  },
-  {
-    "id": "song-97",
-    "number": "97.",
-    "title": "Tennessee Waltz",
-    "artist": "Patti Page",
-    "genre": "Country",
-    "pdf": "pdfs/97-Tennessee-Waltz.pdf",
-    "dataName": "97. Tennessee Waltz | Patti Page | Country"
-  },
-  {
-    "id": "song-98",
-    "number": "98.",
-    "title": "The Air That I Breathe",
-    "artist": "The Hollies",
-    "genre": "Pop/Rock",
-    "pdf": "pdfs/98-The-Air-That-I-Breathe.pdf",
-    "dataName": "98. The Air That I Breathe | The Hollies | Pop/Rock"
-  },
-  {
+        {
     "id": "song-99",
     "number": "99.",
     "title": "The Night They Drove Old Dixie Down",
@@ -943,15 +880,6 @@ const songsData = [
     "genre": "Soul/Pop",
     "pdf": "pdfs/105-Valerie.pdf",
     "dataName": "105. Valerie | Amy Winehouse & Mark Ronson | Soul/Pop"
-  },
-  {
-    "id": "song-106",
-    "number": "106.",
-    "title": "Youre The One That I Want",
-    "artist": "John Travolta & Olivia Newton\u2011John",
-    "genre": "Pop",
-    "pdf": "pdfs/106-Youre-The-One-That-I-Want.pdf",
-    "dataName": "106. Youre The One That I Want learn | John Travolta & Olivia Newton\u2011John | Pop"
   },
   {
     "id": "song-107",
@@ -1224,15 +1152,6 @@ const songsData = [
     "dataName": "136. Baker St | Gerry Rafferty | Soft Rock"
   },
   {
-    "id": "song-137",
-    "number": "137.",
-    "title": "Banana Pancakes",
-    "artist": "Jack Johnson",
-    "genre": "Folk/Pop",
-    "pdf": "pdfs/137-Banana-Pancakes.pdf",
-    "dataName": "137. Banana Pancakes | Jack Johnson | Folk/Pop"
-  },
-  {
     "id": "song-138",
     "number": "138.",
     "title": "Banks Of The Ohio",
@@ -1240,15 +1159,6 @@ const songsData = [
     "genre": "Folk/Country",
     "pdf": "pdfs/138-Banks-Of-The-Ohio.pdf",
     "dataName": "138. Banks Of The Ohio learn | Olivia Newton-John | Folk/Country"
-  },
-  {
-    "id": "song-139",
-    "number": "139.",
-    "title": "Barbara Ann",
-    "artist": "The Beach Boys",
-    "genre": "Rock/Pop",
-    "pdf": "pdfs/139-Barbara-Ann.pdf",
-    "dataName": "139. Barbara Ann | The Beach Boys | Rock/Pop"
   },
   {
     "id": "song-140",
@@ -1303,15 +1213,6 @@ const songsData = [
     "genre": "Pop",
     "pdf": "pdfs/145-Budapest.pdf",
     "dataName": "145. Budapest | George Ezra | Pop"
-  },
-  {
-    "id": "song-146",
-    "number": "146.",
-    "title": "California Girls",
-    "artist": "The Beach Boys",
-    "genre": "Rock/Pop",
-    "pdf": "pdfs/146-California-Girls.pdf",
-    "dataName": "146. California Girls | The Beach Boys | Rock/Pop"
   },
   {
     "id": "song-147",
@@ -1385,25 +1286,7 @@ const songsData = [
     "pdf": "pdfs/154-Everybody-Loves-A-Lover.pdf",
     "dataName": "154. Everybody Loves A Lover | Doris Day | Pop"
   },
-  {
-    "id": "song-155",
-    "number": "155.",
-    "title": "Fix You",
-    "artist": "Coldplay",
-    "genre": "Alternative Rock",
-    "pdf": "pdfs/155-Fix-You.pdf",
-    "dataName": "155. Fix You | Coldplay | Alternative Rock"
-  },
-  {
-    "id": "song-156",
-    "number": "156.",
-    "title": "Forever Tuesday Morning",
-    "artist": "The Mockers",
-    "genre": "Pop (NZ)",
-    "pdf": "pdfs/156-Forever-Tuesday-Morning.pdf",
-    "dataName": "156. Forever Tuesday Morning | The Mockers | Pop (NZ)"
-  },
-  {
+      {
     "id": "song-157",
     "number": "157.",
     "title": "Gentle On My Mind",
@@ -1475,25 +1358,7 @@ const songsData = [
     "pdf": "pdfs/164-Hey-Baby.pdf",
     "dataName": "164. Hey Baby learn | Bruce Channel | Rock \u2019n\u2019 Roll/Pop"
   },
-  {
-    "id": "song-165",
-    "number": "165.",
-    "title": "History",
-    "artist": "One Direction",
-    "genre": "Pop",
-    "pdf": "pdfs/165-History.pdf",
-    "dataName": "165. History | One Direction | Pop"
-  },
-  {
-    "id": "song-166",
-    "number": "166.",
-    "title": "Ho Hey",
-    "artist": "The Lumineers",
-    "genre": "Folk Rock",
-    "pdf": "pdfs/166-Ho-Hey.pdf",
-    "dataName": "166. Ho Hey learn | The Lumineers | Folk Rock"
-  },
-  {
+      {
     "id": "song-167",
     "number": "167.",
     "title": "Hold Back The River",
@@ -1501,15 +1366,6 @@ const songsData = [
     "genre": "Pop/Rock",
     "pdf": "pdfs/167-Hold-Back-The-River.pdf",
     "dataName": "167. Hold Back The River | James Bay | Pop/Rock"
-  },
-  {
-    "id": "song-168",
-    "number": "168.",
-    "title": "Homeward Bound",
-    "artist": "Simon & Garfunkel",
-    "genre": "Folk Rock",
-    "pdf": "pdfs/168-Homeward-Bound.pdf",
-    "dataName": "168. Homeward Bound | Simon & Garfunkel | Folk Rock"
   },
   {
     "id": "song-169",
@@ -1528,15 +1384,6 @@ const songsData = [
     "genre": "Pop",
     "pdf": "pdfs/170-House-Of-Love.pdf",
     "dataName": "170. House Of Love learn | Vika and Linda Bull | Pop"
-  },
-  {
-    "id": "song-171",
-    "number": "171.",
-    "title": "I Guess That's Why They Call It The Blues",
-    "artist": "Elton John",
-    "genre": "Pop/Rock",
-    "pdf": "pdfs/171-I-Guess-That's-Why-They-Call-It-The-Blues.pdf",
-    "dataName": "171. I Guess That's Why They Call It The Blues | Elton John | Pop/Rock"
   },
   {
     "id": "song-172",
@@ -1564,15 +1411,6 @@ const songsData = [
     "genre": "Folk",
     "pdf": "pdfs/174-If-You-Could-Read-My-Mind.pdf",
     "dataName": "174. If You Could Read My Mind | Gordon Lightfoot | Folk"
-  },
-  {
-    "id": "song-175",
-    "number": "175.",
-    "title": "I'll See You In My Dreams",
-    "artist": "Joe Brown",
-    "genre": "Traditional Pop",
-    "pdf": "pdfs/175-I'll-See-You-In-My-Dreams.pdf",
-    "dataName": "175. I'll See You In My Dreams | Joe Brown | Traditional Pop"
   },
   {
     "id": "song-176",
@@ -1924,15 +1762,6 @@ const songsData = [
     "genre": "Rock \u2019n\u2019 Roll",
     "pdf": "pdfs/214-You-Never-Can-Tell.pdf",
     "dataName": "214. You Never Can Tell learn | Chuck Berry | Rock \u2019n\u2019 Roll"
-  },
-  {
-    "id": "song-215",
-    "number": "215.",
-    "title": "Dance Me To The End Of Love",
-    "artist": "Leonard Cohen",
-    "genre": "Folk",
-    "pdf": "pdfs/215-Dance-Me-To-The-End-Of-Love.pdf",
-    "dataName": "215. Dance Me To The End Of Love | Leonard Cohen | Folk"
   },
   {
     "id": "song-216",
