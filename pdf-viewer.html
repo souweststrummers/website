@@ -33,39 +33,14 @@
             padding: 1rem;
             text-align: center;
         }
-
-        .viewer-actions {
-            display: flex;
-            justify-content: flex-end;
-            padding: 0.75rem 0.75rem 0;
-        }
-
-        .viewer-actions button {
-            font: inherit;
-            cursor: pointer;
-        }
-
-        /* .nav-item sets display, which would otherwise beat the UA rule
-           for [hidden] and leave the button on screen with nothing to print. */
-        .viewer-actions button[hidden] {
-            display: none;
-        }
-
-        @media print {
-            .viewer-actions { display: none; }
-        }
     </style>
 </head>
 <body>
-    <div class="viewer-actions">
-        <button id="printPdf" class="nav-item nav-button" type="button" hidden>Print</button>
-    </div>
     <main id="pdfPages" aria-live="polite"></main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
         const pages = document.getElementById('pdfPages');
-        const printButton = document.getElementById('printPdf');
         const params = new URLSearchParams(window.location.search);
         const file = params.get('file');
 
@@ -85,9 +60,6 @@
         }
 
         if (isSameOrigin) {
-            printButton.hidden = false;
-            printButton.addEventListener('click', openPdfForPrinting);
-
             document.addEventListener('keydown', (event) => {
                 if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'p') {
                     event.preventDefault();
