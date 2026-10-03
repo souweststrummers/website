@@ -33,19 +33,67 @@
             padding: 1rem;
             text-align: center;
         }
+
+        .viewer-actions {
+            display: flex;
+            justify-content: flex-end;
+            padding: 0.75rem 0.75rem 0;
+        }
+
+        .viewer-actions button {
+            font: inherit;
+            cursor: pointer;
+        }
+
+        /* .nav-item sets display, which would otherwise beat the UA rule
+           for [hidden] and leave the button on screen with nothing to print. */
+        .viewer-actions button[hidden] {
+            display: none;
+        }
+
+        @media print {
+            .viewer-actions { display: none; }
+        }
     </style>
 </head>
 <body>
+    <div class="viewer-actions">
+        <button id="printPdf" class="nav-item nav-button" type="button" hidden>Print</button>
+    </div>
     <main id="pdfPages" aria-live="polite"></main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
         const pages = document.getElementById('pdfPages');
+        const printButton = document.getElementById('printPdf');
         const params = new URLSearchParams(window.location.search);
         const file = params.get('file');
 
+        // Resolved once so both the renderer and the print handler share it.
+        const pdfUrl = file ? new URL(file, window.location.href) : null;
+        const isSameOrigin = Boolean(pdfUrl) && pdfUrl.origin === window.location.origin;
+
         function showMessage(message) {
             pages.innerHTML = `<p class="viewer-message">${message}</p>`;
+        }
+
+        // The pages above are canvases, so printing this document would send
+        // the printer a screen-resolution bitmap. Hand the browser the real
+        // PDF instead: its built-in viewer prints it at full quality.
+        function openPdfForPrinting() {
+            window.open(pdfUrl.href, '_blank', 'noopener');
+        }
+
+        if (isSameOrigin) {
+            printButton.hidden = false;
+            printButton.addEventListener('click', openPdfForPrinting);
+
+            document.addEventListener('keydown', (event) => {
+                if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'p') {
+                    event.preventDefault();
+                    openPdfForPrinting();
+                }
+            });
         }
 
         async function renderPdf() {
@@ -54,8 +102,7 @@
                 return;
             }
 
-            const pdfUrl = new URL(file, window.location.href);
-            if (pdfUrl.origin !== window.location.origin) {
+            if (!isSameOrigin) {
                 showMessage('This viewer can only open PDFs from this website.');
                 return;
             }
