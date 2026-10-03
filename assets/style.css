@@ -571,7 +571,9 @@ a.link-nochange:hover {
 }
 
 .subnav a {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     padding: 10px 12px;
     margin: 0;
     color: rgba(31, 41, 51, 0.7);
@@ -603,9 +605,6 @@ a.link-nochange:hover {
 
     .subnav {
         position: static;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: flex-start;
         gap: 10px;
         padding: 16px;
         box-shadow: none;
